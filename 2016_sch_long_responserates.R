@@ -4,17 +4,16 @@
 # Matt Mawer, The Association of Commonwealth Universities
 # February, 2017
 
+## NOTE - Update years in 'WHERE' statement of database query ('Data connection and import, section [b]) to appropriate values for survey
+
+SurveyName <- "2016 Alumni Survey"
+
 # --- Library calls ----
 
 library(pacman)
 p_load(RODBC, openxlsx, tidyverse,forcats, plotly, pander)
 
 opar = par()
-
-# update the SurveyName and FilePath variables to the current values
-SurveyName = "2016 Alumni Survey"
-FilePath = "S:/SCHOLARSHIPS/CSC/SNAP/Evaluation/Scholar surveys/Data management & seeding/Sch Alumni seeding.xlsx"
-
 
 # --- Data connection and import ----
 
@@ -25,25 +24,35 @@ con.evaldb
 
 ## b] Data import ----
 
-# Retrieve geodata from evaluation database
-geoData <- sqlQuery(con.evaldb,"
+res.data <- sqlQuery(con.evaldb,"
                     SELECT
-                      tbl_LKUP_Geodata.CTRYNAME AS Country,
+                      tbl_Ctrl_EvalInfo.AWDID AS AWDID
+                      tbl_Ctrl_EvalInfo.AWDSCH AS Scheme
+                      tbl_Ctrl_EvalInfo.SchemeType AS SchemeType
+                      tbl_Ctrl_EvalInfo.PhD AS PhD
+                      tbl_Ctrl_EvalInfo.YearGroup AS YearGroup
+                      tbl_Ctrl_EvalInfo.Origin AS Country
                       tbl_LKUP_Geodata.CSCRegion AS Region
-                    FROM
-                      tbl_LKUP_Geodata
+                      tbl_LKUP_ResponseStatus.ResponseName AS Response
+                    From
+                      tbl_Ctrl_Respondents
+                      LEFT JOIN tbl_LKUP_ResponseStatus ON tbl_LKUP_ResponseStatus.StatusCode = tbl_Ctrl_Respondents.ResponseStatus  
+                      LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_Ctrl_Respondents.AWDID
+                      LEFT JOIN tbl_LKUP_Geodata ON tbl_LKUP_Geodata.CTRYNAME = tbl_Ctrl_EvalInfo.Origin
+                    Where
+                      tbl_Ctrl_EvalInfo.YearGroup IN ('2014','2012','2010','2008','2006')
                     ")
+#might need to check WHERE statement
 
-## THIS NEEDS UPDATING TO USE DATABASE LINKS - NO NEED FOR EXCEL IMPORT
-res.data <- 
-    read.xlsx(FilePath, sheet = "CURRENT SEED", colNames = T, na.strings = "") %>% #get survey data
-    left_join(read.xlsx(geoData,sheet = "CSC regions", colNames = T,na.strings = ""), by = c("Origin" = "Country")) %>% #join region data
-    select(AWDID, Year.Group = YearGroup, PhD, Gender, Scheme, Award.year, Origin, Region,"Response" = FinalResponseStatus, Alumni.status) %>% #select relevant columns
-    mutate(Simple.response = recode(Response, "1"="Completed", .default = "Non-response"), #new variable: binary response
-           Response = recode(Response, "1" = "Completed", "2" = "Not.completed", "3"="Email.failed", "4"="Not.included")) %>% # label responses
-    tbl_df
+res.data <- res.data %>% 
+            mutate(SchemeNom = recode(Scheme, "CD"="Distance Learners",
+                                              "CR"="Agency: Developed",
+                                              "CA"="University Staff", 
+                                              "CS"="Agency: Developing",
+                                              "CN"="Split Site",
+                                              "SS"="Shared Scholars")
+                   )
 
-#xxx
 # --- Analysis ----
 
 ## --- a] Basic RR ----
@@ -66,12 +75,17 @@ resp.phd <-
   count(Response) %>% 
   mutate(Rate = round((n / sum(n))*100,1)) 
 
-resp.scheme <- 
+resp.sch <- 
   res.data %>% 
-  mutate(Scheme = recode(Scheme, "CD"="Distance Learners","CR"="Agency: Developed","CA"="University Staff", "CS"="Agency: Developing","CN"="Split Site","SS"="Shared Scholars")) %>% 
-  group_by(Scheme) %>%
+  group_by(SchemeNom) %>%
   count(Response) %>% 
   mutate(Rate = round((n / sum(n))*100,1)) 
+
+resp.schtype <- 
+  res.data %>%  
+  group_by(SchemeType) %>%
+  count(Response) %>% 
+  mutate(Rate = round((n / sum(n))*100,1))
 
 resp.region <- 
   res.data %>% 

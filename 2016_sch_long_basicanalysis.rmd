@@ -1,0 +1,270 @@
+---
+title: "2016 Scholar Longitudinal Analysis"
+author: "Matt Mawer"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+
+```{r setup, include = FALSE}
+
+load("2016_longitudinal_analysis.rdata")
+
+library(pacman)
+pacman:: p_load(tidyverse, pander,knitr)
+
+```
+
+insert introduction here
+
+# Data Overview by key variables {.tabset}
+
+## Gender
+
+Gender is based on information supplied in the CSC application process.
+
+```{r, echo=FALSE}
+
+pander(overview_gender)
+```
+
+
+## Scheme
+
+The scholarship scheme through which a respondent received an award can be broken down by nominating route and by degree type.
+
+By nominating route:
+```{r, echo=FALSE}
+
+pander(overview_sch)
+```
+By scholarship type:
+```{r, echo=FALSE}
+pander(rescountry_schtype)
+```
+
+## Origin 
+
+Origin region is based on information supplied during application to the CSC. The country of origin - from which region of origin is derived - is best described as the 'country of application' to the CSC. For a small number of cases, for instance, the country of origin may be adopted: e.g. in the case of refugees. Regional groupings are based on the CSC's regional typology.
+
+```{r, echo=FALSE}
+
+pander(overview_orireg)
+```
+
+
+## Current residency 
+
+Residency region is assessed based on respondents' answers to the survey - we ask directly about current country of residence. Regional groupings are based on the CSC's regional typology.
+
+```{r, echo=FALSE}
+
+pander(overview_resreg)
+```
+
+## Subject studied
+
+Higher Education Statistics Authoraity (HESA) JACS 3.0 coding is used to define subjects of study within the CSC administration. The JACS categories (i.e. top level) are used. In many instances there are too few cases within a category to underpin statistical analysis: limitations are noted in analyses where appropriate
+
+```{r, echo=FALSE}
+
+pander(overview_jacs)
+```
+
+## Committee scores
+
+Although selection scoring is completed with the same range of possible scores each year, the exact cutoff for a scholarship award (and range of scores presented in the selection process) varies each year. To make scores more directly comparable we transform absolute scores (e.g. 38, 54, etc.) into standardised scores that are based on the arithmetic mean and standard deviation for all selection scores by year and by scheme. For instance, a candidate with a standardised score ('Z-score') of +1 had a selection score one standard deviation above the mean within their selection competition (e.g. Agency PhDs), within that specific year. If the mean for the 2015 University-nominated (CA) PhD applicants was 30 and the standard deviation was 8, the candidate with a standardised score of +1 would have scored 38 in the competition.
+
+Scores are not meaningful overall because they 'belong' to different selection competitions, but instead are broken down by Scheme and Scheme Type. Only candidates considered at selection meetings directly are assigned committee scores: Distance Learners and Shared Scholars never receive selection scores.
+
+```{r, echo=FALSE}
+
+pander(overview_score)
+
+# Standard Deviation will be listed as 'NaN' (Not a Number) if there is only a single case 
+```
+
+Because scores are standardised, the mean score within the year in which a candidate was selected is always 0. A positive z-score indicates the candidate scored above the average for a particular selection year, a negative score is below the average. We would normally expect the z-scores overall for selected candiates to be positive, since they are likely to be at the upper range of candidate's committee scores in any particular year.
+
+
+# 1. Residency trajectory {.tabset}
+
+Basic tables on current residency and return rate variables, for alumni only. Tabs break down figures by key variables.
+
+## Overall 
+
+Residency figures by country:
+
+```{r, echo=FALSE}
+pander(rescountry_overall)
+```
+
+Overall figures by region:
+
+```{r, echo=FALSE}
+pander(resregion_overall)
+```
+
+Reasons for residing abroad:
+
+```{r, echo=FALSE}
+pander(resreason_overall)
+```
+
+
+## Gender
+
+By Country
+```{r, echo=FALSE}
+pander(rescountry_gender)
+```
+By region:
+
+```{r, echo=FALSE}
+pander(resregion_gender)
+```
+
+## Scheme
+
+By country, based on nominating route:
+```{r, echo=FALSE}
+pander(rescountry_sch)
+```
+By country, based on scholarship type:
+```{r, echo=FALSE}
+pander(rescountry_sch)
+```
+By region, based on nominating route:
+```{r, echo=FALSE}
+pander(resregion_sch)
+```
+By region, based on scholarship type:
+```{r, echo=FALSE}
+pander(resregion_schtype)
+```
+
+
+## Year group
+
+By country
+```{r, echo=FALSE}
+pander(rescountry_year)
+```
+By region:
+
+```{r, echo=FALSE}
+pander(resregion_year)
+```
+
+## Origin
+
+By country
+```{r, echo=FALSE}
+pander(rescountry_orireg)
+```
+By region:
+
+```{r, echo=FALSE}
+pander(resregion_orireg)
+```
+
+## Residency
+
+Note: this tab shows responses by current country of residence. For instance, of those currently residing in Sub-Saharan Africa, for what proportion is that their home region?
+
+By country
+```{r, echo=FALSE}
+pander(rescountry_resreg)
+```
+By region:
+
+```{r, echo=FALSE}
+pander(resregion_resreg)
+```
+## Subject
+
+JACS categories: limited to categories with at least 20 cases.
+
+By country:
+```{r, echo=FALSE}
+pander(rescountry_jacs)
+```
+By region:
+
+```{r, echo=FALSE}
+pander(resregion_jacs)
+```
+
+## Committee Score
+
+Note comments above about standardised 'Z-scores' for applicant committee scores.
+
+By country:
+```{r, echo=FALSE}
+pander(rescountry_score)
+```
+by region:
+```{r, echo=FALSE}
+pander(resregion_score)
+```
+
+
+# 2. Employment {.tabset}
+
+[description]
+
+## Overall
+
+Employment status:
+```{r, echo=FALSE}
+pander(empcurrent_overall)
+
+```
+Employment sector:
+```{r, echo=FALSE}
+pander(empsector_overall)
+
+```
+Scholar's level of skills in relation to skills needed for current employment:
+```{r, echo=FALSE}
+pander(empskillmatch_overall)
+
+```
+Number of employment changes within last 2 years:
+```{r, echo=FALSE}
+pander(empchange_overall)
+
+```
+Specifically for those in first follow-up group (+2 year post-scholarship), did they return to their pre-scholarship organisation?
+```{r, echo=FALSE}
+pander(empreturnorg_overall)
+
+```
+Also specifically for those in first follow-up group (+2 year post-scholarship), how long did it take them to gain employment if they did not return to their pre-scholarship organisation?
+```{r, echo=FALSE}
+pander(filter(empreturntime_overall, !is.na(ReturnEmploy)))
+
+#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
+
+```
+
+## Gender
+
+Employment status:
+```{r, echo=FALSE}
+empcurrent_gender %>% select(-n) %>% spread(CurrentEmploy, prop) %>% pander #simplified tables with just percentages
+
+```
+Employment sector:
+```{r, echo=FALSE}
+empsector_gender %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
+
+```
+Scholar's level of skills in relation to skills needed for current employment:
+```{r, echo=FALSE}
+empskillmatch_gender %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
+
+

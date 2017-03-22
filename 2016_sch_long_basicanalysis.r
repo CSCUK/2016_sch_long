@@ -4,8 +4,7 @@
 # Matt Mawer, The Association of Commonwealth Universities
 # February, 2017
 
-save.image("2016_longitudinal_analysis.rdata")
-load("2016_longitudinal_analysis.rdata")
+load("2016_sch_long_core.rdata")
 
 # --- Library calls ----
 

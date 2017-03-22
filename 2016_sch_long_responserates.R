@@ -1,32 +1,38 @@
-## Response analysis script
-## Feb 2017, Matt Mawer
-## matt.mawer@acu.ac.uk
+# Code information ----
+
+# Longitudinal Scholar tracking survey: Response rates
+# Matt Mawer, The Association of Commonwealth Universities
+# February, 2017
+
+# --- Library calls ----
+
+library(pacman)
+p_load(RODBC, openxlsx, tidyverse,forcats, plotly, pander)
+
+opar = par()
 
 # update the SurveyName and FilePath variables to the current values
 SurveyName = "2016 Alumni Survey"
 FilePath = "S:/SCHOLARSHIPS/CSC/SNAP/Evaluation/Scholar surveys/Data management & seeding/Sch Alumni seeding.xlsx"
 
-###leave the code alone from this part down###
 
+# --- Data connection and import ----
 
+## a] DB connections ----
 
+con.evaldb <- odbcConnect("EvalDb")
+con.evaldb
 
+## b] Data import ----
 
-## --- General settings --- ##
-
-opar = par()
-
-#THIS NEEDS UPDATING TO USE DATABASE TABLE
-geoData = "S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/CSC regions and countries lkup.xlsx"
-
-## --- Packages --- ##
-
-library(pacman)
-pacman:: p_load(openxlsx, dplyr, knitr, pander)
-  # Add new packages to be loaded to p_load args
-
-
-## --- Data import --- ##
+# Retrieve geodata from evaluation database
+geoData <- sqlQuery(con.evaldb,"
+                    SELECT
+                      tbl_LKUP_Geodata.CTRYNAME AS Country,
+                      tbl_LKUP_Geodata.CSCRegion AS Region
+                    FROM
+                      tbl_LKUP_Geodata
+                    ")
 
 ## THIS NEEDS UPDATING TO USE DATABASE LINKS - NO NEED FOR EXCEL IMPORT
 res.data <- 
@@ -35,11 +41,12 @@ res.data <-
     select(AWDID, Year.Group = YearGroup, PhD, Gender, Scheme, Award.year, Origin, Region,"Response" = FinalResponseStatus, Alumni.status) %>% #select relevant columns
     mutate(Simple.response = recode(Response, "1"="Completed", .default = "Non-response"), #new variable: binary response
            Response = recode(Response, "1" = "Completed", "2" = "Not.completed", "3"="Email.failed", "4"="Not.included")) %>% # label responses
-    tbl_df #make a prettier format
+    tbl_df
 
-## --- Analysis --- ##
+#xxx
+# --- Analysis ----
 
-# 1. Response rate data frames #
+## --- a] Basic RR ----
 
 resp.overall <- 
   res.data %>% 
@@ -81,5 +88,5 @@ resp.country <-
 
 ## --- Save output --- ##
 
-save.image("2016_response_alumni.rdata") 
-  #update filename as appropriate
+save.image("2016_sch_long_responserates.rdata")
+  

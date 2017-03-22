@@ -9,7 +9,7 @@ output:
 
 ```{r setup, include = FALSE}
 
-load("2016_longitudinal_analysis.rdata")
+load("2016_sch_long_core.rdata.rdata")
 
 library(pacman)
 pacman:: p_load(tidyverse, pander,knitr)

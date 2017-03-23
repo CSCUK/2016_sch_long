@@ -24,25 +24,41 @@ con.evaldb
 
 ## b] Data import ----
 
-res.data <- sqlQuery(con.evaldb,"
-                    SELECT
-                      tbl_Ctrl_EvalInfo.AWDID AS AWDID
-                      tbl_Ctrl_EvalInfo.AWDSCH AS Scheme
-                      tbl_Ctrl_EvalInfo.SchemeType AS SchemeType
-                      tbl_Ctrl_EvalInfo.PhD AS PhD
-                      tbl_Ctrl_EvalInfo.YearGroup AS YearGroup
-                      tbl_Ctrl_EvalInfo.Origin AS Country
-                      tbl_LKUP_Geodata.CSCRegion AS Region
-                      tbl_LKUP_ResponseStatus.ResponseName AS Response
-                    From
+#Currently this has to be down via importing responses then joining to evalInfo table: could not make a single query version work
+
+res.data <- sqlQuery(con.evaldb, "
+                    SELECT 
+                      tbl_Ctrl_Respondents.AWDID,
+                      tbl_LKUP_ResponseStatus.ResponseName AS Response,
+                      tbl_Ctrl_Respondents.SurveyID
+                    FROM
                       tbl_Ctrl_Respondents
-                      LEFT JOIN tbl_LKUP_ResponseStatus ON tbl_LKUP_ResponseStatus.StatusCode = tbl_Ctrl_Respondents.ResponseStatus  
-                      LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_Ctrl_Respondents.AWDID
+                      LEFT JOIN tbl_LKUP_ResponseStatus ON tbl_Ctrl_Respondents.ResponseStatus = tbl_LKUP_ResponseStatus.StatusCode
+                    WHERE
+                      tbl_Ctrl_Respondents.SurveyID Like '%2014_Two' Or
+                      tbl_Ctrl_Respondents.SurveyID Like '%2012_Four' Or 
+                      tbl_Ctrl_Respondents.SurveyID Like '%2010_Six' Or 
+                      tbl_Ctrl_Respondents.SurveyID Like '%2008_Eight' Or 
+                      tbl_Ctrl_Respondents.SurveyID Like '%2006_Ten';                
+                    ") %>% 
+            left_join(
+            sqlQuery(con.evaldb,"
+                    SELECT
+                      tbl_Ctrl_EvalInfo.AWDID AS AWDID,
+                      tbl_Ctrl_EvalInfo.AWDSCH AS Scheme,
+                      tbl_Ctrl_EvalInfo.SchemeType AS SchemeType,
+                      tbl_Ctrl_EvalInfo.PhD AS PhD,
+                      tbl_Ctrl_EvalInfo.YearGroup AS YearGroup,
+                      tbl_Ctrl_EvalInfo.Origin AS Origin,
+                      tbl_LKUP_Geodata.CSCRegion AS Region
+                    FROM
+                      tbl_Ctrl_EvalInfo
                       LEFT JOIN tbl_LKUP_Geodata ON tbl_LKUP_Geodata.CTRYNAME = tbl_Ctrl_EvalInfo.Origin
-                    Where
-                      tbl_Ctrl_EvalInfo.YearGroup IN ('2014','2012','2010','2008','2006')
-                    ")
-#might need to check WHERE statement
+                             "),  
+                    by= "AWDID") %>% 
+            tbl_df
+
+odbcCloseAll()
 
 res.data <- res.data %>% 
             mutate(SchemeNom = recode(Scheme, "CD"="Distance Learners",
@@ -50,8 +66,7 @@ res.data <- res.data %>%
                                               "CA"="University Staff", 
                                               "CS"="Agency: Developing",
                                               "CN"="Split Site",
-                                              "SS"="Shared Scholars")
-                   )
+                                              "SS"="Shared Scholars") )
 
 # --- Analysis ----
 

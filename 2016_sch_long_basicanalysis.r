@@ -56,7 +56,9 @@ overview_year <- alumni.data %>% count(YearGroup) %>% mutate(prop = round((n / s
 overview_orireg <- alumni.data %>% count(OriginRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
 overview_resreg <- alumni.data %>% count(ResidencyRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
 overview_jacs <- alumni.data %>% count(JacsCat) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
-overview_score <- alumni.data %>% group_by(SchemeNom,SchemeType) %>% score_summary
+overview_score <- rbind(alumni.data %>% group_by(SchemeType) %>% filter(!Scheme=="SS", !Scheme=="CD")%>% score_summary %>% rename(Competition=SchemeType),
+                       (alumni.data %>% group_by(SchemeNom) %>% filter(SchemeNom=="Agency: Developed")%>% score_summary %>% rename(Competition=SchemeNom)))
+                        
 
 ## b] Residency ----
 

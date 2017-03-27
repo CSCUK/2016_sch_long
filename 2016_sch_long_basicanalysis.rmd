@@ -8,11 +8,10 @@ output:
 
 
 ```{r setup, include = FALSE}
-
 load("2016_sch_long_core.rdata")
 
 library(pacman)
-pacman:: p_load(tidyverse, pander,knitr)
+pacman:: p_load(tidyverse, pander,knitr, RODBC)
 
 ```
 
@@ -26,9 +25,9 @@ This paper relates to the `r SurveyName`; it is intended as a reference document
 6. International network participation
 7. Teaching and research activities
 
-Within each topic we present overall summary statistics and comparisons within the following variables: gender, scholarship scheme (both nominating route and scholarship type), Scholar origin, Scholar current residence, subject studied, and score within the CSC selection process. See below for further details about how these variables are defined, any assumptions made, and sources of bias of which the reader should be aware.
+Within each topic we present overall summary statistics and comparisons within the following variables: gender, scholarship scheme (both nominating route and scholarship type), post-scholarship follow-up stage, Scholar origin, Scholar current residence, subject studied, and CSC selection committee score. See below for further details about how these variables are defined, any assumptions made, and sources of bias of which the reader should be aware. For reference, 'n' is used to refer to the number of participants within a particular group (e.g. Male Scholars currently employed) and 'prop' (proportion) describes the proportion of the total participants represented by that group (e.g. proportio of Male Scholars currently employed as a percentage of all male Scholars).
 
-For reference, 'n' is used to refer to the number of participants within a particular group (e.g. Male Scholars currently employed) and 'prop' (proportion) describes the proportion of the total participants represented by that group (e.g. proportio of Male Scholars currently employed as a percentage of all male Scholars).
+Several variables relate to activity or change across the course of the last 2 years specifically. These questions collecting information used to understand change over time. This approach will be most evident when examining a topic by the post-scholarship follow-up stage ('YearGroup'), in which the two year-intervals will be compared.
 
 For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
 
@@ -48,21 +47,22 @@ pander(overview_gender)
 
 ## Scheme
 
-The scholarship scheme through which a respondent received an award can be broken down by nominating route and by degree type. Nominating route ('Scheme') describes the process by which an applicant to the Commonwealth Scholarships is entered into the selection process and is represented by codes such as 'CA', 'CS' etc.
+The scholarship scheme through which a respondent received an award can be broken down by nominating route and by scheme type. Nominating route ('Scheme') describes the process by which an applicant to the Commonwealth Scholarships is entered into the selection process: typically through either direct application to an institution (e.g. Distance Learners, Shared Scholars) or nomination by a CSC partner agency (e.g. Agency: Developing).
 
-By nominating route:
 ```{r, echo=FALSE}
 
 pander(overview_sch)
 ```
-By scholarship type:
+
+Scholarship scheme can also be subdivided by the type of scheme, of which the CSC operates five: Shared Scholars, Distance Learning, Masters (general), PhD (General), and Split site. Within this typology, PhDs funded by DFID and by other departments are subsumed within the broader 'PhD' category, whereas these would be separated under the nominating route categories (Agency: Developed are the non-DFID scholarships).
+
 ```{r, echo=FALSE}
 pander(rescountry_schtype)
 ```
 
 ## Origin 
 
-Origin region is based on information supplied during application to the CSC. The country of origin - from which region of origin is derived - is best described as the 'country of application' to the CSC. For a small number of cases, for instance, the country of origin may be adopted: e.g. in the case of refugees. Regional groupings are based on the CSC's regional typology.
+Origin region is based on information supplied during application to the CSC. Because of small numbers of Scholars from some countries, we almost always analyse geographic data at the regional level. The country of origin - from which region of origin is derived - is best described as the country through which application to the CSC was made. For a small number of cases, the country of origin may be adopted: e.g. for refugees. Regional groupings are based on the CSC's regional typology whcih is not reproduced here (due to length) but is available in the appendix.
 
 ```{r, echo=FALSE}
 
@@ -81,7 +81,7 @@ pander(overview_resreg)
 
 ## Subject studied
 
-Higher Education Statistics Authoraity (HESA) JACS 3.0 coding is used to define subjects of study within the CSC administration. The JACS categories (i.e. top level) are used. In many instances there are too few cases within a category to underpin statistical analysis: limitations are noted in analyses where appropriate
+Higher Education Statistics Authority (HESA) JACS 3.0 coding is used to define subjects of study. The JACS categories (i.e. top level) are used. In many instances there are too few cases within a category to underpin statistical analysis: limitations are noted in analyses where appropriate.
 
 ```{r, echo=FALSE}
 
@@ -90,23 +90,24 @@ pander(overview_jacs)
 
 ## Committee scores
 
-Although selection scoring is completed with the same range of possible scores each year, the exact cutoff for a scholarship award (and range of scores presented in the selection process) varies each year. To make scores more directly comparable we transform absolute scores (e.g. 38, 54, etc.) into standardised scores that are based on the arithmetic mean and standard deviation for all selection scores by year and by scheme. For instance, a candidate with a standardised score ('Z-score') of +1 had a selection score one standard deviation above the mean within their selection competition (e.g. Agency PhDs), within that specific year. If the mean for the 2015 University-nominated (CA) PhD applicants was 30 and the standard deviation was 8, the candidate with a standardised score of +1 would have scored 38 in the competition.
+Although selection scoring is a standardised process, the exact cutoff for a scholarship award (and range of scores presented in the selection process) varies each year depending on the quality of candidates etc. To make scores more directly comparable we transform absolute scores (e.g. 38, 54, etc.) into standardised scores that are based on the arithmetic mean (average) and standard deviation for all selection scores by year and by Scheme Type (masters, PhD, split site). For instance, a candidate with a standardised score ('Z-score') of +1 had a selection score one standard deviation above the mean within their selection competition, within that specific year. If the mean for the 2015 PhD applicants was 30 and the standard deviation was 8, the candidate with a standardised score of +1 would have scored 38 in the competition.
 
-Scores are not meaningful overall because they 'belong' to different selection competitions, but instead are broken down by Scheme and Scheme Type. Only candidates considered at selection meetings directly are assigned committee scores: Distance Learners and Shared Scholars never receive selection scores.
+For standardised scores, the mean score within the year in which a candidate was selected is always 0. A positive core indicates the candidate scored above the average for a particular selection year, a negative score is below the average. We would normally expect the standardised scores for selected candiates to be positive, since they are likely to be at the upper range of candidate's committee scores in any particular year, but this is not universally accurate.
+
+Standardised scores are not meaningful overall because they are not comparable between different selection competitions, but instead are broken down by Scheme Type. Only candidates considered at selection meetings directly are assigned committee scores: Distance Learners and Shared Scholars never receive selection scores.
 
 ```{r, echo=FALSE}
 
 pander(overview_score)
 
-# Standard Deviation will be listed as 'NaN' (Not a Number) if there is only a single case 
+# Standard Deviation will be missing if there is only a single case 
 ```
 
-Because scores are standardised, the mean score within the year in which a candidate was selected is always 0. A positive z-score indicates the candidate scored above the average for a particular selection year, a negative score is below the average. We would normally expect the z-scores overall for selected candiates to be positive, since they are likely to be at the upper range of candidate's committee scores in any particular year.
-
+Scholars funded by organisations other than DFID are considered in a separate selection competition and thus have separate committee scores and z-scores.
 
 # 1. Residency trajectory {.tabset}
 
-Basic tables on current residency and return rate variables, for alumni only. Tabs break down figures by key variables.
+Basic tables on current residency and return rate variables, for alumni only.
 
 ## Overall 
 
@@ -228,21 +229,21 @@ pander(resregion_score)
 
 # 2. Employment {.tabset}
 
-[description]
+Data on employment concerns current status and employment sector (if appropriate), the Scholar's perception of the match between their skills and the job they hold, employment changes within the last two years, and labour force reintegration for Scholars who are receiving their first follow-up survey (at +2 years).
 
 ## Overall
 
-Employment status:
+Current employment status.
 ```{r, echo=FALSE}
 pander(empcurrent_overall)
 
 ```
-Employment sector:
+Current employment sector.
 ```{r, echo=FALSE}
 pander(empsector_overall)
 
 ```
-Scholar's level of skills in relation to skills needed for current employment:
+Scholar's self-reported skill level in relation to skills needed for current employment.
 ```{r, echo=FALSE}
 pander(empskillmatch_overall)
 
@@ -252,12 +253,12 @@ Number of employment changes within last 2 years:
 pander(empchange_overall)
 
 ```
-Specifically for those in first follow-up group (+2 year post-scholarship), did they return to their pre-scholarship organisation?
+Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship.
 ```{r, echo=FALSE}
 pander(empreturnorg_overall)
 
 ```
-Also specifically for those in first follow-up group (+2 year post-scholarship), how long did it take them to gain employment if they did not return to their pre-scholarship organisation?
+Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'.
 ```{r, echo=FALSE}
 pander(filter(empreturntime_overall, !is.na(ReturnEmploy)))
 
@@ -267,20 +268,57 @@ pander(filter(empreturntime_overall, !is.na(ReturnEmploy)))
 
 ## Gender
 
-Employment status:
+Current employment status.
 ```{r, echo=FALSE}
 empcurrent_gender %>% select(-n) %>% spread(CurrentEmploy, prop) %>% pander #simplified tables with just percentages
 
 ```
-Employment sector:
+Current employment sector.
 ```{r, echo=FALSE}
 empsector_gender %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
 
 ```
-Scholar's level of skills in relation to skills needed for current employment:
+Scholar's self-reported skill level in relation to skills needed for current employment.
 ```{r, echo=FALSE}
 empskillmatch_gender %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
 
 ```
+Number of employment changes within last 2 years.
+```{r, echo=FALSE}
+empchange_gender %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
 
+```
+Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship.
+```{r, echo=FALSE}
+empreturnorg_gender %>% select(-n) %>% spread(ReturnOrganisation, prop) %>% pander
+
+```
+Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'. Note: omitted categories in ordinal scale indicate that no Scholars selected that response.
+```{r, echo=FALSE}
+empreturntime_gender %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread(ReturnEmploy, prop) %>% pander
+
+#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
+
+```
+
+
+# Technical appendix {.tabset}
+
+## Data
+
+Data used in this analysis come from the `r SurveyName`. The structure of the dataset is:
+
+```{r echo = FALSE} 
+str(select(alumni.data,-AWDID,-CaseID,-Reintegration, -AppExamples,-InnStartupDetail, -ImpactExample1), list.len=nrow(alumni.data))
+```
+
+## CSC Geodata
+
+The CSC using a bespoke regional grouping for countries. For clarity, this is reproduced in full below, with equivalent macro-regional groupings from the UNESCO Institute of Statistics as a comparator:
+
+```{r echo = FALSE} 
+
+sqlFetch(odbcConnect("EvalDb"), tbl_LKUP_Geodata)
+
+```
 

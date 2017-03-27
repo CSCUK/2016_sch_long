@@ -56,11 +56,12 @@ population <- sqlQuery(con.libra, "
     WHERE
         TBL_AWARD.AWDSCH NOT LIKE 'F%' AND TBL_AWARD.AWDSCH NOT LIKE 'Z%'
        ") %>% 
-  group_by(Year, Scheme) %>% 
-  mutate(CtteeScore = replace(CtteeScore, CtteeScore==0, NA),
-         ZCtteeScore = (CtteeScore - mean(CtteeScore, na.rm=T))/sd(CtteeScore, na.rm=T)
-         ) %>% 
-  ungroup()
+    mutate(CtteeGroup = replace(as.character(SchemeType),Scheme=="CR" ,"Agency: Developed")) %>% 
+    group_by(year, CtteeGroup) %>% 
+    mutate(CtteeScore = replace(CtteeScore, CtteeScore==0, NA),
+           ZCtteeScore = (CtteeScore - mean(CtteeScore, na.rm=T))/sd(CtteeScore, na.rm=T)
+           ) %>% 
+    ungroup()
 
 #DB query for survey data, joins onto admin and geodata
 alumni.data <- 

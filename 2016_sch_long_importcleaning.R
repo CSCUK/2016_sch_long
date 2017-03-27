@@ -226,7 +226,8 @@ alumni.data <-
                                 "CA"="University Staff", 
                                 "CS"="Agency: Developing",
                                 "CN"="Split Site",
-                                "SS"="Shared Scholars")
+                                "SS"="Shared Scholars"),
+    SchemeType = recode(SchemeType, "SS" = "Shared Scholars")
     )
 
 base.data <- 
@@ -241,8 +242,15 @@ base.data <-
     CFUKFunding = fct_recode(CFUKFunding, "Combination of funding"="A combination of the above"),
     CFHomeFunding = fct_recode(CFHomeFunding, "Combination of funding"="A combination of the above"),
     CFOtherFunding = fct_recode(CFOtherFunding, "Combination of funding"="A combination of the above"),
-    PreEmployUnemployed = fct_recode(PreEmployUnemployed, "Caring for dependents"="Caring for dependents full time", "Other"="None of the above")
-    )
+    PreEmployUnemployed = fct_recode(PreEmployUnemployed, "Caring for dependents"="Caring for dependents full time", "Other"="None of the above"),
+    SchemeNom = recode(Scheme, "CD"="Distance Learners",
+                       "CR"="Agency: Developed",
+                       "CA"="University Staff", 
+                       "CS"="Agency: Developing",
+                       "CN"="Split Site",
+                       "SS"="Shared Scholars"),
+    SchemeType = recode(SchemeType, "SS" = "Shared Scholars")
+  )
 
 ## e] Cleanup ----
 

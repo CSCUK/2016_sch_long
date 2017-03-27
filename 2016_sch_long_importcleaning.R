@@ -220,7 +220,13 @@ alumni.data <-
                                               "10+ Years"="I intend to remain abroad for 10 or more years",
                                               "Never" = "Never"),
                                    levels=c("0-2 Years","3-4 Years","5-10 Years","10+ Years","Never"), ordered=T ),
-    CurrentEmployUnemployed = fct_recode(CurrentEmployUnemployed, "Caring for dependents"="Caring for dependents full time", "Other"="None of the above")
+    CurrentEmployUnemployed = fct_recode(CurrentEmployUnemployed, "Caring for dependents"="Caring for dependents full time", "Other"="None of the above"),
+    SchemeNom = recode(Scheme, "CD"="Distance Learners",
+                                "CR"="Agency: Developed",
+                                "CA"="University Staff", 
+                                "CS"="Agency: Developing",
+                                "CN"="Split Site",
+                                "SS"="Shared Scholars")
     )
 
 base.data <- 

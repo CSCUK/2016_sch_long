@@ -9,20 +9,36 @@ output:
 
 ```{r setup, include = FALSE}
 
-load("2016_sch_long_core.rdata.rdata")
+load("2016_sch_long_core.rdata")
 
 library(pacman)
 pacman:: p_load(tidyverse, pander,knitr)
 
 ```
 
-insert introduction here
+This paper relates to the `r SurveyName`; it is intended as a reference document, not an analytic paper with specific interpretations. In the sections below we present basic data on all of the major topics of the survey: 
+
+1. Return and Residency status
+2. Current employment
+3. Leadership activities
+4. Application of skills
+5. Broad development impact indicators
+6. International network participation
+7. Teaching and research activities
+
+Within each topic we present overall summary statistics and comparisons within the following variables: gender, scholarship scheme (both nominating route and scholarship type), Scholar origin, Scholar current residence, subject studied, and score within the CSC selection process. See below for further details about how these variables are defined, any assumptions made, and sources of bias of which the reader should be aware.
+
+For reference, 'n' is used to refer to the number of participants within a particular group (e.g. Male Scholars currently employed) and 'prop' (proportion) describes the proportion of the total participants represented by that group (e.g. proportio of Male Scholars currently employed as a percentage of all male Scholars).
+
+For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
 
 # Data Overview by key variables {.tabset}
 
 ## Gender
 
-Gender is based on information supplied in the CSC application process.
+Gender is based on information supplied in the CSC application process. Two genders are included: Male and Female. 
+
+Records relating to gender are not updated from evaluation data (they may be by alumni activities) and so we assume that the gender recorded in the CSC selection process is still accurate. In a very small minority of cases this assumption may not be accurate: Scholars may presently state their gender other than as the gender they stated when undertaking their Commonwealth Scholarship.  
 
 ```{r, echo=FALSE}
 
@@ -32,7 +48,7 @@ pander(overview_gender)
 
 ## Scheme
 
-The scholarship scheme through which a respondent received an award can be broken down by nominating route and by degree type.
+The scholarship scheme through which a respondent received an award can be broken down by nominating route and by degree type. Nominating route ('Scheme') describes the process by which an applicant to the Commonwealth Scholarships is entered into the selection process and is represented by codes such as 'CA', 'CS' etc.
 
 By nominating route:
 ```{r, echo=FALSE}

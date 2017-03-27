@@ -5,7 +5,7 @@
 # February, 2017
 
 load("2016_sch_long_core.rdata")
-
+SurveyName <- "2016 Alumni Survey"
 
 # --- Library calls ----
 

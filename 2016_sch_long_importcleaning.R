@@ -33,36 +33,52 @@ geoData <- sqlQuery(con.evaldb,"
         tbl_LKUP_Geodata
       ")
 
-#DB query for admin data to join with survey results, note z scores within scheme and year for committee score also
+#DB query for admin data to join with survey results and to create Cttee z-score groups
 population <- sqlQuery(con.libra, "
      SELECT 
-        TBL_AWARD.AWDID AS AWDID,
-        TBL_AWARD.AWDSCH AS Scheme,
-        TBL_AWARD.AWDYR AS Year,
-        TBL_LKUPGENDER.GENDERNAME AS Gender,
-        TBL_AWARD.AWDCTTEESCORE AS CtteeScore,
-        TBL_AWARD.AWDCTTEEACADGRD AS AcadGrade,
-        TBL_AWARD.AWDCTTEEDEVGRD AS DevGrade,
-        TBL_AWARD.AWDCTTEEPROPGRD AS PropGrade,
-        TBL_AWARD.AWDCTTEELDRGRD AS LdrGrade,
-        TBL_LKUPDISCCATEGORY.DISCCATNAME AS JacsCat,
-        TBL_LKUPDISCSUBJECT.DISCSUBJECTNAME AS JacsSubj
-    FROM 
-        TBL_AWARD 
-        LEFT JOIN TBL_PERSON ON TBL_PERSON.PRSNID = TBL_AWARD.PRSNID
-        LEFT JOIN TBL_LKUPDISCSUBJECT ON TBL_LKUPDISCSUBJECT.DISCSUBJCODETXT = TBL_AWARD.AWPROPDISCSUBJ
-        LEFT JOIN TBL_LKUPDISCCATEGORY ON TBL_LKUPDISCCATEGORY.DISCCATCODE = TBL_LKUPDISCSUBJECT.DISCCATCODE
-        LEFT JOIN TBL_LKUPGENDER ON TBL_LKUPGENDER.GENDERCODE = TBL_PERSON.PRSNGENDER
-    WHERE
-        TBL_AWARD.AWDSCH NOT LIKE 'F%' AND TBL_AWARD.AWDSCH NOT LIKE 'Z%'
-       ") %>% 
-    mutate(CtteeGroup = replace(as.character(SchemeType),Scheme=="CR" ,"Agency: Developed")) %>% 
-    group_by(year, CtteeGroup) %>% 
-    mutate(CtteeScore = replace(CtteeScore, CtteeScore==0, NA),
-           ZCtteeScore = (CtteeScore - mean(CtteeScore, na.rm=T))/sd(CtteeScore, na.rm=T)
-           ) %>% 
-    ungroup()
+       TBL_AWARD.AWDID AS AWDID,
+       TBL_AWARD.AWDSCH AS Scheme,
+       TBL_AWARD.AWDYR AS Year,
+       TBL_LKUPGENDER.GENDERNAME AS Gender,
+       TBL_AWCOURSE.AWCRSPHD AS PhD,
+       TBL_AWARD.AWDCTTEESCORE AS CtteeScore,
+       TBL_AWARD.AWDCTTEEACADGRD AS AcadGrade,
+       TBL_AWARD.AWDCTTEEDEVGRD AS DevGrade,
+       TBL_AWARD.AWDCTTEEPROPGRD AS PropGrade,
+       TBL_AWARD.AWDCTTEELDRGRD AS LdrGrade,
+       TBL_LKUPDISCCATEGORY.DISCCATNAME AS JacsCat,
+       TBL_LKUPDISCSUBJECT.DISCSUBJECTNAME AS JacsSubj
+     FROM 
+       TBL_AWARD 
+       LEFT JOIN TBL_PERSON ON TBL_PERSON.PRSNID = TBL_AWARD.PRSNID
+       LEFT JOIN TBL_AWCOURSE ON TBL_AWCOURSE.AWDID = TBL_AWARD.AWDID
+       LEFT JOIN TBL_LKUPDISCSUBJECT ON TBL_LKUPDISCSUBJECT.DISCSUBJCODETXT = TBL_AWARD.AWPROPDISCSUBJ
+       LEFT JOIN TBL_LKUPDISCCATEGORY ON TBL_LKUPDISCCATEGORY.DISCCATCODE = TBL_LKUPDISCSUBJECT.DISCCATCODE
+       LEFT JOIN TBL_LKUPGENDER ON TBL_LKUPGENDER.GENDERCODE = TBL_PERSON.PRSNGENDER
+     WHERE
+       TBL_AWARD.AWDSCH NOT LIKE 'F%' AND TBL_AWARD.AWDSCH NOT LIKE 'Z%' AND
+       TBL_AWCOURSE.AWCRSSTATUS NOT IN ('SR', 'DH') AND TBL_AWCOURSE.AWCRSCURRENT = 1 AND
+       NOT (TBL_AWARD.AWDSCH <> ('CD') and TBL_AWCOURSE.AWCRSSTATUS in ('TT', 'AH'))
+       ") 
 
+#check for duplicates that need correcting in Libra records
+population %>% filter(duplicated(population$AWDID)) %>% select(-starts_with("Jacs")) %>% tbl_df
+
+#If there are no further problems with duplicates - pay close note to PhD duplicates - then refine to only unique records
+population <- population %>% filter(!duplicated(population$AWDID)) %>% tbl_df
+  
+  
+  
+# Function to create Cttee score groups and calculate z-scores - to append when schemetype has been added
+  mutate(CtteeGroup = replace(as.character(SchemeType),Scheme=="CR" ,"Agency: Developed")) %>% 
+  group_by(year, CtteeGroup) %>% 
+  mutate(CtteeScore = replace(CtteeScore, CtteeScore==0, NA),
+         ZCtteeScore = (CtteeScore - mean(CtteeScore, na.rm=T))/sd(CtteeScore, na.rm=T)
+  ) %>% 
+  ungroup()
+
+
+  
 #DB query for survey data, joins onto admin and geodata
 alumni.data <- 
   bind_rows(list(

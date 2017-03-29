@@ -33,7 +33,9 @@ geoData <- sqlQuery(con.evaldb,"
         tbl_LKUP_Geodata
       ")
 
-#DB query for admin data to join with survey results and to create Cttee z-score groups
+# DB query for population data
+
+## Stage 1] DB query for admin data to join with survey results
 population <- sqlQuery(con.libra, "
      SELECT 
        TBL_AWARD.AWDID AS AWDID,
@@ -41,6 +43,7 @@ population <- sqlQuery(con.libra, "
        TBL_AWARD.AWDYR AS Year,
        TBL_LKUPGENDER.GENDERNAME AS Gender,
        TBL_AWCOURSE.AWCRSPHD AS PhD,
+       TBL_AWARD.AWDPQDEGREE AS DegreeCode,
        TBL_AWARD.AWDCTTEESCORE AS CtteeScore,
        TBL_AWARD.AWDCTTEEACADGRD AS AcadGrade,
        TBL_AWARD.AWDCTTEEDEVGRD AS DevGrade,
@@ -59,27 +62,49 @@ population <- sqlQuery(con.libra, "
        TBL_AWARD.AWDSCH NOT LIKE 'F%' AND TBL_AWARD.AWDSCH NOT LIKE 'Z%' AND
        TBL_AWCOURSE.AWCRSSTATUS NOT IN ('SR', 'DH') AND TBL_AWCOURSE.AWCRSCURRENT = 1 AND
        NOT (TBL_AWARD.AWDSCH <> ('CD') and TBL_AWCOURSE.AWCRSSTATUS in ('TT', 'AH'))
-       ") 
+     ")
 
-#check for duplicates that need correcting in Libra records
+
+## Stage 2] check for duplicates that need correcting in Libra records
 population %>% filter(duplicated(population$AWDID)) %>% select(-starts_with("Jacs")) %>% tbl_df
 
-#If there are no further problems with duplicates - pay close note to PhD duplicates - then refine to only unique records
+## If there are no further problems with duplicates - pay close note to PhD duplicates - then refine to only unique records
 population <- population %>% filter(!duplicated(population$AWDID)) %>% tbl_df
-  
-  
-  
-# Function to create Cttee score groups and calculate z-scores - to append when schemetype has been added
-  mutate(CtteeGroup = replace(as.character(SchemeType),Scheme=="CR" ,"Agency: Developed")) %>% 
-  group_by(year, CtteeGroup) %>% 
-  mutate(CtteeScore = replace(CtteeScore, CtteeScore==0, NA),
-         ZCtteeScore = (CtteeScore - mean(CtteeScore, na.rm=T))/sd(CtteeScore, na.rm=T)
-  ) %>% 
-  ungroup()
 
 
+# Stage 3] Create schemetype and ctteegroup variables: later separates out CR as a separate group
+population <- population %>% 
+              mutate(SchemeType = 
+                        ifelse(Scheme %in% c("CA", "CS", "CR") & PhD==1, "PhD", 
+                        ifelse(Scheme %in% c("CS", "CA", "CR") & PhD==0 & !DegreeCode=="520", "Masters",   
+                        ifelse(Scheme %in% c("CS", "CA", "CR") & DegreeCode=="520", "Split Site",   
+                        ifelse(Scheme %in% ("CN"), "Split Site",
+                        ifelse(Scheme %in% ("CD"), "Distance Learning",
+                        ifelse(Scheme %in% ("CF"), "Academic Fellow",
+                        ifelse(Scheme %in% ("CM"), "Medical Fellow",
+                        ifelse(Scheme %in% ("CP"), "Professional Fellow",
+                        paste(Scheme) )))))))),
+                     CtteeGroup = ifelse(Scheme %in% "CR","Agency: Developed", paste(SchemeType))
+                )
+
+
+## Stage 4] Calculate z-scores within each year for each ctteegroup
+population <- population %>%   
+              group_by(Year, CtteeGroup) %>%
+              mutate(CtteeScore = replace(CtteeScore, CtteeScore==0, NA),
+                     ZCtteeScore = (CtteeScore - mean(CtteeScore, na.rm=T))/sd(CtteeScore, na.rm=T)
+                    ) %>% 
+              ungroup()
+
+
+## Stage 5] Remove intermediary variables used in this process
+population <- select(population,-DegreeCode, -SchemeType)
   
-#DB query for survey data, joins onto admin and geodata
+
+# DB query for survey data
+
+## Query data and join onto admin and geodata
+## Two step process required for alumni data because +2 survey has diferent variables, so needs join and bind rows, removes unneeded columns
 alumni.data <- 
   bind_rows(list(
       sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_4.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_4 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_4.AWDID WHERE tbl_DATA_Sch_4.YearGroup=2012"),
@@ -93,9 +118,8 @@ alumni.data <-
   select(-CurrentSector, -DateAdded) %>% 
   rename(OriginRegion=Region.x,ResidencyRegion = Region.y, CurrentSector=DCurrentSector) %>% 
   tbl_df()
-  #Note - two step process required for alumni data because +2 survey has diferent variables, so needs join and bind rows, removes unneeded columns
-
-#DB query for baseline data, joins onto admin and geodata
+  
+## DB query for baseline data, joins onto admin and geodata
 base.data <- 
   sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_0.* FROM tbl_DATA_Sch_0 WHERE tbl_DATA_Sch_0.SurveyID='Sch_2016_0'") %>% 
   left_join(population, by="AWDID") %>% 

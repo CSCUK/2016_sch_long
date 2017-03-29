@@ -318,7 +318,7 @@ The CSC using a bespoke regional grouping for countries. For clarity, this is re
 
 ```{r echo = FALSE} 
 
-sqlFetch(odbcConnect("EvalDb"), tbl_LKUP_Geodata)
+sqlFetch(odbcConnect("EvalDb"), "tbl_LKUP_Geodata") %>% select(Country = CTRYNAME,'CSC Region' = CSCRegion, 'UIS Region'=UISRegion) %>% pander
 
 ```
 

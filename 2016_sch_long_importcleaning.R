@@ -60,9 +60,44 @@ population <- sqlQuery(con.libra, "
        LEFT JOIN TBL_LKUPGENDER ON TBL_LKUPGENDER.GENDERCODE = TBL_PERSON.PRSNGENDER
      WHERE
        TBL_AWARD.AWDSCH NOT LIKE 'F%' AND TBL_AWARD.AWDSCH NOT LIKE 'Z%' AND
-       TBL_AWCOURSE.AWCRSSTATUS NOT IN ('SR', 'DH') AND TBL_AWCOURSE.AWCRSCURRENT = 1 AND
-       NOT (TBL_AWARD.AWDSCH <> ('CD') and TBL_AWCOURSE.AWCRSSTATUS in ('TT', 'AH'))
+       TBL_AWCOURSE.AWCRSSTATUS NOT IN ('SR', 'DH') AND 
+       TBL_AWCOURSE.AWCRSCURRENT = 1 AND
+       NOT (NOT TBL_AWARD.AWDSCH in ('CD','CN') and TBL_AWCOURSE.AWCRSSTATUS in ('TT', 'AH')) AND
+       NOT (TBL_AWARD.AWDSCH IN)
      ")
+
+## CURRENTLY BROKEN - NEED TO SORT OUT PROBLEM OF NON-SUCCESSFULL PHDS NOT BEING TICKED AS PHD=1, ALSO DEAL WITH DUPLICATE
+Test <- sqlQuery(con.libra, "
+     SELECT 
+       TBL_AWARD.AWDID AS AWDID,
+       TBL_AWARD.AWDSCH AS Scheme,
+       TBL_AWARD.AWDYR AS Year,
+       TBL_LKUPGENDER.GENDERNAME AS Gender,
+       TBL_AWCOURSE.AWCRSPHD AS PhD,
+       TBL_AWCOURSE.AWCRSSTATUS AS Status,
+       TBL_AWARD.AWDPQDEGREE AS DegreeCode,
+       TBL_AWARD.AWDCTTEESCORE AS CtteeScore,
+       TBL_AWARD.AWDCTTEEACADGRD AS AcadGrade,
+       TBL_AWARD.AWDCTTEEDEVGRD AS DevGrade,
+       TBL_AWARD.AWDCTTEEPROPGRD AS PropGrade,
+       TBL_AWARD.AWDCTTEELDRGRD AS LdrGrade,
+       TBL_LKUPDISCCATEGORY.DISCCATNAME AS JacsCat,
+       TBL_LKUPDISCSUBJECT.DISCSUBJECTNAME AS JacsSubj
+     FROM 
+       TBL_AWARD 
+       LEFT JOIN TBL_PERSON ON TBL_PERSON.PRSNID = TBL_AWARD.PRSNID
+       LEFT JOIN TBL_AWCOURSE ON TBL_AWCOURSE.AWDID = TBL_AWARD.AWDID
+       LEFT JOIN TBL_LKUPDISCSUBJECT ON TBL_LKUPDISCSUBJECT.DISCSUBJCODETXT = TBL_AWARD.AWPROPDISCSUBJ
+       LEFT JOIN TBL_LKUPDISCCATEGORY ON TBL_LKUPDISCCATEGORY.DISCCATCODE = TBL_LKUPDISCSUBJECT.DISCCATCODE
+       LEFT JOIN TBL_LKUPGENDER ON TBL_LKUPGENDER.GENDERCODE = TBL_PERSON.PRSNGENDER
+     WHERE
+       TBL_AWARD.AWDSCH NOT LIKE 'F%' AND TBL_AWARD.AWDSCH NOT LIKE 'Z%' AND
+       TBL_AWCOURSE.AWCRSSTATUS NOT IN ('SR','ST','SF', 'AT') AND 
+       NOT (TBL_AWARD.AWDSCH <> ('CD') and TBL_AWCOURSE.AWCRSSTATUS in ('TT', 'AH','DH'))
+              ")
+
+
+Test %>% filter(duplicated(Test$AWDID)) %>% select(-starts_with("Jacs")) %>% tbl_df %>% filter(PhD==1)
 
 
 ## Stage 2] check for duplicates that need correcting in Libra records
@@ -98,7 +133,7 @@ population <- population %>%
 
 
 ## Stage 5] Remove intermediary variables used in this process
-population <- select(population,-DegreeCode, -SchemeType)
+population <- select(population,-DegreeCode, -SchemeType, -PhD)
   
 
 # DB query for survey data
@@ -119,6 +154,11 @@ alumni.data <-
   rename(OriginRegion=Region.x,ResidencyRegion = Region.y, CurrentSector=DCurrentSector) %>% 
   tbl_df()
   
+
+filter(alumni.data, SchemeType=="Split Site") %>% select(Gender, Scheme, AWDID) %>% head() 
+table(population$Scheme, population$Gender)
+filter(population, AWDID=="53283")
+
 ## DB query for baseline data, joins onto admin and geodata
 base.data <- 
   sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_0.* FROM tbl_DATA_Sch_0 WHERE tbl_DATA_Sch_0.SurveyID='Sch_2016_0'") %>% 

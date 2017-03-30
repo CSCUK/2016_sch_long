@@ -25,50 +25,11 @@ con.libra <- odbcConnect("Libra")
 con.evaldb
 con.libra
 
-geoData <- sqlQuery(con.evaldb,"
-      SELECT
-        tbl_LKUP_Geodata.CTRYNAME AS Country,
-        tbl_LKUP_Geodata.CSCRegion AS Region
-      FROM
-        tbl_LKUP_Geodata
-      ")
-
 # DB query for population data
 
 ## Stage 1] DB query for admin data to join with survey results
-population <- sqlQuery(con.libra, "
-     SELECT 
-       TBL_AWARD.AWDID AS AWDID,
-       TBL_AWARD.AWDSCH AS Scheme,
-       TBL_AWARD.AWDYR AS Year,
-       TBL_LKUPGENDER.GENDERNAME AS Gender,
-       TBL_AWCOURSE.AWCRSPHD AS PhD,
-       TBL_AWARD.AWDPQDEGREE AS DegreeCode,
-       TBL_AWARD.AWDCTTEESCORE AS CtteeScore,
-       TBL_AWARD.AWDCTTEEACADGRD AS AcadGrade,
-       TBL_AWARD.AWDCTTEEDEVGRD AS DevGrade,
-       TBL_AWARD.AWDCTTEEPROPGRD AS PropGrade,
-       TBL_AWARD.AWDCTTEELDRGRD AS LdrGrade,
-       TBL_LKUPDISCCATEGORY.DISCCATNAME AS JacsCat,
-       TBL_LKUPDISCSUBJECT.DISCSUBJECTNAME AS JacsSubj
-     FROM 
-       TBL_AWARD 
-       LEFT JOIN TBL_PERSON ON TBL_PERSON.PRSNID = TBL_AWARD.PRSNID
-       LEFT JOIN TBL_AWCOURSE ON TBL_AWCOURSE.AWDID = TBL_AWARD.AWDID
-       LEFT JOIN TBL_LKUPDISCSUBJECT ON TBL_LKUPDISCSUBJECT.DISCSUBJCODETXT = TBL_AWARD.AWPROPDISCSUBJ
-       LEFT JOIN TBL_LKUPDISCCATEGORY ON TBL_LKUPDISCCATEGORY.DISCCATCODE = TBL_LKUPDISCSUBJECT.DISCCATCODE
-       LEFT JOIN TBL_LKUPGENDER ON TBL_LKUPGENDER.GENDERCODE = TBL_PERSON.PRSNGENDER
-     WHERE
-       TBL_AWARD.AWDSCH NOT LIKE 'F%' AND TBL_AWARD.AWDSCH NOT LIKE 'Z%' AND
-       TBL_AWCOURSE.AWCRSSTATUS NOT IN ('SR', 'DH') AND 
-       TBL_AWCOURSE.AWCRSCURRENT = 1 AND
-       NOT (NOT TBL_AWARD.AWDSCH in ('CD','CN') and TBL_AWCOURSE.AWCRSSTATUS in ('TT', 'AH')) AND
-       NOT (TBL_AWARD.AWDSCH IN)
-     ")
-
-## CURRENTLY BROKEN - NEED TO SORT OUT PROBLEM OF NON-SUCCESSFULL PHDS NOT BEING TICKED AS PHD=1, ALSO DEAL WITH DUPLICATE
 ## Limited to 2000 onwards because: 1) this removes some problems with database query of legacy data, 2) all survey resps. should be >2000
-Test <- sqlQuery(con.libra, "
+population <- sqlQuery(con.libra, "
      SELECT 
        TBL_AWARD.AWDID AS AWDID,
        TBL_AWARD.AWDSCH AS Scheme,
@@ -94,15 +55,9 @@ Test <- sqlQuery(con.libra, "
      WHERE
        TBL_AWARD.AWDYR >=2000 AND
        TBL_AWARD.AWDSCH NOT LIKE 'F%' AND TBL_AWARD.AWDSCH NOT LIKE 'Z%' AND TBL_AWARD.AWDSCH <>'CT' AND
-       TBL_AWCOURSE.AWCRSSTATUS NOT IN ('SR','ST','SF', 'AT','NN','NX','NW') AND 
+       TBL_AWCOURSE.AWCRSSTATUS NOT IN ('SR','ST','SF', 'AT','NN','NX','NW','DA','DC') AND 
        NOT (TBL_AWARD.AWDSCH <> ('CD') and TBL_AWCOURSE.AWCRSSTATUS in ('TT', 'AH','DH'))
-              ")
-
-
-Test %>% filter(duplicated(Test$AWDID)) %>% select(-starts_with("Jacs")) %>% tbl_df
-
-
-
+     ")
 
 ## Stage 2] check for duplicates that need correcting in Libra records
 population %>% filter(duplicated(population$AWDID)) %>% select(-starts_with("Jacs")) %>% tbl_df
@@ -110,14 +65,13 @@ population %>% filter(duplicated(population$AWDID)) %>% select(-starts_with("Jac
 ## If there are no further problems with duplicates - pay close note to PhD duplicates - then refine to only unique records
 population <- population %>% filter(!duplicated(population$AWDID)) %>% tbl_df
 
-
 # Stage 3] Create schemetype and ctteegroup variables: later separates out CR as a separate group
 
 doctorateCodes <- c("24","25","26","27","28","29","30","31","51","53","54","57","82","89","150","151",
                      "153","189","195","196","230","242","245","283","524","550","67","499","556")
   # Codes from LKUPDEGREE in Libra that correspond to doctorates - need these to filter into schemes appropriately
 
-Test <- Test %>% 
+population <- population %>% 
               mutate(SchemeType = 
                         ifelse(Scheme %in% c("CS", "CA", "CR") & DegreeCode=="520", "Split Site",
                         ifelse(Scheme %in% c("CA", "CS", "CR") & DegreeCode %in% doctorateCodes, "PhD", 
@@ -131,7 +85,6 @@ Test <- Test %>%
                      CtteeGroup = ifelse(Scheme %in% "CR","Agency: Developed", paste(SchemeType))
                 )
 
-
 ## Stage 4] Calculate z-scores within each year for each ctteegroup
 population <- population %>%   
               group_by(Year, CtteeGroup) %>%
@@ -139,7 +92,6 @@ population <- population %>%
                      ZCtteeScore = (CtteeScore - mean(CtteeScore, na.rm=T))/sd(CtteeScore, na.rm=T)
                     ) %>% 
               ungroup()
-
 
 ## Stage 5] Remove intermediary variables used in this process
 population <- select(population,-DegreeCode, -SchemeType, -PhD)
@@ -155,24 +107,22 @@ alumni.data <-
       sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_6.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_6 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_6.AWDID WHERE tbl_DATA_Sch_6.YearGroup=2010"),
       sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_8.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_8 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_8.AWDID WHERE tbl_DATA_Sch_8.YearGroup=2008"),
       sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_10.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_10 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_10.AWDID WHERE tbl_DATA_Sch_10.YearGroup=2006"))) %>%
-  full_join(sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_2.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_2 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_2.AWDID WHERE tbl_DATA_Sch_2.YearGroup=2014"))%>%
+  full_join(sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_2.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_2 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_2.AWDID WHERE tbl_DATA_Sch_2.YearGroup=2014"))
+  
+alumni.data <- 
+  alumni.data %>% 
   left_join(population, by="AWDID") %>% 
-  left_join(geoData, by=c("Origin"="Country")) %>%
-  left_join(geoData, by=c("Residency"="Country")) %>% 
+  left_join(sqlQuery(con.evaldb,"SELECT tbl_LKUP_Geodata.CTRYNAME AS Country,tbl_LKUP_Geodata.CSCRegion AS Region FROM tbl_LKUP_Geodata"), by=c("Origin"="Country")) %>%
+  left_join(sqlQuery(con.evaldb,"SELECT tbl_LKUP_Geodata.CTRYNAME AS Country,tbl_LKUP_Geodata.CSCRegion AS Region FROM tbl_LKUP_Geodata"), by=c("Residency"="Country")) %>% 
   select(-CurrentSector, -DateAdded) %>% 
   rename(OriginRegion=Region.x,ResidencyRegion = Region.y, CurrentSector=DCurrentSector) %>% 
   tbl_df()
-  
-
-filter(alumni.data, SchemeType=="Split Site") %>% select(Gender, Scheme, AWDID) %>% head() 
-table(population$Scheme, population$Gender)
-filter(population, AWDID=="53283")
 
 ## DB query for baseline data, joins onto admin and geodata
 base.data <- 
   sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_0.* FROM tbl_DATA_Sch_0 WHERE tbl_DATA_Sch_0.SurveyID='Sch_2016_0'") %>% 
   left_join(population, by="AWDID") %>% 
-  left_join(geoData, by=c("Origin"="Country")) %>% 
+  left_join(sqlQuery(con.evaldb,"SELECT tbl_LKUP_Geodata.CTRYNAME AS Country,tbl_LKUP_Geodata.CSCRegion AS Region FROM tbl_LKUP_Geodata"), by=c("Origin"="Country")) %>% 
   select(-DateAdded,-StudyScholFunder,-PreSector) %>% 
   rename(OriginRegion = Region, PreSector= DPreSector, StudyScholFunder = DStudyScholFunder) %>% 
   tbl_df() 

@@ -67,6 +67,7 @@ population <- sqlQuery(con.libra, "
      ")
 
 ## CURRENTLY BROKEN - NEED TO SORT OUT PROBLEM OF NON-SUCCESSFULL PHDS NOT BEING TICKED AS PHD=1, ALSO DEAL WITH DUPLICATE
+## Limited to 2000 onwards because: 1) this removes some problems with database query of legacy data, 2) all survey resps. should be >2000
 Test <- sqlQuery(con.libra, "
      SELECT 
        TBL_AWARD.AWDID AS AWDID,
@@ -91,13 +92,16 @@ Test <- sqlQuery(con.libra, "
        LEFT JOIN TBL_LKUPDISCCATEGORY ON TBL_LKUPDISCCATEGORY.DISCCATCODE = TBL_LKUPDISCSUBJECT.DISCCATCODE
        LEFT JOIN TBL_LKUPGENDER ON TBL_LKUPGENDER.GENDERCODE = TBL_PERSON.PRSNGENDER
      WHERE
-       TBL_AWARD.AWDSCH NOT LIKE 'F%' AND TBL_AWARD.AWDSCH NOT LIKE 'Z%' AND
-       TBL_AWCOURSE.AWCRSSTATUS NOT IN ('SR','ST','SF', 'AT') AND 
+       TBL_AWARD.AWDYR >=2000 AND
+       TBL_AWARD.AWDSCH NOT LIKE 'F%' AND TBL_AWARD.AWDSCH NOT LIKE 'Z%' AND TBL_AWARD.AWDSCH <>'CT' AND
+       TBL_AWCOURSE.AWCRSSTATUS NOT IN ('SR','ST','SF', 'AT','NN','NX','NW') AND 
        NOT (TBL_AWARD.AWDSCH <> ('CD') and TBL_AWCOURSE.AWCRSSTATUS in ('TT', 'AH','DH'))
               ")
 
 
-Test %>% filter(duplicated(Test$AWDID)) %>% select(-starts_with("Jacs")) %>% tbl_df %>% filter(PhD==1)
+Test %>% filter(duplicated(Test$AWDID)) %>% select(-starts_with("Jacs")) %>% tbl_df
+
+
 
 
 ## Stage 2] check for duplicates that need correcting in Libra records
@@ -108,11 +112,16 @@ population <- population %>% filter(!duplicated(population$AWDID)) %>% tbl_df
 
 
 # Stage 3] Create schemetype and ctteegroup variables: later separates out CR as a separate group
-population <- population %>% 
+
+doctorateCodes <- c("24","25","26","27","28","29","30","31","51","53","54","57","82","89","150","151",
+                     "153","189","195","196","230","242","245","283","524","550","67","499","556")
+  # Codes from LKUPDEGREE in Libra that correspond to doctorates - need these to filter into schemes appropriately
+
+Test <- Test %>% 
               mutate(SchemeType = 
-                        ifelse(Scheme %in% c("CA", "CS", "CR") & PhD==1, "PhD", 
-                        ifelse(Scheme %in% c("CS", "CA", "CR") & PhD==0 & !DegreeCode=="520", "Masters",   
-                        ifelse(Scheme %in% c("CS", "CA", "CR") & DegreeCode=="520", "Split Site",   
+                        ifelse(Scheme %in% c("CS", "CA", "CR") & DegreeCode=="520", "Split Site",
+                        ifelse(Scheme %in% c("CA", "CS", "CR") & DegreeCode %in% doctorateCodes, "PhD", 
+                        ifelse(Scheme %in% c("CS", "CA", "CR"), "Masters",   
                         ifelse(Scheme %in% ("CN"), "Split Site",
                         ifelse(Scheme %in% ("CD"), "Distance Learning",
                         ifelse(Scheme %in% ("CF"), "Academic Fellow",

@@ -25,7 +25,7 @@ This paper relates to the `r SurveyName`; it is intended as a reference document
 6. International network participation
 7. Teaching and research activities
 
-Within each topic we present overall summary statistics and comparisons within the following variables: gender, scholarship scheme (both nominating route and scholarship type), post-scholarship follow-up stage, Scholar origin, Scholar current residence, subject studied, and CSC selection committee score. See below for further details about how these variables are defined, any assumptions made, and sources of bias of which the reader should be aware. For reference, 'n' is used to refer to the number of participants within a particular group (e.g. Male Scholars currently employed) and 'prop' (proportion) describes the proportion of the total participants represented by that group (e.g. proportio of Male Scholars currently employed as a percentage of all male Scholars).
+Within each topic we present overall summary statistics and comparisons within the following variables: gender, scholarship scheme (both nominating route and scholarship type), post-scholarship follow-up stage, Scholar origin, Scholar current residence, subject studied, and CSC selection committee score. See below for further details about how these variables are defined, any assumptions made, and sources of bias of which the reader should be aware. For reference, 'n' is used to refer to the number of participants within a particular group (e.g. Male Scholars currently employed) and 'prop' (proportion) describes the proportion of the total participants represented by that group (e.g. proportion of Male Scholars currently employed as a percentage of all male Scholars).
 
 Several variables relate to activity or change across the course of the last 2 years specifically. These questions collecting information used to understand change over time. This approach will be most evident when examining a topic by the post-scholarship follow-up stage ('YearGroup'), in which the two year-intervals will be compared.
 
@@ -229,81 +229,23 @@ pander(resregion_score)
 
 
 
+
 # 2. Employment {.tabset}
 
 Data on employment concerns current status and employment sector (if appropriate), the Scholar's perception of the match between their skills and the job they hold, employment changes within the last two years, and labour force reintegration for Scholars who are receiving their first follow-up survey (at +2 years).
 
-## Overall
-
-Current employment status.
+## Status
+### Overall
 ```{r, echo=FALSE}
 pander(empcurrent_overall)
 
 ```
-Current employment sector.
-```{r, echo=FALSE}
-pander(empsector_overall)
-
-```
-Scholar's self-reported skill level in relation to skills needed for current employment.
-```{r, echo=FALSE}
-pander(empskillmatch_overall)
-
-```
-Number of employment changes within last 2 years:
-```{r, echo=FALSE}
-pander(empchange_overall)
-
-```
-Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship.
-```{r, echo=FALSE}
-pander(empreturnorg_overall)
-
-```
-Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'.
-```{r, echo=FALSE}
-pander(filter(empreturntime_overall, !is.na(ReturnEmploy)))
-
-#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
-
-```
-
-## Gender
-
-Current employment status.
+### Gender
 ```{r, echo=FALSE}
 empcurrent_gender %>% select(-n) %>% spread(CurrentEmploy, prop) %>% pander #simplified tables with just percentages
 
 ```
-Current employment sector.
-```{r, echo=FALSE}
-empsector_gender %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
-
-```
-Scholar's self-reported skill level in relation to skills needed for current employment.
-```{r, echo=FALSE}
-empskillmatch_gender %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
-
-```
-Number of employment changes within last 2 years.
-```{r, echo=FALSE}
-empchange_gender %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
-
-```
-Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship.
-```{r, echo=FALSE}
-empreturnorg_gender %>% select(-n) %>% spread(ReturnOrganisation, prop) %>% pander
-
-```
-Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'. Note: omitted categories in ordinal scale indicate that no Scholars selected that response.
-```{r, echo=FALSE}
-empreturntime_gender %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread(ReturnEmploy, prop) %>% pander
-
-#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
-
-```
-
-## Scheme
+### Scheme
 
 Current employment status, based on nominating route:
 ```{r, echo=FALSE}
@@ -317,6 +259,48 @@ empcurrent_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(CurrentEm
 
 ```
 
+### Year group
+```{r, echo=FALSE}
+empcurrent_year %>% select(-n) %>% spread(CurrentEmploy, prop) %>% pander #simplified tables with just percentages
+
+```
+### Origin
+```{r, echo=FALSE}
+empcurrent_orireg %>% select(-n) %>% spread(CurrentEmploy, prop) %>% arrange(desc(Employed)) %>% pander #simplified tables with just percentages
+
+```
+
+### Current residency
+```{r, echo=FALSE}
+empcurrent_resreg %>% select(-n) %>% spread(CurrentEmploy, prop) %>%  arrange(desc(Employed)) %>% pander #simplified tables with just percentages
+
+```
+
+### Subject studied
+```{r, echo=FALSE}
+empcurrent_jacs %>% select(-n) %>% spread(CurrentEmploy, prop) %>% arrange(desc(Employed)) %>% pander #simplified tables with just percentages
+
+```
+
+### Committee score
+```{r, echo=FALSE}
+empcurrent_score %>% rename("Current Employment" = CurrentEmploy) %>% pander
+
+```
+
+
+## Sector
+###Overall
+```{r, echo=FALSE}
+pander(empsector_overall)
+
+```
+### Gender
+```{r, echo=FALSE}
+empsector_gender %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
+
+```
+### Scheme
 Current employment sector,based on nominating route.
 ```{r, echo=FALSE}
 empsector_sch %>% select(-n,"Scheme"= SchemeNom) %>% spread(CurrentSector, prop) %>% pander
@@ -327,7 +311,49 @@ Current employment sector,based on scholarship type.
 empsector_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(CurrentSector, prop) %>% pander
 
 ```
+###Year group
+Current employment sector.
+```{r, echo=FALSE}
+empsector_year %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
 
+```
+### Origin
+```{r, echo=FALSE}
+empsector_orireg %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
+
+```
+### Current residency
+```{r, echo=FALSE}
+empsector_resreg %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
+
+```
+
+
+### Subject studied
+```{r, echo=FALSE}
+empsector_jacs %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
+
+```
+
+### Committee score
+```{r, echo=FALSE}
+empsector_score  %>% rename("Current Sector" = CurrentSector) %>% pander
+
+```
+
+## Skill match
+Scholar's self-reported skill level in relation to skills needed for current employment.
+### Overall
+```{r, echo=FALSE}
+pander(empskillmatch_overall)
+
+```
+### Gender
+```{r, echo=FALSE}
+empskillmatch_gender %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
+### Scheme
 Scholar's self-reported skill level in relation to skills needed for current employment, based on nominating route.
 ```{r, echo=FALSE}
 empskillmatch_sch %>% select(-n,"Scheme"= SchemeNom) %>% spread(CurrentSkillMatch, prop) %>% pander
@@ -339,6 +365,54 @@ empskillmatch_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(Curren
 
 ```
 
+
+
+
+
+
+### Year group
+```{r, echo=FALSE}
+empskillmatch_year %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
+### Origin
+```{r, echo=FALSE}
+empskillmatch_orireg %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
+### Current residency
+```{r, echo=FALSE}
+empsector_resreg %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
+
+```
+### Subject studied
+```{r, echo=FALSE}
+empskillmatch_jacs %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
+### Committee scores
+```{r, echo=FALSE}
+empskillmatch_score  %>% rename("Skill Comparison" = CurrentSkillMatch) %>% pander
+
+```
+
+
+
+
+
+## Job changes
+### Overall
+Number of employment changes within last 2 years:
+```{r, echo=FALSE}
+pander(empchange_overall)
+
+```
+### Gender
+```{r, echo=FALSE}
+empchange_gender %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
+
+```
+### Scheme
 Number of employment changes within last 2 years, based on nominating route.
 ```{r, echo=FALSE}
 empchange_sch %>% select(-n,"Scheme"= SchemeNom) %>% spread(CurrentJobChange, prop) %>% pander
@@ -350,28 +424,74 @@ empchange_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(CurrentJob
 
 ```
 
-Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship. First table based on nominating route:
+
+
+
+
+### Year group
+### Origin
+### Current residency
+### Subject studied
+### Committee scores
+
+
+## Re-employment
+
+### Return to previous employers
+
+Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship.
+
+#### Overall
+```{r, echo=FALSE}
+pander(empreturnorg_overall)
+
+```
+#### Gender
+```{r, echo=FALSE}
+empreturnorg_gender %>% select(-n) %>% spread(ReturnOrganisation, prop) %>% pander
+
+```
+
+#### Scheme
+
+based on nominating route.
 ```{r, echo=FALSE}
 empreturnorg_sch %>% select(-n,"Scheme"= SchemeNom) %>% spread(ReturnOrganisation, prop) %>% pander
 
 ```
-Second table based on scholarship type.
+Based on scholarship type.
 ```{r, echo=FALSE}
 empreturnorg_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(ReturnOrganisation, prop) %>% pander
 
 ```
 
+### Re-employment times
+Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'.
 
-Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'. Note: omitted categories in ordinal scale indicate that no Scholars selected that response.
+####Overall
+```{r, echo=FALSE}
+pander(filter(empreturntime_overall, !is.na(ReturnEmploy)))
 
- First table based on nominating route.
+#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
+
+```
+####Gender
+```{r, echo=FALSE}
+empreturntime_gender %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread(ReturnEmploy, prop) %>% pander
+
+#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
+
+```
+#### Scheme
+
+Based on nominating route.
 ```{r, echo=FALSE}
 empreturntime_sch %>% filter(!is.na(ReturnEmploy)) %>%  select(-n,"Scheme"= SchemeNom) %>% spread(ReturnEmploy, prop) %>% pander
 
 #note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
 
 ```
-Second table based on scholarship type.
+Based on scholarship type.
 ```{r, echo=FALSE}
 empreturntime_schtype %>% filter(!is.na(ReturnEmploy)) %>%  select(-n,"Scheme Type"= SchemeType) %>% spread(ReturnEmploy, prop) %>% pander
 
@@ -383,21 +503,8 @@ empreturntime_schtype %>% filter(!is.na(ReturnEmploy)) %>%  select(-n,"Scheme Ty
 
 For Year Group, analysis of return to previous employer and employment time for those not returning to the same employer are omitted: all data for these questions comes from the cohort receiving the +2 year post-scholarship follow-up survey.
 
-Current employment status.
-```{r, echo=FALSE}
-empcurrent_year %>% select(-n) %>% spread(CurrentEmploy, prop) %>% pander #simplified tables with just percentages
-
-```
-Current employment sector.
-```{r, echo=FALSE}
-empsector_year %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
-
-```
 Scholar's self-reported skill level in relation to skills needed for current employment.
-```{r, echo=FALSE}
-empskillmatch_year %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
 
-```
 Number of employment changes within last 2 years.
 ```{r, echo=FALSE}
 empchange_year %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
@@ -408,21 +515,10 @@ empchange_year %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
 
 Some origin regions have low numbers of respondents: refer to the data overview.
 
-Current employment status.
-```{r, echo=FALSE}
-empcurrent_orireg %>% select(-n) %>% spread(CurrentEmploy, prop) %>% arrange(desc(Employed)) %>% pander #simplified tables with just percentages
-
-```
 Current employment sector.
-```{r, echo=FALSE}
-empsector_orireg %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
 
-```
 Scholar's self-reported skill level in relation to skills needed for current employment.
-```{r, echo=FALSE}
-empskillmatch_orireg %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
 
-```
 Number of employment changes within last 2 years.
 ```{r, echo=FALSE}
 empchange_orireg %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
@@ -443,18 +539,13 @@ empreturntime_orireg %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread
 
 ## Current residency
 
+
 Some residency regions have low numbers of respondents: refer to the data overview.
 
 Current employment status.
-```{r, echo=FALSE}
-empcurrent_resreg %>% select(-n) %>% spread(CurrentEmploy, prop) %>%  arrange(desc(Employed)) %>% pander #simplified tables with just percentages
 
-```
 Current employment sector.
-```{r, echo=FALSE}
-empsector_resreg %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
 
-```
 Scholar's self-reported skill level in relation to skills needed for current employment.
 ```{r, echo=FALSE}
 empskillmatch_resreg %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
@@ -483,20 +574,11 @@ empreturntime_resreg %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread
 Excluding those with no JACS category and limited to categories with at least 20 cases.
 
 Current employment status.
-```{r, echo=FALSE}
-empcurrent_jacs %>% select(-n) %>% spread(CurrentEmploy, prop) %>% arrange(desc(Employed)) %>% pander #simplified tables with just percentages
 
-```
 Current employment sector.
-```{r, echo=FALSE}
-empsector_jacs %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
 
-```
 Scholar's self-reported skill level in relation to skills needed for current employment.
-```{r, echo=FALSE}
-empskillmatch_jacs %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
 
-```
 Number of employment changes within last 2 years.
 ```{r, echo=FALSE}
 empchange_jacs %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
@@ -518,20 +600,10 @@ empreturntime_jacs %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread(R
 
 ## Committee scores
 Current employment status.
-```{r, echo=FALSE}
-empcurrent_score %>% rename("Current Employment" = CurrentEmploy) %>% pander
+ Current employment sector.
 
-```
-Current employment sector.
-```{r, echo=FALSE}
-empsector_score  %>% rename("Current Sector" = CurrentSector) %>% pander
-
-```
 Scholar's self-reported skill level in relation to skills needed for current employment.
-```{r, echo=FALSE}
-empskillmatch_score  %>% rename("Skill Comparison" = CurrentSkillMatch) %>% pander
 
-```
 Number of employment changes within last 2 years.
 ```{r, echo=FALSE}
 empchange_score %>% rename("Job Changes" = CurrentJobChange) %>% pander
@@ -551,8 +623,12 @@ empreturntime_score %>% filter(!is.na(ReturnEmploy)) %>% rename("Time to Employm
 ```
 
 
+
 # Technical appendix {.tabset}
 
+## Overview
+
+The techncial appendix contains any additional methodological information potentially useful for understanding the data tables.
 ## Data
 
 Data used in this analysis come from the `r SurveyName`. The structure of the dataset is:

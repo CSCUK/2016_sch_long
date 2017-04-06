@@ -28,11 +28,13 @@ score_summary <- function(x){
   )}
 
 #This one in progress - to do the grouping, counting and mutation operations in a single function
-test <- 
-  function(x){
-      count(x) %>% 
-      mutate(prop = round((n / sum(n))*100,1))
+group_summary <- 
+  function(x,y){
+    y %>%   
+    count(x) %>% 
+    mutate(prop = round((n / sum(n))*100,1))
   }
+
 
 # --- Dataset structure ----
 
@@ -56,12 +58,7 @@ overview_year <- alumni.data %>% count(YearGroup) %>% mutate(prop = round((n / s
 overview_orireg <- alumni.data %>% count(OriginRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
 overview_resreg <- alumni.data %>% count(ResidencyRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
 overview_jacs <- alumni.data %>% count(JacsCat) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
-overview_score <- rbind(alumni.data %>% group_by(SchemeType) %>% filter(!Scheme=="SS", !Scheme=="CD")%>% score_summary %>% rename(Competition=SchemeType),
-                       (alumni.data %>% group_by(SchemeNom) %>% filter(SchemeNom=="Agency: Developed")%>% score_summary %>% rename(Competition=SchemeNom)))
-## IF CTTEEGROUP VARIABLE IN importcleaning.r WORKED CORRECTLY, CAN USE THIS INSTEAD:
 overview_score <- alumni.data %>% group_by(CtteeGroup) %>% score_summary()
-
-
 
 ## b] Residency ----
 

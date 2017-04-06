@@ -301,6 +301,61 @@ empreturntime_gender %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread
 
 ```
 
+## Scheme
+
+Current employment status, based on nominating route:
+```{r, echo=FALSE}
+empcurrent_sch %>% select(-n,"Scheme"= SchemeNom) %>% spread(CurrentEmploy, prop) %>% pander #simplified tables with just percentages
+
+```
+Current employment status, based on scholarship type
+```{r, echo=FALSE}
+empcurrent_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(CurrentEmploy, prop) %>% arrange(desc(Employed)) %>% pander 
+#simplified tables with just percentages
+
+```
+
+Current employment sector,based on nominating route.
+```{r, echo=FALSE}
+empsector_sch %>% select(-n,"Scheme"= SchemeNom) %>% spread(CurrentSector, prop) %>% pander
+
+```
+Current employment sector,based on scholarship type.
+```{r, echo=FALSE}
+empsector_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(CurrentSector, prop) %>% pander
+
+```
+
+Scholar's self-reported skill level in relation to skills needed for current employment, based on nominating route.
+```{r, echo=FALSE}
+empskillmatch_sch %>% select(-n,"Scheme"= SchemeNom) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
+Scholar's self-reported skill level in relation to skills needed for current employment, based on scholarship type.
+```{r, echo=FALSE}
+empskillmatch_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
+
+Number of employment changes within last 2 years.
+```{r, echo=FALSE}
+empchange_gender %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
+
+```
+
+Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship.
+```{r, echo=FALSE}
+empreturnorg_gender %>% select(-n) %>% spread(ReturnOrganisation, prop) %>% pander
+
+```
+
+Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'. Note: omitted categories in ordinal scale indicate that no Scholars selected that response.
+```{r, echo=FALSE}
+empreturntime_gender %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread(ReturnEmploy, prop) %>% pander
+
+#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
+
+```
 
 # Technical appendix {.tabset}
 

@@ -105,6 +105,7 @@ pander(overview_score)
 
 Scholars funded by organisations other than DFID are considered in a separate selection competition and thus have separate committee scores and z-scores.
 
+
 # 1. Residency trajectory {.tabset}
 
 Basic tables on current residency and return rate variables, for alumni only.
@@ -227,6 +228,7 @@ pander(resregion_score)
 ```
 
 
+
 # 2. Employment {.tabset}
 
 Data on employment concerns current status and employment sector (if appropriate), the Scholar's perception of the match between their skills and the job they hold, employment changes within the last two years, and labour force reintegration for Scholars who are receiving their first follow-up survey (at +2 years).
@@ -337,18 +339,172 @@ empskillmatch_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(Curren
 
 ```
 
+Number of employment changes within last 2 years, based on nominating route.
+```{r, echo=FALSE}
+empchange_sch %>% select(-n,"Scheme"= SchemeNom) %>% spread(CurrentJobChange, prop) %>% pander
+
+```
+Number of employment changes within last 2 years, based on scholarship type.
+```{r, echo=FALSE}
+empchange_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(CurrentJobChange, prop) %>% pander
+
+```
+
+Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship. First table based on nominating route:
+```{r, echo=FALSE}
+empreturnorg_sch %>% select(-n,"Scheme"= SchemeNom) %>% spread(ReturnOrganisation, prop) %>% pander
+
+```
+Second table based on scholarship type.
+```{r, echo=FALSE}
+empreturnorg_schtype %>% select(-n,"Scheme Type"= SchemeType) %>% spread(ReturnOrganisation, prop) %>% pander
+
+```
+
+
+Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'. Note: omitted categories in ordinal scale indicate that no Scholars selected that response.
+
+ First table based on nominating route.
+```{r, echo=FALSE}
+empreturntime_sch %>% filter(!is.na(ReturnEmploy)) %>%  select(-n,"Scheme"= SchemeNom) %>% spread(ReturnEmploy, prop) %>% pander
+
+#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
+
+```
+Second table based on scholarship type.
+```{r, echo=FALSE}
+empreturntime_schtype %>% filter(!is.na(ReturnEmploy)) %>%  select(-n,"Scheme Type"= SchemeType) %>% spread(ReturnEmploy, prop) %>% pander
+
+#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
+
+```
+
+## Year group
+
+For Year Group, analysis of return to previous employer and employment time for those not returning to the same employer are omitted: all data for these questions comes from the cohort receiving the +2 year post-scholarship follow-up survey.
+
+Current employment status.
+```{r, echo=FALSE}
+empcurrent_year %>% select(-n) %>% spread(CurrentEmploy, prop) %>% pander #simplified tables with just percentages
+
+```
+Current employment sector.
+```{r, echo=FALSE}
+empsector_year %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
+
+```
+Scholar's self-reported skill level in relation to skills needed for current employment.
+```{r, echo=FALSE}
+empskillmatch_year %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
+Number of employment changes within last 2 years.
+```{r, echo=FALSE}
+empchange_year %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
+
+```
+
+## Origin
+
+Some origin regions have low numbers of respondents: refer to the data overview.
+
+Current employment status.
+```{r, echo=FALSE}
+empcurrent_orireg %>% select(-n) %>% spread(CurrentEmploy, prop) %>% arrange(desc(Employed)) %>% pander #simplified tables with just percentages
+
+```
+Current employment sector.
+```{r, echo=FALSE}
+empsector_orireg %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
+
+```
+Scholar's self-reported skill level in relation to skills needed for current employment.
+```{r, echo=FALSE}
+empskillmatch_orireg %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
+Number of employment changes within last 2 years.
+```{r, echo=FALSE}
+empchange_orireg %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
+
+```
+Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship.
+```{r, echo=FALSE}
+empreturnorg_orireg %>% select(-n) %>% spread(ReturnOrganisation, prop) %>% pander
+
+```
+Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'. Note: omitted categories in ordinal scale indicate that no Scholars selected that response.
+```{r, echo=FALSE}
+empreturntime_orireg %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread(ReturnEmploy, prop) %>% pander
+
+#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
+
+```
+
+## Current residency
+
+Some residency regions have low numbers of respondents: refer to the data overview.
+
+Current employment status.
+```{r, echo=FALSE}
+empcurrent_resreg %>% select(-n) %>% spread(CurrentEmploy, prop) %>%  arrange(desc(Employed)) %>% pander #simplified tables with just percentages
+
+```
+Current employment sector.
+```{r, echo=FALSE}
+empsector_resreg %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
+
+```
+Scholar's self-reported skill level in relation to skills needed for current employment.
+```{r, echo=FALSE}
+empskillmatch_resreg %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
+Number of employment changes within last 2 years.
+```{r, echo=FALSE}
+empchange_resreg %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
+
+```
+Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship.
+```{r, echo=FALSE}
+empreturnorg_resreg %>% select(-n) %>% spread(ReturnOrganisation, prop) %>% pander
+
+```
+Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'. Note: omitted categories in ordinal scale indicate that no Scholars selected that response.
+```{r, echo=FALSE}
+empreturntime_resreg %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread(ReturnEmploy, prop) %>% pander
+
+#note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
+
+```
+
+## Subject studied
+
+Current employment status.
+```{r, echo=FALSE}
+empcurrent_gender %>% select(-n) %>% spread(CurrentEmploy, prop) %>% pander #simplified tables with just percentages
+
+```
+Current employment sector.
+```{r, echo=FALSE}
+empsector_gender %>% select(-n) %>% spread(CurrentSector, prop) %>% pander
+
+```
+Scholar's self-reported skill level in relation to skills needed for current employment.
+```{r, echo=FALSE}
+empskillmatch_gender %>% select(-n) %>% spread(CurrentSkillMatch, prop) %>% pander
+
+```
 Number of employment changes within last 2 years.
 ```{r, echo=FALSE}
 empchange_gender %>% select(-n) %>% spread(CurrentJobChange, prop) %>% pander
 
 ```
-
 Specifically for those in first follow-up group (+2 year post-scholarship), proportion who returned to their previous employer. Note: 'Unemployed' indicates that the Scholar was not employed *before* their Commonwealth Scholarship.
 ```{r, echo=FALSE}
 empreturnorg_gender %>% select(-n) %>% spread(ReturnOrganisation, prop) %>% pander
 
 ```
-
 Also specifically for those in first follow-up group (+2 year post-scholarship), length of time to gain employment for those that did not return to their pre-scholarship employer. Answers in the table below are limited to Scholars who reported that they were currently employed but did not return to their pre-scholarship employer (i.e. they moved on to employment elsewhere). There are often some discrepancies in responses to this question: e.g. time to employment = 'not at all' but current employment status = 'employed'. Note: omitted categories in ordinal scale indicate that no Scholars selected that response.
 ```{r, echo=FALSE}
 empreturntime_gender %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread(ReturnEmploy, prop) %>% pander
@@ -356,6 +512,7 @@ empreturntime_gender %>% filter(!is.na(ReturnEmploy)) %>%  select(-n) %>% spread
 #note: three cases filtered for 2016 iteration because they answered incompatibly (ReturnEmploy = 'not at all', CurrentEmploy = 'Employed'). These were marked as NA.
 
 ```
+
 
 # Technical appendix {.tabset}
 

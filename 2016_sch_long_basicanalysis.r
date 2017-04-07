@@ -181,7 +181,17 @@ empreturntime_jacs <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOr
 empreturntime_score <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(ReturnEmploy) %>% score_summary()
 
 
-## d] Leadership ----
+## d] Further qualifications----
+
+# prefix = "Aca"
+
+#Overall
+
+Acapostaward_overall <- pop_summary(alumni.data, ~AcaPostaward)
+Acaquallevel_overall <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% pop_summary(~AcaQualLevel)
+Acacontribution_overall <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% pop_summary(~AcaQualCMWContribution)
+
+## e] Leadership ----
 
 # prefix = "ldr" and "Inn"
 # LEADERSHIP QUESTIONS, LEADERSHIP INDEX, INNOVATION QUESTIONS
@@ -268,3 +278,9 @@ ldrinnfunding_score <- alumni.data %>% group_by(InnLeadFunding) %>% score_summar
 ldrinnstartup_score <- alumni.data %>% group_by(InnStartup) %>% score_summary()
 
 ldrbudget_orireg %>% filter(LdrBudget=="Yes") %>% arrange(desc(prop)) #example of simplified table looking at proportions reporting activities
+
+## f] Skill application----
+## g] Teaching and research----
+## h] Networks and links----
+## i] Broader impact----
+## j] Analytic indices----

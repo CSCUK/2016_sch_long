@@ -27,14 +27,24 @@ score_summary <- function(x){
     Min = round(min(ZCtteeScore, na.rm=T),2)
   )}
 
-#This one in progress - to do the grouping, counting and mutation operations in a single function
-group_summary <- 
-  function(x,y){
-    y %>%   
-    count(x) %>% 
-    mutate(prop = round((n / sum(n))*100,1))
-  }
 
+pop_summary <- function(dataframe, variable){
+  dataframe %>% 
+    group_by_(variable) %>% 
+    summarise_(
+      freq = ~n() 
+    ) %>% 
+    mutate(prop = round((freq / sum(freq))*100,1))
+}
+
+subgroup_summary <- function(dataframe, group, variable){
+  dataframe %>% 
+    group_by_(group, variable) %>% 
+    summarise_(
+      freq = ~n() 
+    ) %>% 
+    mutate(prop = round((freq / sum(freq))*100,1))
+}
 
 # --- Dataset structure ----
 
@@ -98,6 +108,7 @@ p.resregion_score <- ggplot(alumni.data, aes(x=resStatusRegion, y=ZCtteeScore)) 
 ## c] Employment ----
 
 # prefix = 'emp'
+# TO ADD - CONTEXT VARIABLES
 
 # Overall
 empcurrent_overall <- alumni.data %>% count(CurrentEmploy) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(prop))
@@ -168,4 +179,21 @@ empreturntime_orireg <- alumni.data %>% filter(grepl("_Two$", SurveyID), !Return
 empreturntime_resreg <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(ResidencyRegion) %>%  count(ReturnEmploy) %>% mutate(prop = round((n / sum(n))*100,1))
 empreturntime_jacs <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(JacsCat) %>%  count(ReturnEmploy) %>% mutate(prop = round((n / sum(n))*100,1))
 empreturntime_score <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(ReturnEmploy) %>% score_summary()
+
+
+## d] Leadership ----
+
+# prefix = "ldr" and "Inn"
+# LEADERSHIP QUESTIONS, LEADERSHIP INDEX, INNOVATION QUESTIONS
+
+#NA = question not asked: not currently employed
+ldrbudget_overall <- alumni.data %>% count(LdrBudget) %>% mutate(prop = round((n / sum(n))*100,1)) 
+ldrsupervise_overall<- alumni.data %>% count(LdrSupervising) %>% mutate(prop = round((n / sum(n))*100,1)) 
+ldrmanaging_overall <- alumni.data %>% count(LdrManaging) %>% mutate(prop = round((n / sum(n))*100,1)) 
+ldrstrategy_overall <- alumni.data %>% count(LdrStrategy) %>% mutate(prop = round((n / sum(n))*100,1)) 
+ldrinnproject_overall <- alumni.data %>% count(InnLeadProject) %>% mutate(prop = round((n / sum(n))*100,1)) 
+ldrinnfunding_overall <- alumni.data %>% count(InnLeadFunding) %>% mutate(prop = round((n / sum(n))*100,1)) 
+ldrinnstartup_overall <- alumni.data %>% count(InnStartup) %>% mutate(prop = round((n / sum(n))*100,1)) 
+
+
 

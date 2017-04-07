@@ -16,9 +16,9 @@ opar = par()
 
 # --- Functions ----
 
-score_summary <- function(x){
+score_summary <- function(dataframe){
   summarise(
-    filter(x,!SchemeNom=="Shared Scholars", !SchemeNom=="Distance Learners"),
+    filter(dataframe,!SchemeNom=="Shared Scholars", !SchemeNom=="Distance Learners"),
     Count = n(),
     Median = round(median(ZCtteeScore, na.rm=T),2),
     Mean = round(mean(ZCtteeScore, na.rm=T),2), 
@@ -35,7 +35,7 @@ pop_summary <- function(dataframe, variable){
       freq = ~n() 
     ) %>% 
     mutate(prop = round((freq / sum(freq))*100,1))
-}
+} #population level summary for a variable
 
 subgroup_summary <- function(dataframe, group, variable){
   dataframe %>% 
@@ -44,7 +44,7 @@ subgroup_summary <- function(dataframe, group, variable){
       freq = ~n() 
     ) %>% 
     mutate(prop = round((freq / sum(freq))*100,1))
-}
+} #subgroup summary for a variable: takes group as the second argument
 
 # --- Dataset structure ----
 
@@ -186,14 +186,85 @@ empreturntime_score <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnO
 # prefix = "ldr" and "Inn"
 # LEADERSHIP QUESTIONS, LEADERSHIP INDEX, INNOVATION QUESTIONS
 
-#NA = question not asked: not currently employed
-ldrbudget_overall <- alumni.data %>% count(LdrBudget) %>% mutate(prop = round((n / sum(n))*100,1)) 
-ldrsupervise_overall<- alumni.data %>% count(LdrSupervising) %>% mutate(prop = round((n / sum(n))*100,1)) 
-ldrmanaging_overall <- alumni.data %>% count(LdrManaging) %>% mutate(prop = round((n / sum(n))*100,1)) 
-ldrstrategy_overall <- alumni.data %>% count(LdrStrategy) %>% mutate(prop = round((n / sum(n))*100,1)) 
-ldrinnproject_overall <- alumni.data %>% count(InnLeadProject) %>% mutate(prop = round((n / sum(n))*100,1)) 
-ldrinnfunding_overall <- alumni.data %>% count(InnLeadFunding) %>% mutate(prop = round((n / sum(n))*100,1)) 
-ldrinnstartup_overall <- alumni.data %>% count(InnStartup) %>% mutate(prop = round((n / sum(n))*100,1)) 
+# Overall
+ldrbudget_overall <- pop_summary(alumni.data,~LdrBudget) #NA = question not asked: not currently employed
+ldrsupervise_overall<- pop_summary(alumni.data,~LdrSupervising)
+ldrmanaging_overall <- pop_summary(alumni.data,~LdrManaging)
+ldrstrategy_overall <- pop_summary(alumni.data,~LdrStrategy)
+ldrinnproject_overall <- pop_summary(alumni.data,~InnLeadProject)
+ldrinnfunding_overall <- pop_summary(alumni.data,~InnLeadFunding) 
+ldrinnstartup_overall <- pop_summary(alumni.data,~InnStartup)
+  
+#Gender
+ldrbudget_gender <- subgroup_summary(alumni.data,~Gender,~LdrBudget) #NA = question not asked: not currently employed
+ldrsupervise_gender <- subgroup_summary(alumni.data,~Gender,~LdrSupervising)
+ldrmanaging_gender <- subgroup_summary(alumni.data,~Gender, ~LdrManaging)
+ldrstrategy_gender <- subgroup_summary(alumni.data,~Gender,~LdrStrategy)
+ldrinnproject_gender <- subgroup_summary(alumni.data,~Gender,~InnLeadProject)
+ldrinnfunding_gender <- subgroup_summary(alumni.data,~Gender,~InnLeadFunding) 
+ldrinnstartup_gender <- subgroup_summary(alumni.data,~Gender,~InnStartup)
 
+#Scheme
+ldrbudget_sch <- subgroup_summary(alumni.data,~SchemeNom,~LdrBudget) #NA = question not asked: not currently employed
+ldrsupervise_sch <- subgroup_summary(alumni.data,~SchemeNom,~LdrSupervising)
+ldrmanaging_sch <- subgroup_summary(alumni.data,~SchemeNom, ~LdrManaging)
+ldrstrategy_sch <- subgroup_summary(alumni.data,~SchemeNom,~LdrStrategy)
+ldrinnproject_sch <- subgroup_summary(alumni.data,~SchemeNom,~InnLeadProject)
+ldrinnfunding_sch <- subgroup_summary(alumni.data,~SchemeNom,~InnLeadFunding) 
+ldrinnstartup_sch <- subgroup_summary(alumni.data,~SchemeNom,~InnStartup)
 
+#Scheme Type
+ldrbudget_schtype <- subgroup_summary(alumni.data,~SchemeType,~LdrBudget) #NA = question not asked: not currently employed
+ldrsupervise_schtype <- subgroup_summary(alumni.data,~SchemeType,~LdrSupervising)
+ldrmanaging_schtype <- subgroup_summary(alumni.data,~SchemeType, ~LdrManaging)
+ldrstrategy_schtype <- subgroup_summary(alumni.data,~SchemeType,~LdrStrategy)
+ldrinnproject_schtype <- subgroup_summary(alumni.data,~SchemeType,~InnLeadProject)
+ldrinnfunding_schtype <- subgroup_summary(alumni.data,~SchemeType,~InnLeadFunding) 
+ldrinnstartup_schtype <- subgroup_summary(alumni.data,~SchemeType,~InnStartup)
 
+#Year group
+ldrbudget_year <- subgroup_summary(alumni.data,~YearGroup,~LdrBudget) #NA = question not asked: not currently employed
+ldrsupervise_year <- subgroup_summary(alumni.data,~YearGroup,~LdrSupervising)
+ldrmanaging_year <- subgroup_summary(alumni.data,~YearGroup, ~LdrManaging)
+ldrstrategy_year <- subgroup_summary(alumni.data,~YearGroup,~LdrStrategy)
+ldrinnproject_year <- subgroup_summary(alumni.data,~YearGroup,~InnLeadProject)
+ldrinnfunding_year <- subgroup_summary(alumni.data,~YearGroup,~InnLeadFunding) 
+ldrinnstartup_year <- subgroup_summary(alumni.data,~YearGroup,~InnStartup)
+
+#Origin region
+ldrbudget_orireg <- subgroup_summary(alumni.data,~OriginRegion,~LdrBudget) #NA = question not asked: not currently employed
+ldrsupervise_orireg <- subgroup_summary(alumni.data,~OriginRegion,~LdrSupervising)
+ldrmanaging_orireg <- subgroup_summary(alumni.data,~OriginRegion, ~LdrManaging)
+ldrstrategy_orireg <- subgroup_summary(alumni.data,~OriginRegion,~LdrStrategy)
+ldrinnproject_orireg <- subgroup_summary(alumni.data,~OriginRegion,~InnLeadProject)
+ldrinnfunding_orireg <- subgroup_summary(alumni.data,~OriginRegion,~InnLeadFunding) 
+ldrinnstartup_orireg <- subgroup_summary(alumni.data,~OriginRegion,~InnStartup)
+
+#Residency region
+ldrbudget_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~LdrBudget) #NA = question not asked: not currently employed
+ldrsupervise_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~LdrSupervising)
+ldrmanaging_resreg <- subgroup_summary(alumni.data,~ResidencyRegion, ~LdrManaging)
+ldrstrategy_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~LdrStrategy)
+ldrinnproject_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~InnLeadProject)
+ldrinnfunding_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~InnLeadFunding) 
+ldrinnstartup_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~InnStartup)
+
+#Subject studied
+ldrbudget_jacs <- subgroup_summary(alumni.data,~JacsCat,~LdrBudget) %>% filter(!JacsCat=="NA", sum(freq)>20) #NA = question not asked: not currently employed
+ldrsupervise_jacs <- subgroup_summary(alumni.data,~ResidencyRegion,~LdrSupervising) %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrmanaging_jacs <- subgroup_summary(alumni.data,~ResidencyRegion, ~LdrManaging) %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrstrategy_jacs <- subgroup_summary(alumni.data,~ResidencyRegion,~LdrStrategy) %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrinnproject_jacs <- subgroup_summary(alumni.data,~ResidencyRegion,~InnLeadProject) %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrinnfunding_jacs <- subgroup_summary(alumni.data,~ResidencyRegion,~InnLeadFunding)  %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrinnstartup_jacs <- subgroup_summary(alumni.data,~ResidencyRegion,~InnStartup) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
+#Committee score
+ldrbudget_score <- alumni.data %>% group_by(LdrBudget) %>% score_summary()
+ldrsupervise_score <- alumni.data %>% group_by(LdrSupervising) %>% score_summary()
+ldrmanaging_score <- alumni.data %>% group_by(LdrManaging) %>% score_summary()
+ldrstrategy_score <- alumni.data %>% group_by(LdrStrategy) %>% score_summary()
+ldrinnproject_score <- alumni.data %>% group_by(InnLeadProject) %>% score_summary()
+ldrinnfunding_score <- alumni.data %>% group_by(InnLeadFunding) %>% score_summary()
+ldrinnstartup_score <- alumni.data %>% group_by(InnStartup) %>% score_summary()
+
+ldrbudget_orireg %>% filter(LdrBudget=="Yes") %>% arrange(desc(prop)) #example of simplified table looking at proportions reporting activities

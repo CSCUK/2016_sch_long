@@ -503,16 +503,7 @@ indices <- select(alumni.data, starts_with("i."))
 index_overall <- rbind(sapply(indices, summary),SD=sapply(y, sd)) %>% round(2)
 
 #Gender
-
-x <- function(dataframe,variable){ 
-  summarise_(
-          Median = median(variable),
-          Mean = mean(variable), 
-          SD = sd(variable),
-          Max = max(variable),
-          Min = min(variable) ) }
-
-indexldr_overall <- alumni.data %>% 
+indexldr_gender <- alumni.data %>% 
   group_by(Gender) %>% 
   summarise(Count = n(),
             Median = round(median(i.ldr),2),
@@ -521,7 +512,7 @@ indexldr_overall <- alumni.data %>%
             Max = round(max(i.ldr),2),
             Min = round(min(i.ldr),2) )
                                                                    
-indexcollab_overall <- 
+indexcollab_gender <- 
   alumni.data %>% 
   group_by(Gender) %>% 
   summarise(Count = n(),
@@ -531,7 +522,7 @@ indexcollab_overall <-
             Max = round(max(i.collab),2),
             Min = round(min(i.collab),2) )
                                                                    
-indexskills_overall <- 
+indexskills_gender <- 
   alumni.data %>% 
   group_by(Gender) %>% 
   summarise(Count = n(),
@@ -541,7 +532,7 @@ indexskills_overall <-
             Max = round(max(i.skills),2),
             Min = round(min(i.skills),2) )
 
-indexresearch_overall <- 
+indexresearch_gender <- 
   alumni.data %>% 
   group_by(Gender) %>% 
   summarise(Count = n(),
@@ -551,11 +542,256 @@ indexresearch_overall <-
             Max = round(max(i.research),2),
             Min = round(min(i.research),2) )
 
-
 #Scheme
+indexldr_sch <- alumni.data %>% 
+  group_by(SchemeNom) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.ldr),2),
+            Mean = round(mean(i.ldr),2),
+            SD = round(sd(i.ldr),2),
+            Max = round(max(i.ldr),2),
+            Min = round(min(i.ldr),2) )
+
+indexcollab_sch <- 
+  alumni.data %>% 
+  group_by(SchemeNom) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.collab),2),
+            Mean = round(mean(i.collab),2),
+            SD = round(sd(i.collab),2),
+            Max = round(max(i.collab),2),
+            Min = round(min(i.collab),2) )
+
+indexskills_sch <- 
+  alumni.data %>% 
+  group_by(SchemeNom) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.skills),2),
+            Mean = round(mean(i.skills),2),
+            SD = round(sd(i.skills),2),
+            Max = round(max(i.skills),2),
+            Min = round(min(i.skills),2) )
+
+indexresearch_sch <- 
+  alumni.data %>% 
+  group_by(SchemeNom) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.research),2),
+            Mean = round(mean(i.research),2),
+            SD = round(sd(i.research),2),
+            Max = round(max(i.research),2),
+            Min = round(min(i.research),2) )
+
 #Scheme Type
+indexldr_schtype <- 
+  alumni.data %>% 
+  group_by(SchemeType) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.ldr),2),
+            Mean = round(mean(i.ldr),2),
+            SD = round(sd(i.ldr),2),
+            Max = round(max(i.ldr),2),
+            Min = round(min(i.ldr),2) )
+
+indexcollab_schtype <- 
+  alumni.data %>% 
+  group_by(SchemeType) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.collab),2),
+            Mean = round(mean(i.collab),2),
+            SD = round(sd(i.collab),2),
+            Max = round(max(i.collab),2),
+            Min = round(min(i.collab),2) )
+
+indexskills_schtype <- 
+  alumni.data %>% 
+  group_by(SchemeType) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.skills),2),
+            Mean = round(mean(i.skills),2),
+            SD = round(sd(i.skills),2),
+            Max = round(max(i.skills),2),
+            Min = round(min(i.skills),2) )
+
+indexresearch_schtype <- 
+  alumni.data %>% 
+  group_by(SchemeType) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.research),2),
+            Mean = round(mean(i.research),2),
+            SD = round(sd(i.research),2),
+            Max = round(max(i.research),2),
+            Min = round(min(i.research),2) )
+
 #Year Group
+indexldr_year <- 
+  alumni.data %>% 
+  group_by(YearGroup) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.ldr),2),
+            Mean = round(mean(i.ldr),2),
+            SD = round(sd(i.ldr),2),
+            Max = round(max(i.ldr),2),
+            Min = round(min(i.ldr),2) )
+
+indexcollab_year <- 
+  alumni.data %>% 
+  group_by(YearGroup) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.collab),2),
+            Mean = round(mean(i.collab),2),
+            SD = round(sd(i.collab),2),
+            Max = round(max(i.collab),2),
+            Min = round(min(i.collab),2) )
+
+indexskills_year <- 
+  alumni.data %>% 
+  group_by(YearGroup) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.skills),2),
+            Mean = round(mean(i.skills),2),
+            SD = round(sd(i.skills),2),
+            Max = round(max(i.skills),2),
+            Min = round(min(i.skills),2) )
+
+indexresearch_year <- 
+  alumni.data %>% 
+  group_by(YearGroup) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.research),2),
+            Mean = round(mean(i.research),2),
+            SD = round(sd(i.research),2),
+            Max = round(max(i.research),2),
+            Min = round(min(i.research),2) )
+
 #Origin Region
+indexldr_orireg <- alumni.data %>% 
+  group_by(OriginRegion) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.ldr),2),
+            Mean = round(mean(i.ldr),2),
+            SD = round(sd(i.ldr),2),
+            Max = round(max(i.ldr),2),
+            Min = round(min(i.ldr),2) )
+
+indexcollab_orireg <- 
+  alumni.data %>% 
+  group_by(OriginRegion) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.collab),2),
+            Mean = round(mean(i.collab),2),
+            SD = round(sd(i.collab),2),
+            Max = round(max(i.collab),2),
+            Min = round(min(i.collab),2) )
+
+indexskills_orireg <- 
+  alumni.data %>% 
+  group_by(OriginRegion) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.skills),2),
+            Mean = round(mean(i.skills),2),
+            SD = round(sd(i.skills),2),
+            Max = round(max(i.skills),2),
+            Min = round(min(i.skills),2) )
+
+indexresearch_orireg <- 
+  alumni.data %>% 
+  group_by(OriginRegion) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.research),2),
+            Mean = round(mean(i.research),2),
+            SD = round(sd(i.research),2),
+            Max = round(max(i.research),2),
+            Min = round(min(i.research),2) )
+
 #Residency Region
+indexldr_resreg <- 
+  alumni.data %>% 
+  group_by(ResidencyRegion) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.ldr),2),
+            Mean = round(mean(i.ldr),2),
+            SD = round(sd(i.ldr),2),
+            Max = round(max(i.ldr),2),
+            Min = round(min(i.ldr),2) )
+
+indexcollab_resreg <- 
+  alumni.data %>% 
+  group_by(ResidencyRegion) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.collab),2),
+            Mean = round(mean(i.collab),2),
+            SD = round(sd(i.collab),2),
+            Max = round(max(i.collab),2),
+            Min = round(min(i.collab),2) )
+
+indexskills_resreg <- 
+  alumni.data %>% 
+  group_by(ResidencyRegion) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.skills),2),
+            Mean = round(mean(i.skills),2),
+            SD = round(sd(i.skills),2),
+            Max = round(max(i.skills),2),
+            Min = round(min(i.skills),2) )
+
+indexresearch_resreg <- 
+  alumni.data %>% 
+  group_by(ResidencyRegion) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.research),2),
+            Mean = round(mean(i.research),2),
+            SD = round(sd(i.research),2),
+            Max = round(max(i.research),2),
+            Min = round(min(i.research),2) )
+
 #Subect Studied
+indexldr_jacs <- 
+  alumni.data %>% 
+  group_by(JacsCat) %>%
+  summarise(Count = n(),
+            Median = round(median(i.ldr),2),
+            Mean = round(mean(i.ldr),2),
+            SD = round(sd(i.ldr),2),
+            Max = round(max(i.ldr),2),
+            Min = round(min(i.ldr),2) ) %>% 
+  filter(!JacsCat=="NA", Count>20)
+
+indexcollab_jacs <- 
+  alumni.data %>% 
+  group_by(JacsCat) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.collab),2),
+            Mean = round(mean(i.collab),2),
+            SD = round(sd(i.collab),2),
+            Max = round(max(i.collab),2),
+            Min = round(min(i.collab),2) ) %>% 
+  filter(!JacsCat=="NA", Count>20)
+
+indexskills_jacs <- 
+  alumni.data %>% 
+  group_by(JacsCat) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.skills),2),
+            Mean = round(mean(i.skills),2),
+            SD = round(sd(i.skills),2),
+            Max = round(max(i.skills),2),
+            Min = round(min(i.skills),2) ) %>% 
+  filter(!JacsCat=="NA", Count>20)
+
+indexresearch_jacs <- 
+  alumni.data %>% 
+  group_by(JacsCat) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.research),2),
+            Mean = round(mean(i.research),2),
+            SD = round(sd(i.research),2),
+            Max = round(max(i.research),2),
+            Min = round(min(i.research),2) ) %>% 
+  filter(!JacsCat=="NA", Count>20)
+
 #Committee Score
+
+#this is much harder to model in a table because both sets of variables are continuous - better to use a scatterplot
+
+qplot(x=i.ldr,y=ZCtteeScore,data=alumni.data, geom="point")

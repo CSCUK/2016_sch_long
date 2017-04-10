@@ -61,14 +61,15 @@ str(alumni.data, list.len=nrow(alumni.data))
 # JACS category = jacs
 
 ## a] Data overview ----
-overview_gender <- alumni.data %>% count(Gender) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
-overview_sch <- alumni.data %>% count(SchemeNom) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
-overview_schtype <- alumni.data %>% count(SchemeType) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
-overview_year <- alumni.data %>% count(YearGroup) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
-overview_orireg <- alumni.data %>% count(OriginRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
-overview_resreg <- alumni.data %>% count(ResidencyRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
-overview_jacs <- alumni.data %>% count(JacsCat) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(n))
+overview_gender <- pop_summary(alumni.data,~Gender) %>% arrange(desc(prop))
+overview_sch <- pop_summary(alumni.data,~Scheme) %>% arrange(desc(prop))
+overview_schtype <- pop_summary(alumni.data,~SchemeType) %>% arrange(desc(prop))
+overview_year <- pop_summary(alumni.data,~YearGroup) %>% arrange(desc(prop))
+overview_orireg <- pop_summary(alumni.data,~OriginRegion) %>% arrange(desc(prop))
+overview_resreg <- pop_summary(alumni.data,~ResidencyRegion) %>% arrange(desc(prop))
+overview_jacs <- pop_summary(alumni.data,~JacsCat) %>% arrange(desc(prop))
 overview_score <- alumni.data %>% group_by(CtteeGroup) %>% score_summary()
+
 
 ## b] Residency ----
 
@@ -186,10 +187,49 @@ empreturntime_score <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnO
 # prefix = "Aca"
 
 #Overall
-
 Acapostaward_overall <- pop_summary(alumni.data, ~AcaPostaward)
-Acaquallevel_overall <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% pop_summary(~AcaQualLevel)
+Acaquallevel_overall <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% pop_summary(~AcaQualLevel) %>% arrange(desc(prop))
 Acacontribution_overall <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% pop_summary(~AcaQualCMWContribution)
+
+#Gender
+Acapostaward_gender <- subgroup_summary(alumni.data, ~Gender,~AcaPostaward)
+Acaquallevel_gender <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~Gender,~AcaQualLevel)
+Acacontribution_gender <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~Gender, ~AcaQualCMWContribution)
+
+#Scheme
+Acapostaward_sch <- subgroup_summary(alumni.data, ~SchemeNom,~AcaPostaward)
+Acaquallevel_sch <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeNom,~AcaQualLevel)
+Acacontribution_sch <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeNom, ~AcaQualCMWContribution)
+
+#Scheme Type
+Acapostaward_schtype <- subgroup_summary(alumni.data, ~SchemeType,~AcaPostaward)
+Acaquallevel_schtype <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeType,~AcaQualLevel)
+Acacontribution_schtype <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeType, ~AcaQualCMWContribution)
+
+#Year Group
+Acapostaward_year <- subgroup_summary(alumni.data, ~YearGroup,~AcaPostaward)
+Acaquallevel_year <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~YearGroup,~AcaQualLevel)
+Acacontribution_year <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~YearGroup, ~AcaQualCMWContribution)
+
+#Origin Region
+Acapostaward_orireg <- subgroup_summary(alumni.data, ~OriginRegion,~AcaPostaward)
+Acaquallevel_orireg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~OriginRegion,~AcaQualLevel)
+Acacontribution_orireg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~OriginRegion, ~AcaQualCMWContribution)
+
+#Residency Region
+Acapostaward_resreg <- subgroup_summary(alumni.data, ~ResidencyRegion,~AcaPostaward)
+Acaquallevel_resreg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~ResidencyRegion,~AcaQualLevel)
+Acacontribution_resreg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~ResidencyRegion, ~AcaQualCMWContribution)
+
+#Subect Studied
+Acapostaward_jacs <- subgroup_summary(alumni.data, ~JacsCat,~AcaPostaward) %>% filter(!JacsCat=="NA", sum(freq)>20)
+Acaquallevel_jacs <- alumni.data %>% filter(!is.na(AcaQualLevel),!JacsCat=="NA") %>% subgroup_summary(~JacsCat,~AcaQualLevel)
+Acacontribution_jacs <- alumni.data %>% filter(!is.na(AcaQualLevel),!JacsCat=="NA") %>% subgroup_summary(~JacsCat, ~AcaQualCMWContribution)
+
+#Committee Score
+Acapostaward_score <- alumni.data %>% group_by(AcaPostaward) %>% score_summary()
+Acaquallevel_score <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% group_by(AcaQualLevel) %>% score_summary()
+Acacontribution_score <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% group_by(AcaQualCMWContribution) %>% score_summary()
 
 ## e] Leadership ----
 
@@ -280,7 +320,62 @@ ldrinnstartup_score <- alumni.data %>% group_by(InnStartup) %>% score_summary()
 ldrbudget_orireg %>% filter(LdrBudget=="Yes") %>% arrange(desc(prop)) #example of simplified table looking at proportions reporting activities
 
 ## f] Skill application----
-## g] Teaching and research----
+
+#Overall
+#Gender
+#Scheme
+#Scheme Type
+#Year Group
+#Origin Region
+#Residency Region
+#Subect Studied
+#Committee Score
+
+## g] Teaching and research
+
+#Overall
+#Gender
+#Scheme
+#Scheme Type
+#Year Group
+#Origin Region
+#Residency Region
+#Subect Studied
+#Committee Score
+
+----
 ## h] Networks and links----
+
+#Overall
+#Gender
+#Scheme
+#Scheme Type
+#Year Group
+#Origin Region
+#Residency Region
+#Subect Studied
+#Committee Score
+
 ## i] Broader impact----
+
+#Overall
+#Gender
+#Scheme
+#Scheme Type
+#Year Group
+#Origin Region
+#Residency Region
+#Subect Studied
+#Committee Score
+
 ## j] Analytic indices----
+
+#Overall
+#Gender
+#Scheme
+#Scheme Type
+#Year Group
+#Origin Region
+#Residency Region
+#Subect Studied
+#Committee Score

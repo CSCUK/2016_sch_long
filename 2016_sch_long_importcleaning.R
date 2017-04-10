@@ -203,6 +203,7 @@ alumni.data <- alumni.data %>%
      Recommend = parse_factor(Recommend, levels=c("Definitely disagree", "Mostly disagree","Neither agree nor disagree",
                                                   "Mostly agree","Definitely agree","Don't know"), ordered=T),
      CurrentJobChange = parse_factor(CurrentJobChange, levels=c("Never","Once","Twice","Three or more times"),ordered=T),
+     AcaQualCMWContribution = parse_factor(AcaQualCMWContribution, levels=c("Very unlikely","Unlikely","Likely", "Very likely"), ordered=T),
      ReturnIntention = factor(ReturnIntention),
      YearGroup = factor(YearGroup),
      OriginRegion = factor(OriginRegion),

@@ -369,7 +369,7 @@ impinternational_overall <- pop_summary(alumni.data,~ImpInternational)
 impsocial_overall <- pop_summary(alumni.data,~ImpSocial)
 impcivic_overall <- pop_summary(alumni.data,~ImpCivic)
 impecon_overall <- pop_summary(alumni.data,~ImpEcon)
-impolicy_overall <- pop_summary(alumni.data,~ImpPolicy)
+imppolicy_overall <- pop_summary(alumni.data,~ImpPolicy)
 
 #Gender
 impinstitutional_gender <- subgroup_summary(alumni.data,~Gender,~ImpInstitutional)
@@ -380,7 +380,7 @@ impinternational_gender <- subgroup_summary(alumni.data,~Gender,~ImpInternationa
 impsocial_gender <- subgroup_summary(alumni.data,~Gender,~ImpSocial)
 impcivic_gender <- subgroup_summary(alumni.data,~Gender,~ImpCivic)
 impecon_gender <- subgroup_summary(alumni.data,~Gender,~ImpEcon)
-impolicy_gender <- subgroup_summary(alumni.data,~Gender,~ImpPolicy)
+imppolicy_gender <- subgroup_summary(alumni.data,~Gender,~ImpPolicy)
 
 #Scheme
 impinstitutional_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpInstitutional)
@@ -391,7 +391,7 @@ impinternational_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpInternationa
 impsocial_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpSocial)
 impcivic_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpCivic)
 impecon_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpEcon)
-impolicy_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpPolicy)
+imppolicy_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpPolicy)
 
 #Scheme Type
 impinstitutional_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpInstitutional)
@@ -402,7 +402,7 @@ impinternational_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpInterna
 impsocial_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpSocial)
 impcivic_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpCivic)
 impecon_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpEcon)
-impolicy_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpPolicy)
+imppolicy_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpPolicy)
 
 #Year Group
 impinstitutional_year <- subgroup_summary(alumni.data,~YearGroup,~ImpInstitutional)
@@ -413,7 +413,7 @@ impinternational_year <- subgroup_summary(alumni.data,~YearGroup,~ImpInternation
 impsocial_year <- subgroup_summary(alumni.data,~YearGroup,~ImpSocial)
 impcivic_year <- subgroup_summary(alumni.data,~YearGroup,~ImpCivic)
 impecon_year <- subgroup_summary(alumni.data,~YearGroup,~ImpEcon)
-impolicy_year <- subgroup_summary(alumni.data,~YearGroup,~ImpPolicy)
+imppolicy_year <- subgroup_summary(alumni.data,~YearGroup,~ImpPolicy)
 
 #Origin Region
 impinstitutional_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpInstitutional)
@@ -424,7 +424,7 @@ impinternational_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpIntern
 impsocial_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpSocial)
 impcivic_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpCivic)
 impecon_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpEcon)
-impolicy_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpPolicy)
+imppolicy_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpPolicy)
 
 #Residency Region
 impinstitutional_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpInstitutional)
@@ -435,7 +435,7 @@ impinternational_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpInt
 impsocial_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpSocial)
 impcivic_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpCivic)
 impecon_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpEcon)
-impolicy_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpPolicy)
+imppolicy_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpPolicy)
 
 #Subect Studied
 impinstitutional_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpInstitutional) %>% filter(!JacsCat=="NA", sum(freq)>20)
@@ -446,7 +446,7 @@ impinternational_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpInternational
 impsocial_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpSocial) %>% filter(!JacsCat=="NA", sum(freq)>20)
 impcivic_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpCivic) %>% filter(!JacsCat=="NA", sum(freq)>20)
 impecon_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpEcon) %>% filter(!JacsCat=="NA", sum(freq)>20)
-impolicy_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpPolicy) %>% filter(!JacsCat=="NA", sum(freq)>20)
+imppolicy_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpPolicy) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
 #Committee Score
 impinstitutional_score <- alumni.data %>% group_by(ImpInstitutional) %>% score_summary()
@@ -457,27 +457,33 @@ impinternational_score <- alumni.data %>% group_by(ImpInternational) %>% score_s
 impsocial_score <- alumni.data %>% group_by(ImpSocial) %>% score_summary()
 impcivic_score <- alumni.data %>% group_by(ImpCivic) %>% score_summary()
 impecon_score <- alumni.data %>% group_by(ImpEcon) %>% score_summary()
-impolicy_score <- alumni.data %>% group_by(ImpPolicy) %>% score_summary()
+imppolicy_score <- alumni.data %>% group_by(ImpPolicy) %>% score_summary()
 
 
-test <- function(dataframe, variable){
-  dataframe %>% 
-    filter_(variable=="Yes")
-    }
+#WORK IN PROGRESS TO SIMPLIFY BIND_COLS CODES FOR TABLES 
+test <- function(dataframe, group,variable,name){
+  dataframe %>%
+    ungroup %>% 
+    filter(variable=="Yes") %>%
+    select(name=prop)
+  }
 
-
-x <- impinstitutional_year %>% filter(ImpInstitutional=="Yes") %>% arrange(YearGroup) %>% ungroup #example of simplified table looking at proportions reporting activities
-y <- implocal_year %>% filter(ImpLocal=="Yes") %>% arrange(Year %>% ungroup #example of simplified table looking at proportions reporting activities
-z <- impnational_year %>% filter(ImpNational=="Yes") %>% arrange(desc(prop)) %>% ungroup #example of simplified table looking at proportions reporting activities
-a <- impinternational_year %>% filter(ImpInternational=="Yes") %>% arrange(YearGroup) %>% ungroup #example of simplified table looking at proportions reporting activities
-
-
+#Example of a concise table for impact level
 bind_cols(
   select(impinstitutional_year %>% filter(ImpInstitutional=="Yes") %>% arrange(YearGroup) %>% ungroup, YearGroup, Institutional=prop),
   select(implocal_year %>% filter(ImpLocal=="Yes") %>% arrange(YearGroup) %>% ungroup, Local=prop),
   select(impnational_year %>% filter(ImpNational=="Yes") %>% arrange(YearGroup) %>% ungroup, National=prop),
   select(impinternational_year %>% filter(ImpInternational=="Yes") %>% arrange(YearGroup) %>% ungroup, International=prop)
   )
+
+#Example of a concise table for impact type
+bind_cols(
+  select(impsocial_year %>% filter(ImpSocial=="Yes") %>% arrange(YearGroup) %>% ungroup, YearGroup, Social=prop),
+  select(impcivic_year %>% filter(ImpCivic=="Yes") %>% arrange(YearGroup) %>% ungroup, Civic=prop),
+  select(impecon_year %>% filter(ImpEcon=="Yes") %>% arrange(YearGroup) %>% ungroup, Economic=prop),
+  select(imppolicy_year %>% filter(ImpPolicy=="Yes") %>% arrange(YearGroup) %>% ungroup, Policy=prop)
+)
+
 
 
 

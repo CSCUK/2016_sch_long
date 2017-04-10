@@ -461,12 +461,19 @@ imppolicy_score <- alumni.data %>% group_by(ImpPolicy) %>% score_summary()
 
 
 #WORK IN PROGRESS TO SIMPLIFY BIND_COLS CODES FOR TABLES 
-test <- function(dataframe, group,variable,name){
+test <- function(dataframe,variable,group,v_name){
   dataframe %>%
-    ungroup %>% 
-    filter(variable=="Yes") %>%
-    select(name=prop)
-  }
+    group_by_(group, variable) %>% 
+    summarise_(
+      freq = ~n() 
+    ) %>% 
+    mutate_(prop = round((freq / sum(freq))*100,1)) %>% 
+    filter_(variable=="Yes") %>% 
+    arrange_(group) %>% 
+    select_(group, v_name=prop)
+}
+
+
 
 #Example of a concise table for impact level
 bind_cols(
@@ -485,12 +492,66 @@ bind_cols(
 )
 
 
-
-
 ## j] Analytic indices----
 
+#prefix = "i."
+
 #Overall
+
+indices <- select(alumni.data, starts_with("i."))
+
+index_overall <- rbind(sapply(indices, summary),SD=sapply(y, sd)) %>% round(2)
+
 #Gender
+
+x <- function(dataframe,variable){ 
+  summarise_(
+          Median = median(variable),
+          Mean = mean(variable), 
+          SD = sd(variable),
+          Max = max(variable),
+          Min = min(variable) ) }
+
+indexldr_overall <- alumni.data %>% 
+  group_by(Gender) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.ldr),2),
+            Mean = round(mean(i.ldr),2),
+            SD = round(sd(i.ldr),2),
+            Max = round(max(i.ldr),2),
+            Min = round(min(i.ldr),2) )
+                                                                   
+indexcollab_overall <- 
+  alumni.data %>% 
+  group_by(Gender) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.collab),2),
+            Mean = round(mean(i.collab),2),
+            SD = round(sd(i.collab),2),
+            Max = round(max(i.collab),2),
+            Min = round(min(i.collab),2) )
+                                                                   
+indexskills_overall <- 
+  alumni.data %>% 
+  group_by(Gender) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.skills),2),
+            Mean = round(mean(i.skills),2),
+            SD = round(sd(i.skills),2),
+            Max = round(max(i.skills),2),
+            Min = round(min(i.skills),2) )
+
+indexresearch_overall <- 
+  alumni.data %>% 
+  group_by(Gender) %>% 
+  summarise(Count = n(),
+            Median = round(median(i.research),2),
+            Mean = round(mean(i.research),2),
+            SD = round(sd(i.research),2),
+            Max = round(max(i.research),2),
+            Min = round(min(i.research),2) )
+
+
 #Scheme
 #Scheme Type
 #Year Group

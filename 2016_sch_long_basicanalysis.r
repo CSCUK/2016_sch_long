@@ -337,6 +337,7 @@ skillinfluence_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop
 skillethical_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillEthical)
 
 ## simplified table of all skill gain variables - use with a table package (e.g. Pander) for best results
+## Remove spread command for a long data format dataframe
 skillgain_overall <- 
   bind_rows(
     skillrestech_overall %>% mutate(Variable="SkillResearchTechniques") %>% select(Variable,Response=SkillResearchTechniques,prop),
@@ -350,8 +351,28 @@ skillgain_overall <-
     ) %>% 
   spread(Response,prop) 
   
+## Application of skills, asked to all alumni survey participants
+appskillwork_overall <- alumni.data %>% pop_summary(~AppSkillWork)
+appskillnonwork_overall <- alumni.data %>% pop_summary(~AppSkillNonwork)
+appapproach_overall <- alumni.data %>% pop_summary(~AppApproachProblem)
+apptrain_overall <- alumni.data %>% pop_summary(~AppTrainColleagues)
+appresources_overall <- alumni.data %>% pop_summary(~AppDevelopResources)
+appadvocate_overall <- alumni.data %>% pop_summary(~AppAdvocateChange)
+appchange_overall <- alumni.data %>% pop_summary(~AppMakeChange)
 
-
+## simplified table of all application variables - use with a table package (e.g. Pander) for best results.
+## Remove spread command for a long data format dataframe
+app_overall <- 
+  bind_rows(
+    appskillwork_overall %>% mutate(Variable="AppSkillWork") %>% select(Variable,Response=AppSkillWork,prop),
+    appskillnonwork_overall %>% mutate(Variable="AppSkillNonwork") %>% select(Variable,Response=AppSkillNonwork,prop),
+    appapproach_overall %>% mutate(Variable="AppApproachProblem") %>% select(Variable,Response=AppApproachProblem,prop),
+    apptrain_overall %>% mutate(Variable="AppTrainColleages") %>% select(Variable,Response=AppTrainColleagues,prop),
+    appresources_overall %>% mutate(Variable="AppDevelopResources") %>% select(Variable,Response=AppDevelopResources,prop),
+    appadvocate_overall %>% mutate(Variable="AppAdvocateChange") %>% select(Variable,Response=AppAdvocateChange,prop),
+    appchange_overall %>% mutate(Variable="AppMakeChange") %>% select(Variable,Response=AppMakeChange,prop)
+    ) %>% 
+  spread(Response,prop) 
 
 #Gender
 #Scheme

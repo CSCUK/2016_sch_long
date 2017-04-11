@@ -14,6 +14,7 @@ p_load(RODBC, openxlsx, tidyverse,forcats, plotly, pander)
 
 opar = par()
 
+
 # --- Functions ----
 
 score_summary <- function(dataframe){
@@ -301,12 +302,12 @@ ldrinnstartup_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~InnStartu
 
 #Subject studied
 ldrbudget_jacs <- subgroup_summary(alumni.data,~JacsCat,~LdrBudget) %>% filter(!JacsCat=="NA", sum(freq)>20) #NA = question not asked: not currently employed
-ldrsupervise_jacs <- subgroup_summary(alumni.data,~ResidencyRegion,~LdrSupervising) %>% filter(!JacsCat=="NA", sum(freq)>20)
-ldrmanaging_jacs <- subgroup_summary(alumni.data,~ResidencyRegion, ~LdrManaging) %>% filter(!JacsCat=="NA", sum(freq)>20)
-ldrstrategy_jacs <- subgroup_summary(alumni.data,~ResidencyRegion,~LdrStrategy) %>% filter(!JacsCat=="NA", sum(freq)>20)
-ldrinnproject_jacs <- subgroup_summary(alumni.data,~ResidencyRegion,~InnLeadProject) %>% filter(!JacsCat=="NA", sum(freq)>20)
-ldrinnfunding_jacs <- subgroup_summary(alumni.data,~ResidencyRegion,~InnLeadFunding)  %>% filter(!JacsCat=="NA", sum(freq)>20)
-ldrinnstartup_jacs <- subgroup_summary(alumni.data,~ResidencyRegion,~InnStartup) %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrsupervise_jacs <- subgroup_summary(alumni.data,~JacsCat,~LdrSupervising) %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrmanaging_jacs <- subgroup_summary(alumni.data,~JacsCat, ~LdrManaging) %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrstrategy_jacs <- subgroup_summary(alumni.data,~JacsCat,~LdrStrategy) %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrinnproject_jacs <- subgroup_summary(alumni.data,~JacsCat,~InnLeadProject) %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrinnfunding_jacs <- subgroup_summary(alumni.data,~JacsCat,~InnLeadFunding)  %>% filter(!JacsCat=="NA", sum(freq)>20)
+ldrinnstartup_jacs <- subgroup_summary(alumni.data,~JacsCat,~InnStartup) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
 #Committee score
 ldrbudget_score <- alumni.data %>% group_by(LdrBudget) %>% score_summary()
@@ -500,7 +501,7 @@ bind_cols(
 
 indices <- select(alumni.data, starts_with("i."))
 
-index_overall <- rbind(sapply(indices, summary),SD=sapply(y, sd)) %>% round(2)
+index_overall <- rbind(sapply(indices, summary),SD=sapply(indices, sd)) %>% round(2)
 
 #Gender
 indexldr_gender <- alumni.data %>% 

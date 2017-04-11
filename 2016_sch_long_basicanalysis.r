@@ -32,11 +32,13 @@ score_summary <- function(dataframe){
 pop_summary <- function(dataframe, variable){
   dataframe %>% 
     group_by_(variable) %>% 
-    summarise_(
-      freq = ~n() 
-    ) %>% 
-    mutate(prop = round((freq / sum(freq))*100,1))
-} #population level summary for a variable
+    summarise_(freq = ~n()) %>% 
+    mutate(prop = round((freq / sum(freq))*100,1)) %>% 
+    rownames_to_column() %>%
+    mutate(rowname=colnames(.)[2]) %>% 
+    rename_(Response = variable) %>% 
+    select(Variable = rowname, everything()) 
+} #population level summary for a variable, in long data format
 
 subgroup_summary <- function(dataframe, group, variable){
   dataframe %>% 
@@ -339,18 +341,12 @@ skillethical_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_s
 ## simplified table of all skill gain variables - use with a table package (e.g. Pander) for best results
 ## Remove spread command for a long data format dataframe
 skillgain_overall <- 
-  bind_rows(
-    skillrestech_overall %>% mutate(Variable="SkillResearchTechniques") %>% select(Variable,Response=SkillResearchTechniques,prop),
-    skillresfield_overall %>% mutate(Variable="SkillResearchField") %>% select(Variable,Response=SkillResearchField,prop),
-    skillcritical_overall %>% mutate(Variable="SkillCritical") %>% select(Variable,Response=SkillCritical,prop),
-    skilltechnical_overall %>% mutate(Variable="SkillTechnical") %>% select(Variable,Response=SkillTechnical,prop),
-    skillleadership_overall %>% mutate(Variable="SkillLeadership") %>% select(Variable,Response=SkillLeadership,prop),
-    skilldisseminate_overall %>% mutate(Variable="SkillDisseminate") %>% select(Variable,Response=SkillDisseminate,prop),
-    skillinfluence_overall %>% mutate(Variable="SkillInfluence") %>% select(Variable,Response=SkillInfluence,prop),
-    skillethical_overall %>% mutate(Variable="SkillEthical") %>% select(Variable,Response=SkillEthical,prop)
-    ) %>% 
-  spread(Response,prop) 
-  
+  bind_rows(skillrestech_overall, skillresfield_overall, skillcritical_overall, skilltechnical_overall,
+      skillleadership_overall,skilldisseminate_overall, skillinfluence_overall, skillethical_overall) %>% 
+  select(-freq) %>% 
+  spread(Response, prop)
+
+
 ## Application of skills, asked to all alumni survey participants
 appskillwork_overall <- pop_summary(alumni.data,~AppSkillWork)
 appskillnonwork_overall <- pop_summary(alumni.data,~AppSkillNonwork)
@@ -364,14 +360,9 @@ appchange_overall <- pop_summary(alumni.data,~AppMakeChange)
 ## Remove spread command for a long data format dataframe
 app_overall <- 
   bind_rows(
-    appskillwork_overall %>% mutate(Variable="AppSkillWork") %>% select(Variable,Response=AppSkillWork,prop),
-    appskillnonwork_overall %>% mutate(Variable="AppSkillNonwork") %>% select(Variable,Response=AppSkillNonwork,prop),
-    appapproach_overall %>% mutate(Variable="AppApproachProblem") %>% select(Variable,Response=AppApproachProblem,prop),
-    apptrain_overall %>% mutate(Variable="AppTrainColleages") %>% select(Variable,Response=AppTrainColleagues,prop),
-    appresources_overall %>% mutate(Variable="AppDevelopResources") %>% select(Variable,Response=AppDevelopResources,prop),
-    appadvocate_overall %>% mutate(Variable="AppAdvocateChange") %>% select(Variable,Response=AppAdvocateChange,prop),
-    appchange_overall %>% mutate(Variable="AppMakeChange") %>% select(Variable,Response=AppMakeChange,prop)
-    ) %>% 
+    appskillwork_overall, appskillnonwork_overall,appapproach_overall,apptrain_overall,appresources_overall,
+    appadvocate_overall,appchange_overall) %>% 
+  select(-freq) %>% 
   spread(Response,prop) 
 
 #Gender
@@ -528,7 +519,19 @@ appchange_score <- alumni.data %>% group_by(AppMakeChange) %>% score_summary()
 
 ## g] Research ----
 
+# prefix = "res"
+
+
+rescollabauthor_overall <- pop_summary(alumni.data,~ResCollabAuthor)
+rescollabgrant_overall <- pop_summary(alumni.data,~ResCollabGrant)
+rescollabconf_overall <- pop_summary(alumni.data,~ResCollabConf)
+
+## simplified table of all application variables - use with a table package (e.g. Pander) for best results.
+## Remove spread command for a long data format dataframe
+
 #Overall
+
+
 #Gender
 #Scheme
 #Scheme Type

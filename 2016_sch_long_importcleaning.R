@@ -297,5 +297,3 @@ base.data <-
 
 rm(list= ls()[!(ls() %in% c("opar","alumni.data","base.data"))]) #remove everything that doesn't match this list
 gc() #clean the memory
-
-save.image("2016_sch_long_core.rdata")

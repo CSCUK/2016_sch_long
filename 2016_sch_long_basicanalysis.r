@@ -322,6 +322,48 @@ ldrbudget_orireg %>% filter(LdrBudget=="Yes") %>% arrange(desc(prop)) #example o
 
 ## f] Skill application----
 
+# prefix = "App" and "Skill"
+
+#Overall
+
+## Skill gain questions - only asked of +2 year follow up group (_Two)
+skillrestech_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillResearchTechniques)
+skillresfield_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillResearchField)
+skillcritical_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillCritical)
+skilltechnical_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillTechnical)
+skillleadership_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillLeadership)
+skilldisseminate_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillDisseminate)
+skillinfluence_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillInfluence)
+skillethical_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillEthical)
+
+## simplified table of all skill gain variables - use with a table package (e.g. Pander) for best results
+skillgain_overall <- 
+  bind_rows(
+    skillrestech_overall %>% mutate(Variable="SkillResearchTechniques") %>% select(Variable,Response=SkillResearchTechniques,prop),
+    skillresfield_overall %>% mutate(Variable="SkillResearchField") %>% select(Variable,Response=SkillResearchField,prop),
+    skillcritical_overall %>% mutate(Variable="SkillCritical") %>% select(Variable,Response=SkillCritical,prop),
+    skilltechnical_overall %>% mutate(Variable="SkillTechnical") %>% select(Variable,Response=SkillTechnical,prop),
+    skillleadership_overall %>% mutate(Variable="SkillLeadership") %>% select(Variable,Response=SkillLeadership,prop),
+    skilldisseminate_overall %>% mutate(Variable="SkillDisseminate") %>% select(Variable,Response=SkillDisseminate,prop),
+    skillinfluence_overall %>% mutate(Variable="SkillInfluence") %>% select(Variable,Response=SkillInfluence,prop),
+    skillethical_overall %>% mutate(Variable="SkillEthical") %>% select(Variable,Response=SkillEthical,prop)
+    ) %>% 
+  spread(Response,prop) 
+  
+
+
+
+#Gender
+#Scheme
+#Scheme Type
+#Year Group
+#Origin Region
+#Residency Region
+#Subect Studied
+#Committee Score
+
+## g] Research ----
+
 #Overall
 #Gender
 #Scheme
@@ -332,7 +374,7 @@ ldrbudget_orireg %>% filter(LdrBudget=="Yes") %>% arrange(desc(prop)) #example o
 #Subect Studied
 #Committee Score
 
-## g] Teaching and research
+## h] Teaching ----
 
 #Overall
 #Gender
@@ -344,8 +386,7 @@ ldrbudget_orireg %>% filter(LdrBudget=="Yes") %>% arrange(desc(prop)) #example o
 #Subect Studied
 #Committee Score
 
-----
-## h] Networks and links----
+## i] Networks and links----
 
 #Overall
 #Gender
@@ -357,7 +398,7 @@ ldrbudget_orireg %>% filter(LdrBudget=="Yes") %>% arrange(desc(prop)) #example o
 #Subect Studied
 #Committee Score
 
-## i] Broader impact----
+## j] Broader impact----
 
 # prefix = "Imp"
 
@@ -493,7 +534,7 @@ bind_cols(
 )
 
 
-## j] Analytic indices----
+## k] Analytic indices----
 
 #prefix = "i."
 

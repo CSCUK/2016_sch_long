@@ -43,11 +43,13 @@ pop_summary <- function(dataframe, variable){
 subgroup_summary <- function(dataframe, group, variable){
   dataframe %>% 
     group_by_(group, variable) %>% 
-    summarise_(
-      freq = ~n() 
-    ) %>% 
-    mutate(prop = round((freq / sum(freq))*100,1))
-} #subgroup summary for a variable: takes group as the second argument
+    summarise_(freq = ~n()) %>% 
+    mutate(prop = round((freq / sum(freq))*100,1)) %>% 
+    rownames_to_column() %>%
+    mutate(rowname=colnames(.)[3]) %>% 
+    rename_(Response = variable) %>% 
+    select(Variable = rowname, everything()) 
+} #subgroup summary for a variable: takes group as the second argument - in long data format
 
 # --- Dataset structure ----
 
@@ -521,10 +523,10 @@ appchange_score <- alumni.data %>% group_by(AppMakeChange) %>% score_summary()
 
 # prefix = "res"
 
-
 rescollabauthor_overall <- pop_summary(alumni.data,~ResCollabAuthor)
 rescollabgrant_overall <- pop_summary(alumni.data,~ResCollabGrant)
 rescollabconf_overall <- pop_summary(alumni.data,~ResCollabConf)
+
 
 ## simplified table of all application variables - use with a table package (e.g. Pander) for best results.
 ## Remove spread command for a long data format dataframe

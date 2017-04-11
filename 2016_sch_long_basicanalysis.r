@@ -352,13 +352,13 @@ skillgain_overall <-
   spread(Response,prop) 
   
 ## Application of skills, asked to all alumni survey participants
-appskillwork_overall <- alumni.data %>% pop_summary(~AppSkillWork)
-appskillnonwork_overall <- alumni.data %>% pop_summary(~AppSkillNonwork)
-appapproach_overall <- alumni.data %>% pop_summary(~AppApproachProblem)
-apptrain_overall <- alumni.data %>% pop_summary(~AppTrainColleagues)
-appresources_overall <- alumni.data %>% pop_summary(~AppDevelopResources)
-appadvocate_overall <- alumni.data %>% pop_summary(~AppAdvocateChange)
-appchange_overall <- alumni.data %>% pop_summary(~AppMakeChange)
+appskillwork_overall <- pop_summary(alumni.data,~AppSkillWork)
+appskillnonwork_overall <- pop_summary(alumni.data,~AppSkillNonwork)
+appapproach_overall <- pop_summary(alumni.data,~AppApproachProblem)
+apptrain_overall <- pop_summary(alumni.data,~AppTrainColleagues)
+appresources_overall <- pop_summary(alumni.data,~AppDevelopResources)
+appadvocate_overall <- pop_summary(alumni.data,~AppAdvocateChange)
+appchange_overall <- pop_summary(alumni.data,~AppMakeChange)
 
 ## simplified table of all application variables - use with a table package (e.g. Pander) for best results.
 ## Remove spread command for a long data format dataframe
@@ -375,13 +375,156 @@ app_overall <-
   spread(Response,prop) 
 
 #Gender
+## Skill gain
+skillrestech_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillResearchTechniques)
+skillresfield_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillResearchField)
+skillcritical_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillCritical)
+skilltechnical_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillTechnical)
+skillleadership_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillLeadership)
+skilldisseminate_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillDisseminate)
+skillinfluence_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillInfluence)
+skillethical_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillEthical)
+
+## Application of skills
+appskillwork_gender <- subgroup_summary(alumni.data,~Gender,~AppSkillWork)
+appskillnonwork_gender <- subgroup_summary(alumni.data,~Gender,~AppSkillNonwork)
+appapproach_gender <- subgroup_summary(alumni.data,~Gender,~AppApproachProblem)
+apptrain_gender <- subgroup_summary(alumni.data,~Gender,~AppTrainColleagues)
+appresources_gender <- subgroup_summary(alumni.data,~Gender,~AppDevelopResources)
+appadvocate_gender <- subgroup_summary(alumni.data,~Gender,~AppAdvocateChange)
+appchange_gender <- subgroup_summary(alumni.data,~Gender,~AppMakeChange)
+
 #Scheme
+## Skill gain
+skillrestech_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillResearchTechniques)
+skillresfield_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillResearchField)
+skillcritical_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillCritical)
+skilltechnical_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillTechnical)
+skillleadership_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillLeadership)
+skilldisseminate_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillDisseminate)
+skillinfluence_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillInfluence)
+skillethical_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillEthical)
+
+## Application of skills
+appskillwork_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppSkillWork)
+appskillnonwork_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppSkillNonwork)
+appapproach_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppApproachProblem)
+apptrain_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppTrainColleagues)
+appresources_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppDevelopResources)
+appadvocate_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppAdvocateChange)
+appchange_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppMakeChange)
+
 #Scheme Type
+## Skill gain
+skillrestech_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillResearchTechniques)
+skillresfield_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillResearchField)
+skillcritical_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillCritical)
+skilltechnical_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillTechnical)
+skillleadership_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillLeadership)
+skilldisseminate_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillDisseminate)
+skillinfluence_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillInfluence)
+skillethical_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillEthical)
+
+## Application of skills
+appskillwork_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppSkillWork)
+appskillnonwork_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppSkillNonwork)
+appapproach_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppApproachProblem)
+apptrain_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppTrainColleagues)
+appresources_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppDevelopResources)
+appadvocate_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppAdvocateChange)
+appchange_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppMakeChange)
+
 #Year Group
+## Skill gain - not meaningful for Year group: question is only asked to +2 year (_Two) group
+
+## Application of skills
+appskillwork_year <- subgroup_summary(alumni.data,~YearGroup,~AppSkillWork)
+appskillnonwork_year <- subgroup_summary(alumni.data,~YearGroup,~AppSkillNonwork)
+appapproach_year <- subgroup_summary(alumni.data,~YearGroup,~AppApproachProblem)
+apptrain_year <- subgroup_summary(alumni.data,~YearGroup,~AppTrainColleagues)
+appresources_year <- subgroup_summary(alumni.data,~YearGroup,~AppDevelopResources)
+appadvocate_year <- subgroup_summary(alumni.data,~YearGroup,~AppAdvocateChange)
+appchange_year <- subgroup_summary(alumni.data,~YearGroup,~AppMakeChange)
+
 #Origin Region
+## Skill gain
+skillrestech_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillResearchTechniques)
+skillresfield_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillResearchField)
+skillcritical_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillCritical)
+skilltechnical_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillTechnical)
+skillleadership_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillLeadership)
+skilldisseminate_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillDisseminate)
+skillinfluence_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillInfluence)
+skillethical_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillEthical)
+
+## Application of skills
+appskillwork_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppSkillWork)
+appskillnonwork_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppSkillNonwork)
+appapproach_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppApproachProblem)
+apptrain_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppTrainColleagues)
+appresources_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppDevelopResources)
+appadvocate_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppAdvocateChange)
+appchange_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppMakeChange)
+
 #Residency Region
+## Skill gain
+skillrestech_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillResearchTechniques)
+skillresfield_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillResearchField)
+skillcritical_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillCritical)
+skilltechnical_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillTechnical)
+skillleadership_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillLeadership)
+skilldisseminate_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillDisseminate)
+skillinfluence_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillInfluence)
+skillethical_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillEthical)
+
+## Application of skills
+appskillwork_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppSkillWork)
+appskillnonwork_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppSkillNonwork)
+appapproach_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppApproachProblem)
+apptrain_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppTrainColleagues)
+appresources_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppDevelopResources)
+appadvocate_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppAdvocateChange)
+appchange_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppMakeChange)
+
 #Subect Studied
+## Skill gain
+skillrestech_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillResearchTechniques) %>% filter(!JacsCat=="NA", sum(freq)>20)
+skillresfield_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillResearchField) %>% filter(!JacsCat=="NA", sum(freq)>20)
+skillcritical_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillCritical) %>% filter(!JacsCat=="NA", sum(freq)>20)
+skilltechnical_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillTechnical) %>% filter(!JacsCat=="NA", sum(freq)>20)
+skillleadership_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillLeadership) %>% filter(!JacsCat=="NA", sum(freq)>20)
+skilldisseminate_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillDisseminate) %>% filter(!JacsCat=="NA", sum(freq)>20)
+skillinfluence_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillInfluence) %>% filter(!JacsCat=="NA", sum(freq)>20)
+skillethical_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillEthical) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
+## Application of skills
+appskillwork_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppSkillWork) %>% filter(!JacsCat=="NA", sum(freq)>20)
+appskillnonwork_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppSkillNonwork) %>% filter(!JacsCat=="NA", sum(freq)>20)
+appapproach_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppApproachProblem) %>% filter(!JacsCat=="NA", sum(freq)>20)
+apptrain_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppTrainColleagues) %>% filter(!JacsCat=="NA", sum(freq)>20)
+appresources_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppDevelopResources) %>% filter(!JacsCat=="NA", sum(freq)>20)
+appadvocate_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppAdvocateChange) %>% filter(!JacsCat=="NA", sum(freq)>20)
+appchange_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppMakeChange) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
 #Committee Score
+## Skill gain
+skillrestech_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillResearchTechniques) %>% score_summary()
+skillresfield_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillResearchField) %>% score_summary()
+skillcritical_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillCritical) %>% score_summary()
+skilltechnical_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillTechnical) %>% score_summary()
+skillleadership_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillLeadership) %>% score_summary()
+skilldisseminate_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillDisseminate) %>% score_summary()
+skillinfluence_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillInfluence) %>% score_summary()
+skillethical_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillEthical) %>% score_summary()
+
+## Application of skills
+appskillwork_score <- alumni.data %>% group_by(AppSkillWork) %>% score_summary()
+appskillnonwork_score <- alumni.data %>% group_by(AppSkillNonwork) %>% score_summary()
+appapproach_score <- alumni.data %>% group_by(AppApproachProblem) %>% score_summary()
+apptrain_score <- alumni.data %>% group_by(AppTrainColleagues) %>% score_summary()
+appresources_score <- alumni.data %>% group_by(AppDevelopResources) %>% score_summary()
+appadvocate_score <- alumni.data %>% group_by(AppAdvocateChange) %>% score_summary()
+appchange_score <- alumni.data %>% group_by(AppMakeChange) %>% score_summary()
 
 ## g] Research ----
 

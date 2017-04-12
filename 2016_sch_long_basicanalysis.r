@@ -779,15 +779,131 @@ rbind(teachschool_year,teachundergrad_year,teachpostgrad_year,teachdoctorate_yea
 
 ## i] Networks and links----
 
+# prefix= 'Net'
+
 #Overall
+netacad_overall <- pop_summary(alumni.data,~NetAcad)
+netuk_overall <- pop_summary(alumni.data,~NetUK)
+nethome_overall <- pop_summary(alumni.data,~NetHome)
+netother_overall <- pop_summary(alumni.data,~NetOther)
+netpersonal_overall <- pop_summary(alumni.data,~NetPersonal)
+
+netinfacad_overall <- pop_summary(alumni.data,~NetInfluenceAcad)
+netinfuk_overall <- pop_summary(alumni.data,~NetInfluenceUK)
+netinforigin_overall <- pop_summary(alumni.data,~NetInfluenceOrigin)
+netinfother_overall <- pop_summary(alumni.data,~NetInfluenceOther)
+netinfpersonal_overall <- pop_summary(alumni.data,~NetInfluencePersonal)
+
 #Gender
+netacad_gender <- subgroup_summary(alumni.data,~Gender,~NetAcad)
+netuk_gender <- subgroup_summary(alumni.data,~Gender,~NetUK)
+nethome_gender <- subgroup_summary(alumni.data,~Gender,~NetHome)
+netother_gender <- subgroup_summary(alumni.data,~Gender,~NetOther)
+netpersonal_gender <- subgroup_summary(alumni.data,~Gender,~NetPersonal)
+
+netinfacad_gender <- subgroup_summary(alumni.data,~Gender,~NetInfluenceAcad)
+netinfuk_gender <- subgroup_summary(alumni.data,~Gender,~NetInfluenceUK)
+netinforigin_gender <- subgroup_summary(alumni.data,~Gender,~NetInfluenceOrigin)
+netinfother_gender <- subgroup_summary(alumni.data,~Gender,~NetInfluenceOther)
+netinfpersonal_gender <- subgroup_summary(alumni.data,~Gender,~NetInfluencePersonal)
+
 #Scheme
+netacad_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetAcad)
+netuk_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetUK)
+nethome_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetHome)
+netother_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetOther)
+netpersonal_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetPersonal)
+
+netinfacad_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetInfluenceAcad)
+netinfuk_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetInfluenceUK)
+netinforigin_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetInfluenceOrigin)
+netinfother_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetInfluenceOther)
+netinfpersonal_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetInfluencePersonal)
+
 #Scheme Type
+netacad_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetAcad)
+netuk_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetUK)
+nethome_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetHome)
+netother_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetOther)
+netpersonal_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetPersonal)
+
+netinfacad_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetInfluenceAcad)
+netinfuk_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetInfluenceUK)
+netinforigin_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetInfluenceOrigin)
+netinfother_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetInfluenceOther)
+netinfpersonal_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetInfluencePersonal)
+
 #Year Group
+netacad_year <- subgroup_summary(alumni.data,~YearGroup,~NetAcad)
+netuk_year <- subgroup_summary(alumni.data,~YearGroup,~NetUK)
+nethome_year <- subgroup_summary(alumni.data,~YearGroup,~NetHome)
+netother_year <- subgroup_summary(alumni.data,~YearGroup,~NetOther)
+netpersonal_year <- subgroup_summary(alumni.data,~YearGroup,~NetPersonal)
+
+netinfacad_year <- subgroup_summary(alumni.data,~YearGroup,~NetInfluenceAcad)
+netinfuk_year <- subgroup_summary(alumni.data,~YearGroup,~NetInfluenceUK)
+netinforigin_year <- subgroup_summary(alumni.data,~YearGroup,~NetInfluenceOrigin)
+netinfother_year <- subgroup_summary(alumni.data,~YearGroup,~NetInfluenceOther)
+netinfpersonal_year <- subgroup_summary(alumni.data,~YearGroup,~NetInfluencePersonal)
+
 #Origin Region
+netacad_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetAcad)
+netuk_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetUK)
+nethome_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetHome)
+netother_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetOther)
+netpersonal_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetPersonal)
+
+netinfacad_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetInfluenceAcad)
+netinfuk_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetInfluenceUK)
+netinforigin_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetInfluenceOrigin)
+netinfother_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetInfluenceOther)
+netinfpersonal_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetInfluencePersonal)
+
 #Residency Region
+netacad_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetAcad)
+netuk_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetUK)
+nethome_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetHome)
+netother_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetOther)
+netpersonal_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetPersonal)
+
+netinfacad_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetInfluenceAcad)
+netinfuk_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetInfluenceUK)
+netinforigin_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetInfluenceOrigin)
+netinfother_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetInfluenceOther)
+netinfpersonal_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetInfluencePersonal)
+
 #Subect Studied
+netacad_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetAcad) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netuk_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetUK) %>% filter(!JacsCat=="NA", sum(freq)>20)
+nethome_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetHome) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netother_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetOther) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netpersonal_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetPersonal) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
+netinfacad_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetInfluenceAcad) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netinfuk_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetInfluenceUK) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netinforigin_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetInfluenceOrigin) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netinfother_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetInfluenceOther) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netinfpersonal_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetInfluencePersonal) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
 #Committee Score
+netacad_score <- alumni.data %>% group_by(NetAcad) %>% score_summary()
+netuk_score <- alumni.data %>% group_by(NetUK) %>% score_summary()
+nethome_score <- alumni.data %>% group_by(NetHome) %>% score_summary()
+netother_score <- alumni.data %>% group_by(NetOther) %>% score_summary()
+netpersonal_score <- alumni.data %>% group_by(NetPersonal) %>% score_summary()
+
+netinfacad_score <- alumni.data %>% group_by(NetInfluenceAcad) %>% score_summary()
+netinfuk_score <- alumni.data %>% group_by(NetInfluenceUK) %>% score_summary()
+netinforigin_score <- alumni.data %>% group_by(NetInfluenceOrigin) %>% score_summary()
+netinfother_score <- alumni.data %>% group_by(NetInfluenceOther) %>% score_summary()
+netinfpersonal_score <- alumni.data %>% group_by(NetInfluencePersonal) %>% score_summary()
+
+
+#Example of a table by variable (slightly more complex, but clear to read)
+rbind(netacad_year,netuk_year,nethome_year,netother_year,netpersonal_year) %>% 
+  select(-freq) %>% 
+  spread(YearGroup, prop)
+
 
 ## j] Broader impact----
 

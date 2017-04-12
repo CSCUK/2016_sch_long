@@ -624,6 +624,31 @@ empreturntime_score %>% filter(!is.na(ReturnEmploy)) %>% rename("Time to Employm
 
 
 
+# 3. Skills
+
+```{r, echo=FALSE}
+## simplified table of all skill gain variables - use with a table package (e.g. Pander) for best results
+  bind_rows(skillrestech_overall, skillresfield_overall, skillcritical_overall, skilltechnical_overall,
+      skillleadership_overall,skilldisseminate_overall, skillinfluence_overall, skillethical_overall) %>% 
+  select(-freq) %>% 
+  spread(Response, prop) %>% 
+  pander()
+```
+
+
+```{r, echo=FALSE}
+## simplified table of all application variables - use with a table package (e.g. Pander) for best results.
+## Remove spread command for a long data format dataframe
+app_overall <- 
+  bind_rows(
+    appskillwork_overall, appskillnonwork_overall,appapproach_overall,apptrain_overall,appresources_overall,
+    appadvocate_overall,appchange_overall) %>% 
+  select(-freq) %>% 
+  spread(Response,prop) 
+```
+
+
+
 # Technical appendix {.tabset}
 
 ## Overview

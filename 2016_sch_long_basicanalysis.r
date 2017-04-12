@@ -87,7 +87,6 @@ overview_resreg <- pop_summary(alumni.data,~ResidencyRegion) %>% arrange(desc(pr
 overview_jacs <- pop_summary(alumni.data,~JacsCat) %>% arrange(desc(prop))
 overview_score <- alumni.data %>% group_by(CtteeGroup) %>% test()
 
-
 ## b] Residency ----
 
 # prefix = 'res'
@@ -176,8 +175,6 @@ empchange_resreg <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% group_by
 empchange_jacs <- alumni.data %>% filter(!JacsCat=="NA",!CurrentJobChange=="NA") %>% group_by(JacsCat) %>% count(CurrentJobChange) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(sum(n)>20) %>% arrange(JacsCat,CurrentJobChange)
 empchange_score <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% group_by(CurrentJobChange) %>% score_summary()
 
-empchange_jacs %>% filter(CurrentJobChange=="Never") #example of simplified table looking at 'never' only
-
 # Return to previous organisation for +2 year respondents only (note 'YearGroup' is missing as a variable because it is meaningless: all are +2 group)
 empreturnorg_gender <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% group_by(Gender) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(Gender,desc(prop))
 empreturnorg_sch <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% group_by(SchemeNom) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(SchemeNom, desc(ReturnOrganisation))
@@ -186,8 +183,6 @@ empreturnorg_orireg <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% grou
 empreturnorg_resreg <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% group_by(ResidencyRegion) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(ResidencyRegion, desc(ReturnOrganisation))
 empreturnorg_jacs <- alumni.data %>% filter(grepl("_Two$", SurveyID),!JacsCat=="NA") %>% group_by(JacsCat) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(sum(n)>20) %>% arrange(JacsCat, desc(ReturnOrganisation))
 empreturnorg_score <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% group_by(ReturnOrganisation) %>% score_summary()
-
-empreturnorg_sch %>% filter(ReturnOrganisation=="Yes") #example of simplified table for looking at those who return to org only
 
 # Time to gain employment for those +2 year respondents who did not return to their former organistion (N quite small for some groups, not very meaningful)
 empreturntime_gender <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(Gender) %>%  count(ReturnEmploy) %>% mutate(prop = round((n / sum(n))*100,1))
@@ -334,7 +329,7 @@ ldrinnproject_score <- alumni.data %>% group_by(InnLeadProject) %>% score_summar
 ldrinnfunding_score <- alumni.data %>% group_by(InnLeadFunding) %>% score_summary()
 ldrinnstartup_score <- alumni.data %>% group_by(InnStartup) %>% score_summary()
 
-ldrbudget_orireg %>% filter(Response=="Yes") %>% arrange(desc(prop)) #example of simplified table looking at proportions reporting activities
+
 
 ## f] Skill application----
 
@@ -352,14 +347,6 @@ skilldisseminate_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% p
 skillinfluence_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillInfluence)
 skillethical_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillEthical)
 
-## simplified table of all skill gain variables - use with a table package (e.g. Pander) for best results
-## Remove spread command for a long data format dataframe
-skillgain_overall <- 
-  bind_rows(skillrestech_overall, skillresfield_overall, skillcritical_overall, skilltechnical_overall,
-      skillleadership_overall,skilldisseminate_overall, skillinfluence_overall, skillethical_overall) %>% 
-  select(-freq) %>% 
-  spread(Response, prop)
-
 
 ## Application of skills, asked to all alumni survey participants
 appskillwork_overall <- pop_summary(alumni.data,~AppSkillWork)
@@ -369,15 +356,6 @@ apptrain_overall <- pop_summary(alumni.data,~AppTrainColleagues)
 appresources_overall <- pop_summary(alumni.data,~AppDevelopResources)
 appadvocate_overall <- pop_summary(alumni.data,~AppAdvocateChange)
 appchange_overall <- pop_summary(alumni.data,~AppMakeChange)
-
-## simplified table of all application variables - use with a table package (e.g. Pander) for best results.
-## Remove spread command for a long data format dataframe
-app_overall <- 
-  bind_rows(
-    appskillwork_overall, appskillnonwork_overall,appapproach_overall,apptrain_overall,appresources_overall,
-    appadvocate_overall,appchange_overall) %>% 
-  select(-freq) %>% 
-  spread(Response,prop) 
 
 #Gender
 ## Skill gain
@@ -898,13 +876,6 @@ netinforigin_score <- alumni.data %>% group_by(NetInfluenceOrigin) %>% score_sum
 netinfother_score <- alumni.data %>% group_by(NetInfluenceOther) %>% score_summary()
 netinfpersonal_score <- alumni.data %>% group_by(NetInfluencePersonal) %>% score_summary()
 
-
-#Example of a table by variable (slightly more complex, but clear to read)
-rbind(netacad_year,netuk_year,nethome_year,netother_year,netpersonal_year) %>% 
-  select(-freq) %>% 
-  spread(YearGroup, prop)
-
-
 ## j] Broader impact----
 
 # prefix = "Imp"
@@ -1326,3 +1297,21 @@ indexresearch_jacs <-
 #this is much harder to model in a table because both sets of variables are continuous - better to use a scatterplot
 
 qplot(x=i.ldr,y=ZCtteeScore,data=alumni.data, geom="point")
+
+# --- Example table structures----
+
+#example of simplified table looking at proportions reporting positively a single activity
+ldrbudget_orireg %>% filter(Response=="Yes") %>% arrange(desc(prop)) 
+
+#Example table for a simple binary variable, grouped
+rbind(teachschool_year,teachundergrad_year,teachpostgrad_year,teachdoctorate_year,teachtvet_year) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq,-Response) %>% 
+  spread(Variable, prop)
+
+#Example of a table by several similar variables, grouped
+rbind(netacad_year,netuk_year,nethome_year,netother_year,netpersonal_year) %>% 
+  select(-freq) %>% 
+  spread(YearGroup, prop)
+
+

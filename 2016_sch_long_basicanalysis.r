@@ -4,6 +4,13 @@
 # Matt Mawer, The Association of Commonwealth Universities
 # February, 2017
 
+# Script creates an extensive array of basic data tables for the results of the CSC's surveys.
+# Many tables can be used directly in reports (e.g. in markdown, or exported to excel) or can be used as part of other analyses and visualisations
+# Data structures throughout are data frames (tibbles) in long data format
+
+# Either load the RDATA file directly, or use source() to the importcleaning.r script 
+# e.g. source(S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_importcleaning.r)
+
 load("2016_sch_long_core.rdata")
 SurveyName <- "2016 Alumni Survey"
 
@@ -68,7 +75,7 @@ str(alumni.data, list.len=nrow(alumni.data))
 # YearGroup = year
 # Origin region = orireg
 # Residency region = resreg
-# JACS category = jacs
+# JACS category = jacs. Note: throughout, JACs categories included in dataframes are limited to those with 20+ cases. JACs = NA is usually excluded.
 
 ## a] Data overview ----
 overview_gender <- pop_summary(alumni.data,~Gender) %>% arrange(desc(prop))
@@ -666,26 +673,109 @@ rescomparticles_score <- alumni.data %>% group_by(ResCompArticles) %>% score_sum
 rescompprojects_score <- alumni.data %>% group_by(ResCompProjects) %>% score_summary()
 rescompfunding_score <- alumni.data %>% group_by(ResCompFunding) %>% score_summary()
 
-alumni.data %>% group_by(ResCompFunding) %>% test()
-
-
-test(alumni.data)
-
-
-
-
 
 ## h] Teaching ----
 
+# prefix = "teach"
+
 #Overall
+teachmain_overall <- pop_summary(alumni.data,~TeachMain)
+teachcmwskills_overall <- pop_summary(alumni.data,~TeachCMWSkills)
+
+teachschool_overall <- pop_summary(alumni.data,~TeachSchool)
+teachundergrad_overall <- pop_summary(alumni.data,~TeachUndergrad)
+teachpostgrad_overall <- pop_summary(alumni.data,~TeachPostgrad)
+teachdoctorate_overall <- pop_summary(alumni.data,~TeachDoctorate)
+teachtvet_overall <- pop_summary(alumni.data,~TeachTVET)
+
+
 #Gender
+teachmain_gender <- subgroup_summary(alumni.data,~Gender,~TeachMain)
+teachcmwskills_gender <- subgroup_summary(alumni.data,~Gender,~TeachCMWSkills)
+
+teachschool_gender <- subgroup_summary(alumni.data,~Gender,~TeachSchool)
+teachundergrad_gender <- subgroup_summary(alumni.data,~Gender,~TeachUndergrad)
+teachpostgrad_gender <- subgroup_summary(alumni.data,~Gender,~TeachPostgrad)
+teachdoctorate_gender <- subgroup_summary(alumni.data,~Gender,~TeachDoctorate)
+teachtvet_gender <- subgroup_summary(alumni.data,~Gender,~TeachTVET)
+
 #Scheme
+teachmain_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachMain)
+teachcmwskills_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachCMWSkills)
+
+teachschool_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachSchool)
+teachundergrad_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachUndergrad)
+teachpostgrad_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachPostgrad)
+teachdoctorate_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachDoctorate)
+teachtvet_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachTVET)
+
 #Scheme Type
+teachmain_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachMain)
+teachcmwskills_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachCMWSkills)
+
+teachschool_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachSchool)
+teachundergrad_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachUndergrad)
+teachpostgrad_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachPostgrad)
+teachdoctorate_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachDoctorate)
+teachtvet_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachTVET)
+
 #Year Group
+teachmain_year <- subgroup_summary(alumni.data,~YearGroup,~TeachMain)
+teachcmwskills_year <- subgroup_summary(alumni.data,~YearGroup,~TeachCMWSkills)
+
+teachschool_year <- subgroup_summary(alumni.data,~YearGroup,~TeachSchool)
+teachundergrad_year <- subgroup_summary(alumni.data,~YearGroup,~TeachUndergrad)
+teachpostgrad_year <- subgroup_summary(alumni.data,~YearGroup,~TeachPostgrad)
+teachdoctorate_year <- subgroup_summary(alumni.data,~YearGroup,~TeachDoctorate)
+teachtvet_year <- subgroup_summary(alumni.data,~YearGroup,~TeachTVET)
+
 #Origin Region
+teachmain_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachMain)
+teachcmwskills_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachCMWSkills)
+
+teachschool_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachSchool)
+teachundergrad_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachUndergrad)
+teachpostgrad_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachPostgrad)
+teachdoctorate_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachDoctorate)
+teachtvet_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachTVET)
+
 #Residency Region
+teachmain_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachMain)
+teachcmwskills_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachCMWSkills)
+
+teachschool_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachSchool)
+teachundergrad_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachUndergrad)
+teachpostgrad_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachPostgrad)
+teachdoctorate_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachDoctorate)
+teachtvet_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachTVET)
+
 #Subect Studied
+teachmain_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachMain) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachcmwskills_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachCMWSkills) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
+teachschool_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachSchool) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachundergrad_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachUndergrad) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachpostgrad_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachPostgrad) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachdoctorate_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachDoctorate) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachtvet_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachTVET) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
 #Committee Score
+teachmain_score <- alumni.data %>% group_by(TeachMain) %>% score_summary()
+teachcmwskills_score <- alumni.data %>% group_by(TeachCMWSkills) %>% score_summary()
+
+teachschool_score <- alumni.data %>% group_by(TeachSchool) %>% score_summary()
+teachundergrad_score <- alumni.data %>% group_by(TeachUndergrad) %>% score_summary()
+teachpostgrad_score <- alumni.data %>% group_by(TeachPostgrad) %>% score_summary()
+teachdoctorate_score <- alumni.data %>% group_by(TeachDoctorate) %>% score_summary()
+teachtvet_score <- alumni.data %>% group_by(TeachTVET) %>% score_summary()
+
+
+#Example simplified table of teaching activity by a group
+rbind(teachschool_year,teachundergrad_year,teachpostgrad_year,teachdoctorate_year,teachtvet_year) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq,-Response) %>% 
+  spread(Variable, prop)
+
 
 ## i] Networks and links----
 

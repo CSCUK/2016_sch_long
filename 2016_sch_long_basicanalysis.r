@@ -521,27 +521,146 @@ appchange_score <- alumni.data %>% group_by(AppMakeChange) %>% score_summary()
 
 ## g] Research ----
 
-# prefix = "res"
+# Prefix = "res"
+# Note that there are usually many NA responses for research variables because these questions are only asked to thsoe that report current involvement in research
+# Filter question for research involvement is 'ResMain'
+# NA for ResMain is because unemployed and studying respondents are not presented with the ResMain question
+
+#Overall
+resmain_overall <- pop_summary(alumni.data, ~ResMain) 
 
 rescollabauthor_overall <- pop_summary(alumni.data,~ResCollabAuthor)
 rescollabgrant_overall <- pop_summary(alumni.data,~ResCollabGrant)
 rescollabconf_overall <- pop_summary(alumni.data,~ResCollabConf)
 
+reseditor_overall <- pop_summary(alumni.data, ~ResEditor)
+resreviewer_overall <- pop_summary(alumni.data, ~ResReviewer)
+resorganiser_overall <- pop_summary(alumni.data, ~ResOrganiser)
 
-## simplified table of all application variables - use with a table package (e.g. Pander) for best results.
-## Remove spread command for a long data format dataframe
-
-#Overall
-
+rescomparticles_overall <- pop_summary(alumni.data, ~ResCompArticles)
+rescompprojects_overall <- pop_summary(alumni.data, ~ResCompProjects)
+rescompfunding_overall <- pop_summary(alumni.data, ~ResCompFunding)
 
 #Gender
+resmain_gender <- subgroup_summary(alumni.data,~Gender,~ResMain) 
+
+rescollabauthor_gender <- subgroup_summary(alumni.data,~Gender,~ResCollabAuthor)
+rescollabgrant_gender <- subgroup_summary(alumni.data,~Gender,~ResCollabGrant)
+rescollabconf_gender <- subgroup_summary(alumni.data,~Gender,~ResCollabConf)
+
+reseditor_gender <- subgroup_summary(alumni.data,~Gender,~ResEditor)
+resreviewer_gender <- subgroup_summary(alumni.data,~Gender,~ResReviewer)
+resorganiser_gender <- subgroup_summary(alumni.data,~Gender,~ResOrganiser)
+
+rescomparticles_gender <- subgroup_summary(alumni.data,~Gender,~ResCompArticles)
+rescompprojects_gender <- subgroup_summary(alumni.data,~Gender,~ResCompProjects)
+rescompfunding_gender <- subgroup_summary(alumni.data,~Gender,~ResCompFunding)
+
 #Scheme
+resmain_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResMain) 
+
+rescollabauthor_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCollabAuthor)
+rescollabgrant_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCollabGrant)
+rescollabconf_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCollabConf)
+
+reseditor_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResEditor)
+resreviewer_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResReviewer)
+resorganiser_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResOrganiser)
+
+rescomparticles_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCompArticles)
+rescompprojects_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCompProjects)
+rescompfunding_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCompFunding)
+
 #Scheme Type
+resmain_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResMain) 
+
+rescollabauthor_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCollabAuthor)
+rescollabgrant_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCollabGrant)
+rescollabconf_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCollabConf)
+
+reseditor_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResEditor)
+resreviewer_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResReviewer)
+resorganiser_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResOrganiser)
+
+rescomparticles_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCompArticles)
+rescompprojects_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCompProjects)
+rescompfunding_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCompFunding)
+
 #Year Group
+resmain_year <- subgroup_summary(alumni.data,~YearGroup,~ResMain) 
+
+rescollabauthor_year <- subgroup_summary(alumni.data,~YearGroup,~ResCollabAuthor)
+rescollabgrant_year <- subgroup_summary(alumni.data,~YearGroup,~ResCollabGrant)
+rescollabconf_year <- subgroup_summary(alumni.data,~YearGroup,~ResCollabConf)
+
+reseditor_year <- subgroup_summary(alumni.data,~YearGroup,~ResEditor)
+resreviewer_year <- subgroup_summary(alumni.data,~YearGroup,~ResReviewer)
+resorganiser_year <- subgroup_summary(alumni.data,~YearGroup,~ResOrganiser)
+
+rescomparticles_year <- subgroup_summary(alumni.data,~YearGroup,~ResCompArticles)
+rescompprojects_year <- subgroup_summary(alumni.data,~YearGroup,~ResCompProjects)
+rescompfunding_year <- subgroup_summary(alumni.data,~YearGroup,~ResCompFunding)
+
 #Origin Region
+resmain_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResMain) 
+
+rescollabauthor_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCollabAuthor)
+rescollabgrant_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCollabGrant)
+rescollabconf_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCollabConf)
+
+reseditor_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResEditor)
+resreviewer_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResReviewer)
+resorganiser_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResOrganiser)
+
+rescomparticles_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCompArticles)
+rescompprojects_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCompProjects)
+rescompfunding_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCompFunding)
+
 #Residency Region
+resmain_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResMain) 
+
+rescollabauthor_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCollabAuthor)
+rescollabgrant_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCollabGrant)
+rescollabconf_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCollabConf)
+
+reseditor_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResEditor)
+resreviewer_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResReviewer)
+resorganiser_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResOrganiser)
+
+rescomparticles_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCompArticles)
+rescompprojects_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCompProjects)
+rescompfunding_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCompFunding)
+
 #Subect Studied
+resmain_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResMain) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
+rescollabauthor_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCollabAuthor) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescollabgrant_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCollabGrant) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescollabconf_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCollabConf) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
+reseditor_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResEditor) %>% filter(!JacsCat=="NA", sum(freq)>20)
+resreviewer_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResReviewer) %>% filter(!JacsCat=="NA", sum(freq)>20)
+resorganiser_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResOrganiser) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
+rescomparticles_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCompArticles) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescompprojects_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCompProjects) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescompfunding_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCompFunding) %>% filter(!JacsCat=="NA", sum(freq)>20)
+
 #Committee Score
+resmain_score <- alumni.data %>% group_by(ResMain) %>% score_summary()
+
+rescollabauthor_score <- alumni.data %>% group_by(ResCollabAuthor) %>% score_summary()
+rescollabgrant_score <- alumni.data %>% group_by(ResCollabGrant) %>% score_summary()
+rescollabconf_score <- alumni.data %>% group_by(ResCollabConf) %>% score_summary()
+
+reseditor_score <- alumni.data %>% group_by(ResEditor) %>% score_summary()
+resreviewer_score <- alumni.data %>% group_by(ResReviewer) %>% score_summary()
+resorganiser_score <- alumni.data %>% group_by(ResOrganiser) %>% score_summary()
+
+rescomparticles_score <- alumni.data %>% group_by(ResCompArticles) %>% score_summary()
+rescompprojects_score <- alumni.data %>% group_by(ResCompProjects) %>% score_summary()
+rescompfunding_score <- alumni.data %>% group_by(ResCompFunding) %>% score_summary()
+
 
 ## h] Teaching ----
 
@@ -683,7 +802,6 @@ test <- function(dataframe,variable,group,v_name){
     arrange_(group) %>% 
     select_(group, v_name=prop)
 }
-
 
 
 #Example of a concise table for impact level

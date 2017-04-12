@@ -20,13 +20,18 @@ opar = par()
 score_summary <- function(dataframe){
   summarise(
     filter(dataframe,!SchemeNom=="Shared Scholars", !SchemeNom=="Distance Learners"),
-    Count = n(),
+    Freq = n(),
     Median = round(median(ZCtteeScore, na.rm=T),2),
     Mean = round(mean(ZCtteeScore, na.rm=T),2), 
     SD = round(sd(ZCtteeScore, na.rm=T),2), 
     Max = round(max(ZCtteeScore, na.rm=T),2),
-    Min = round(min(ZCtteeScore, na.rm=T),2)
-  )}
+    Min = round(min(ZCtteeScore, na.rm=T),2) ) %>% 
+  rownames_to_column() %>% 
+  mutate(rowname=colnames(.)[2]) %>% 
+  rename_(Response = colnames(.)[2]) %>% 
+  select(Variable = rowname, everything())
+} #Statistical summary for committee scores, group data first to yield useful comparisons. In long data format.
+
 
 
 pop_summary <- function(dataframe, variable){
@@ -73,7 +78,7 @@ overview_year <- pop_summary(alumni.data,~YearGroup) %>% arrange(desc(prop))
 overview_orireg <- pop_summary(alumni.data,~OriginRegion) %>% arrange(desc(prop))
 overview_resreg <- pop_summary(alumni.data,~ResidencyRegion) %>% arrange(desc(prop))
 overview_jacs <- pop_summary(alumni.data,~JacsCat) %>% arrange(desc(prop))
-overview_score <- alumni.data %>% group_by(CtteeGroup) %>% score_summary()
+overview_score <- alumni.data %>% group_by(CtteeGroup) %>% test()
 
 
 ## b] Residency ----
@@ -322,7 +327,7 @@ ldrinnproject_score <- alumni.data %>% group_by(InnLeadProject) %>% score_summar
 ldrinnfunding_score <- alumni.data %>% group_by(InnLeadFunding) %>% score_summary()
 ldrinnstartup_score <- alumni.data %>% group_by(InnStartup) %>% score_summary()
 
-ldrbudget_orireg %>% filter(LdrBudget=="Yes") %>% arrange(desc(prop)) #example of simplified table looking at proportions reporting activities
+ldrbudget_orireg %>% filter(Response=="Yes") %>% arrange(desc(prop)) #example of simplified table looking at proportions reporting activities
 
 ## f] Skill application----
 
@@ -661,6 +666,14 @@ rescomparticles_score <- alumni.data %>% group_by(ResCompArticles) %>% score_sum
 rescompprojects_score <- alumni.data %>% group_by(ResCompProjects) %>% score_summary()
 rescompfunding_score <- alumni.data %>% group_by(ResCompFunding) %>% score_summary()
 
+alumni.data %>% group_by(ResCompFunding) %>% test()
+
+
+test(alumni.data)
+
+
+
+
 
 ## h] Teaching ----
 
@@ -790,35 +803,18 @@ impecon_score <- alumni.data %>% group_by(ImpEcon) %>% score_summary()
 imppolicy_score <- alumni.data %>% group_by(ImpPolicy) %>% score_summary()
 
 
-#WORK IN PROGRESS TO SIMPLIFY BIND_COLS CODES FOR TABLES 
-test <- function(dataframe,variable,group,v_name){
-  dataframe %>%
-    group_by_(group, variable) %>% 
-    summarise_(
-      freq = ~n() 
-    ) %>% 
-    mutate_(prop = round((freq / sum(freq))*100,1)) %>% 
-    filter_(variable=="Yes") %>% 
-    arrange_(group) %>% 
-    select_(group, v_name=prop)
-}
-
-
 #Example of a concise table for impact level
-bind_cols(
-  select(impinstitutional_year %>% filter(ImpInstitutional=="Yes") %>% arrange(YearGroup) %>% ungroup, YearGroup, Institutional=prop),
-  select(implocal_year %>% filter(ImpLocal=="Yes") %>% arrange(YearGroup) %>% ungroup, Local=prop),
-  select(impnational_year %>% filter(ImpNational=="Yes") %>% arrange(YearGroup) %>% ungroup, National=prop),
-  select(impinternational_year %>% filter(ImpInternational=="Yes") %>% arrange(YearGroup) %>% ungroup, International=prop)
-  )
+bind_rows(impinstitutional_year,implocal_year,impnational_year,impinternational_year) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq,-Response) %>% 
+  spread(Variable, prop)
 
 #Example of a concise table for impact type
-bind_cols(
-  select(impsocial_year %>% filter(ImpSocial=="Yes") %>% arrange(YearGroup) %>% ungroup, YearGroup, Social=prop),
-  select(impcivic_year %>% filter(ImpCivic=="Yes") %>% arrange(YearGroup) %>% ungroup, Civic=prop),
-  select(impecon_year %>% filter(ImpEcon=="Yes") %>% arrange(YearGroup) %>% ungroup, Economic=prop),
-  select(imppolicy_year %>% filter(ImpPolicy=="Yes") %>% arrange(YearGroup) %>% ungroup, Policy=prop)
-)
+bind_rows(impsocial_year,impcivic_year,impecon_year,imppolicy_year) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq,-Response) %>% 
+  spread(Variable, prop)
+
 
 
 ## k] Analytic indices----

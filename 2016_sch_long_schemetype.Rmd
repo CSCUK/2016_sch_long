@@ -20,7 +20,7 @@ panderOptions("table.split.table",Inf)
 
 ```
 
-This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
+This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. Figures in tables are proportions (%) of the total (e.g. 89% of Split site Scholars replied 'Often'). For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
 
 # 1. Data overview
 
@@ -261,6 +261,8 @@ bind_rows(impsocial_schtype,impcivic_schtype,impecon_schtype,imppolicy_schtype) 
 ```
 
 # 11. Analytic indices
+
+Comparative indices, ranging from 0 (low) to 1 (high), based on responses to questions on application of skills, leadership, research activity, and international research collaboration. Methodology detailed elsewhere: please contact the E&M Team for details.
 
 ```{r, echo=FALSE}
 bind_cols(select(indexskills_schtype, SchemeType, Skills=Mean),

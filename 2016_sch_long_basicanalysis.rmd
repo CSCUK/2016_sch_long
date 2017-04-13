@@ -2,8 +2,9 @@
 title: "2016 Scholar Longitudinal Analysis"
 author: "Matt Mawer"
 output:
-  html_document: default
+  pdf_document: default
   html_notebook: default
+  html_document: default
 ---
 
 

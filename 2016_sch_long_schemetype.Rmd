@@ -1,0 +1,270 @@
+---
+title: "Sch_2016_SchemeType"
+author: "Matt Mawer"
+date: "13 April 2017"
+output: html_document
+---
+
+
+```{r setup, include = FALSE}
+
+source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_basicanalysis.r")
+
+library(pacman)
+pacman:: p_load(tidyverse, pander,knitr, RODBC)
+
+set.alignment("left")
+
+```
+
+# 1. Data overview
+
+```{r, echo=FALSE}
+overview_schtype %>% 
+  select(-Variable,Count=freq, 'Proportion (%)'=prop) %>% 
+  pander
+```
+
+# 2. Current residency
+
+```{r, echo=FALSE}
+bind_rows(rescountry_schtype,resregion_schtype) %>% 
+  select(-freq) %>% 
+  mutate(Variable = fct_recode(Variable, "Country"="resStatusCountry","Region"="resStatusRegion")) %>% 
+  spread(SchemeType, prop) %>% 
+  pander
+```
+
+# 3. Employment
+
+Employment status:
+
+```{r, echo=FALSE}
+empcurrent_schtype %>% 
+  select(-freq) %>% 
+  mutate(Variable = fct_recode(Variable,"Current Employment"="CurrentEmploy")) %>% 
+  spread(SchemeType, prop) %>% 
+  pander
+```
+
+Current sector of employment:
+
+```{r, echo=FALSE}
+empsector_schtype %>% 
+  select(-freq) %>% 
+  mutate(Variable = fct_recode(Variable,"Current Job Sector"="CurrentSector")) %>% 
+  spread(SchemeType, prop) %>% 
+  pander
+```
+
+# 4. Further qualificiations
+
+Study of additional qualifications post-Commonwealth Scholarship. Note: be cautious of low size for groups distorting figures.
+
+```{r, echo=FALSE}
+acapostaward_schtype %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq, -Response, "Proportion (%)"=prop) %>% 
+  mutate(Variable = fct_recode(Variable,"Additional qualification"="AcaPostaward")) %>% 
+  pander
+```
+
+Qualification levels (in rows: Scheme Type in columns):
+
+```{r, echo=FALSE}
+acaquallevel_schtype %>% 
+  select(-freq) %>% 
+  mutate(Variable = fct_recode(Variable,"Qualification type"="AcaQualLevel")) %>% 
+  spread(SchemeType, prop) %>% 
+  pander
+```
+
+# 5. Leadership activities
+
+Workplace related leadership activities:
+
+```{r, echo=FALSE}
+bind_rows(ldrbudget_schtype, ldrmanaging_schtype, ldrsupervise_schtype,ldrstrategy_schtype) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq, -Response) %>% 
+  mutate(Variable = fct_recode(Variable,"Overseeing budgets"="LdrBudget","Managing Company / department" = "LdrManaging",
+                               "Setting strategy"="LdrStrategy","Supervising others"="LdrSupervising")) %>% 
+  spread(SchemeType, prop) %>% 
+  pander
+```
+
+# 6. Skill application
+
+Use of skills from Scholarship in various circumstances. Divided into three overall groups: 
+
+[1] Use of skills
+
+```{r, echo=FALSE}
+bind_rows(
+    appskillwork_schtype, appskillnonwork_schtype,appapproach_schtype) %>% 
+  select(-freq) %>% 
+  mutate(Variable = fct_recode(Variable,"Used in workplace"="AppSkillWork", "Used elsewhere"="AppSkillNonwork",
+                               "Took new approach"="AppApproachProblem")) %>% 
+  spread(Response,prop) %>% 
+  arrange(desc(Variable)) %>% 
+  pander
+
+```
+
+[2] Knowledge transfer
+
+```{r, echo=FALSE}
+bind_rows(
+    apptrain_schtype,appresources_schtype) %>% 
+  select(-freq) %>% 
+  mutate(Variable = fct_recode(Variable,"Trained others"="AppTrainColleagues","Developed resources" = "AppDevelopResources")) %>% 
+  spread(Response,prop) %>% 
+  pander
+
+```
+
+[3] Advocacy and influencing change
+
+```{r, echo=FALSE}
+bind_rows(
+    appadvocate_schtype,appchange_schtype) %>% 
+  select(-freq) %>% 
+  mutate(Variable = fct_recode(Variable,"Advocated change"="AppAdvocateChange","Introduced change"="AppMakeChange")) %>% 
+  spread(Response,prop) %>% 
+  pander
+
+```
+
+# 7. Research activity
+
+Overall involvement in academic research:
+
+```{r, echo=FALSE}
+resmain_schtype %>% 
+  filter(Response=="Yes") %>%
+  arrange(desc(prop)) %>% 
+  select(-freq, -Response, "Proportion (%)"=prop) %>% 
+  mutate(Variable = fct_recode(Variable,"Research involvement"="ResMain")) %>% 
+  pander
+```
+
+Academic productivity
+
+```{r, echo=FALSE}
+
+bind_rows(rescomparticles_schtype,rescompprojects_schtype,rescompfunding_schtype) %>% 
+  select(-freq) %>% 
+  mutate(Variable = fct_recode(Variable,"Published articles"="ResCompArticles","Applied for funding"="ResCompFunding",
+                               "Involved in projects" = "ResCompProjects")) %>% 
+  spread(Response,prop) %>% 
+  pander
+
+```
+
+Academic community activities:
+
+```{r, echo=FALSE}
+bind_rows(reseditor_schtype,resreviewer_schtype,resorganiser_schtype) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq,-Response, "Proportion (%)"=prop) %>%
+  mutate(Variable = fct_recode(Variable,"Journal editor"="ResEditor","Peer reviewer"="ResReviewer",
+                               "Conference organiser" = "ResOrganiser")) %>%
+  pander
+
+
+```
+
+International collaboration 9activities with colleagues from outside Scholar's country of origin):
+
+```{r, echo=FALSE}
+
+bind_rows(rescollabauthor_schtype,rescollabgrant_schtype,rescollabconf_schtype) %>% 
+  filter(!Response=="NA") %>% 
+  select(-freq) %>% 
+  mutate(Variable = fct_recode(Variable,"Authored articles"="ResCollabAuthor","Applied for grants"="ResCollabGrant",
+                               "Attended conference" = "ResCollabConf")) %>% 
+  spread(Response,prop) %>% 
+  pander
+
+```
+
+# 8. Teaching
+
+Overall involvement in teaching:
+
+```{r, echo=FALSE}
+teachmain_schtype %>% 
+  filter(Response=="Yes") %>%
+  arrange(desc(prop)) %>% 
+  select(-freq, -Response, "Proportion (%)"=prop) %>% 
+  mutate(Variable = fct_recode(Variable,"Teaching responsibility"="TeachMain")) %>% 
+  pander
+```
+
+Levels of education at which Scholars are teaching:
+
+```{r, echo=FALSE}
+rbind(teachschool_schtype,teachundergrad_schtype,teachpostgrad_schtype,teachdoctorate_schtype,teachtvet_schtype) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq,-Response) %>% 
+  spread(Variable,prop) %>% 
+  select(SchemeType,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,Undergraduate=TeachUndergrad,TVET=TeachTVET,School=TeachSchool) %>% 
+  pander
+```
+
+# 9. Networks and links
+
+Frequency of contact with networks of various kinds:
+
+```{r, echo=FALSE}
+rbind(netacad_schtype,netuk_schtype,nethome_schtype,netother_schtype,netpersonal_schtype) %>% 
+  select(-freq) %>% 
+  spread(SchemeType, prop) %>% 
+  mutate(Variable = fct_recode(Variable,"Academic"="NetAcad", "UK professional network"="NetUK", "Home pofessional network"="NetHome",
+         "Personal contacts"="NetPersonal", "Other"="NetOther")) %>% 
+  pander
+
+```
+
+# 10. Broader impact
+
+Breadth of impact reported:
+
+```{r, echo=FALSE}
+bind_rows(impinstitutional_schtype,implocal_schtype,impnational_schtype,impinternational_schtype) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq,-Response) %>% 
+  spread(Variable, prop) %>% 
+  select(SchemeType, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
+  pander
+
+```
+
+Types of impact reported:
+
+```{r, echo=FALSE}
+bind_rows(impsocial_schtype,impcivic_schtype,impecon_schtype,imppolicy_schtype) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq,-Response) %>% 
+  spread(Variable, prop) %>%
+  rename('Civic Engagement'=ImpCivic, Economic = ImpEcon,'Policymaking'=ImpPolicy, 'Social Development' =ImpSocial) %>% 
+  pander
+
+
+```
+
+# 11. Analytic indices
+
+```{r, echo=FALSE}
+bind_cols(select(indexskills_schtype, SchemeType, Skills=Mean),
+          select(indexldr_schtype, Leadership=Mean),
+          select(indexresearch_schtype, "Research activity"=Mean),
+          select(indexcollab_schtype, "Research collaboration"=Mean)) %>% 
+  pander
+
+```
+
+
+
+
+

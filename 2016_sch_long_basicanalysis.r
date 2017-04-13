@@ -8,10 +8,10 @@
 # Many tables can be used directly in reports (e.g. in markdown, or exported to excel) or can be used as part of other analyses and visualisations
 # Data structures throughout are data frames (tibbles) in long data format
 
-# Either load the RDATA file directly, or use source() to the importcleaning.r script 
-# e.g. source(S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_importcleaning.r)
+# Either load the RDATA file directly, or use source() to the importcleaning.r script:
+source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_importcleaning.r")
+# load("2016_sch_long_core.rdata")
 
-load("2016_sch_long_core.rdata")
 SurveyName <- "2016 Alumni Survey"
 
 # --- Library calls ----
@@ -85,42 +85,36 @@ overview_year <- pop_summary(alumni.data,~YearGroup) %>% arrange(desc(prop))
 overview_orireg <- pop_summary(alumni.data,~OriginRegion) %>% arrange(desc(prop))
 overview_resreg <- pop_summary(alumni.data,~ResidencyRegion) %>% arrange(desc(prop))
 overview_jacs <- pop_summary(alumni.data,~JacsCat) %>% arrange(desc(prop))
-overview_score <- alumni.data %>% group_by(CtteeGroup) %>% test()
+overview_score <- alumni.data %>% group_by(CtteeGroup) %>% score_summary()
 
 ## b] Residency ----
 
 # prefix = 'res'
 
 #overall
-rescountry_overall <- alumni.data %>% count(resStatusCountry) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(prop))
-resregion_overall <- alumni.data %>% count(resStatusRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(prop))
-resreason_overall <- alumni.data %>% filter(!ResidencyReason=="NA") %>% count(ResidencyReason) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(prop))
+rescountry_overall <- pop_summary(alumni.data,~resStatusCountry)
+resregion_overall <- pop_summary(alumni.data,~resStatusRegion)
+resreason_overall <- alumni.data %>% filter(!ResidencyReason=="NA") %>%  pop_summary(~ResidencyReason) %>% arrange(desc(prop))
 
 # Residency status (home country)
-rescountry_gender <- alumni.data %>% group_by(Gender) %>% count(resStatusCountry) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusCountry=="Home") %>% arrange(desc(prop))
-rescountry_sch <- alumni.data %>% group_by(SchemeNom) %>% count(resStatusCountry) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusCountry=="Home") %>% arrange(desc(prop))
-rescountry_schtype <- alumni.data %>% group_by(SchemeType) %>% count(resStatusCountry) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusCountry=="Home") %>% arrange(desc(prop))
-rescountry_year <- alumni.data %>% group_by(YearGroup) %>% count(resStatusCountry) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusCountry=="Home") %>% arrange(desc(prop))
-rescountry_orireg <- alumni.data %>% group_by(OriginRegion) %>% count(resStatusCountry) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusCountry=="Home") %>% arrange(desc(prop))
-rescountry_resreg <- alumni.data %>% group_by(ResidencyRegion) %>% count(resStatusCountry) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusCountry=="Home") %>% arrange(desc(prop))
-rescountry_jacs <- alumni.data %>% filter(!JacsCat=="NA") %>% group_by(JacsCat) %>% count(resStatusCountry) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusCountry=="Home",sum(n)>20) %>% arrange(desc(prop))
-rescountry_score <- alumni.data %>% group_by(resStatusCountry) %>% score_summary
-
-p.rescountry_score <- ggplot(alumni.data, aes(x=resStatusCountry, y=ZCtteeScore)) + geom_boxplot() + stat_summary(fun.y=mean, geom="point", shape=23, size=4)
-
+rescountry_gender <- subgroup_summary(alumni.data,~Gender,~resStatusCountry)
+rescountry_sch <- subgroup_summary(alumni.data,~SchemeNom,~resStatusCountry)
+rescountry_schtype <- subgroup_summary(alumni.data,~SchemeType,~resStatusCountry)
+rescountry_year <- subgroup_summary(alumni.data,~YearGroup,~resStatusCountry)
+rescountry_orireg <- subgroup_summary(alumni.data,~OriginRegion,~resStatusCountry)
+rescountry_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~resStatusCountry)
+rescountry_jacs <- subgroup_summary(alumni.data,~JacsCat,~resStatusCountry) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescountry_score <- alumni.data %>% group_by(resStatusCountry) %>% score_summary()
 
 # Residency status (home region)
-resregion_gender <- alumni.data %>% group_by(Gender) %>% count(resStatusRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusRegion=="Home") %>% arrange(desc(prop))
-resregion_sch <- alumni.data %>% group_by(SchemeNom) %>% count(resStatusRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusRegion=="Home") %>% arrange(desc(prop))
-resregion_schtype <- alumni.data %>% group_by(SchemeType) %>% count(resStatusRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusRegion=="Home") %>% arrange(desc(prop))
-resregion_year <- alumni.data %>% group_by(YearGroup) %>% count(resStatusRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusRegion=="Home") %>% arrange(desc(prop))
-resregion_orireg <- alumni.data %>% group_by(OriginRegion) %>% count(resStatusRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusRegion=="Home") %>% arrange(desc(prop))
-resregion_resreg <- alumni.data %>% group_by(ResidencyRegion) %>% count(resStatusRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusRegion=="Home") %>% arrange(desc(prop))
-resregion_jacs <- alumni.data %>% filter(!JacsCat=="NA") %>% group_by(JacsCat) %>% count(resStatusRegion) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(resStatusRegion=="Home",sum(n)>20) %>% arrange(desc(prop))
+resregion_gender <- subgroup_summary(alumni.data,~Gender,~resStatusRegion)
+resregion_sch <- subgroup_summary(alumni.data,~SchemeNom,~resStatusRegion)
+resregion_schtype <- subgroup_summary(alumni.data,~SchemeType,~resStatusRegion)
+resregion_year <- subgroup_summary(alumni.data,~YearGroup,~resStatusRegion)
+resregion_orireg <- subgroup_summary(alumni.data,~OriginRegion,~resStatusRegion)
+resregion_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~resStatusRegion)
+resregion_jacs <- subgroup_summary(alumni.data,~JacsCat,~resStatusRegion) %>% filter(!JacsCat=="NA", sum(freq)>20)
 resregion_score <- alumni.data %>% group_by(resStatusRegion) %>% score_summary()
-
-p.resregion_score <- ggplot(alumni.data, aes(x=resStatusRegion, y=ZCtteeScore)) + geom_boxplot() + stat_summary(fun.y=mean, geom="point", shape=23, size=4)
-
 
 ## c] Employment ----
 
@@ -128,32 +122,32 @@ p.resregion_score <- ggplot(alumni.data, aes(x=resStatusRegion, y=ZCtteeScore)) 
 # TO ADD - CONTEXT VARIABLES
 
 # Overall
-empcurrent_overall <- alumni.data %>% count(CurrentEmploy) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(prop))
-empsector_overall <- alumni.data %>% filter(!CurrentSector=="NA") %>% count(CurrentSector) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(prop))
-empskillmatch_overall <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% count(CurrentSkillMatch) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(prop))
-empchange_overall <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% count(CurrentJobChange) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(prop))
-empreturnorg_overall <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(prop))
-empreturntime_overall <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% count(ReturnEmploy) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(desc(prop))
+empcurrent_overall <- pop_summary(alumni.data,~CurrentEmploy)
+empsector_overall <- pop_summary(alumni.data,~CurrentSector)
+empskillmatch_overall <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% pop_summary(~CurrentSkillMatch)
+empchange_overall <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% pop_summary(~CurrentJobChange)
+empreturnorg_overall <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% pop_summary(~ReturnOrganisation)
+empreturntime_overall <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% pop_summary(~ReturnEmploy)
 
 # Current employment - limited to 'Employed' and 'Studying' for ease of viewing
-empcurrent_gender <- alumni.data %>% group_by(Gender) %>% count(CurrentEmploy) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(CurrentEmploy %in% "Employed" | CurrentEmploy %in% "Studying") %>% arrange(CurrentEmploy, desc(prop))
-empcurrent_sch <- alumni.data %>% group_by(SchemeNom) %>% count(CurrentEmploy) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(CurrentEmploy %in% "Employed" | CurrentEmploy %in% "Studying") %>% arrange(CurrentEmploy, desc(prop))
-empcurrent_schtype <- alumni.data %>% group_by(SchemeType) %>% count(CurrentEmploy) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(CurrentEmploy %in% "Employed" | CurrentEmploy %in% "Studying") %>% arrange(CurrentEmploy, desc(prop))
-empcurrent_year <- alumni.data %>% group_by(YearGroup) %>% count(CurrentEmploy) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(CurrentEmploy %in% "Employed" | CurrentEmploy %in% "Studying") %>% arrange(CurrentEmploy, desc(prop))
-empcurrent_orireg <- alumni.data %>% group_by(OriginRegion) %>% count(CurrentEmploy) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(CurrentEmploy %in% "Employed" | CurrentEmploy %in% "Studying") %>% arrange(CurrentEmploy, desc(prop))
-empcurrent_resreg <- alumni.data %>% group_by(ResidencyRegion) %>% count(CurrentEmploy) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(CurrentEmploy %in% "Employed" | CurrentEmploy %in% "Studying", sum(n)>20) %>% arrange(CurrentEmploy, desc(prop)) #limited to regions with n>20
-empcurrent_jacs <- alumni.data %>% filter(!JacsCat=="NA") %>% group_by(JacsCat) %>% count(CurrentEmploy) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(CurrentEmploy %in% "Employed" | CurrentEmploy %in% "Studying", sum(n)>20) %>% arrange(CurrentEmploy,desc(prop))
+empcurrent_gender <- subgroup_summary(alumni.data,~Gender,~CurrentEmploy)
+empcurrent_sch <- subgroup_summary(alumni.data,~SchemeNom,~CurrentEmploy)
+empcurrent_schtype <- subgroup_summary(alumni.data,~SchemeType,~CurrentEmploy)
+empcurrent_year <- subgroup_summary(alumni.data,~YearGroup,~CurrentEmploy)
+empcurrent_orireg <- subgroup_summary(alumni.data,~OriginRegion,~CurrentEmploy)
+empcurrent_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~CurrentEmploy)
+empcurrent_jacs <- subgroup_summary(alumni.data,~JacsCat,~CurrentEmploy) %>% filter(!JacsCat=="NA", sum(freq)>20)
 empcurrent_score <- alumni.data %>% group_by(CurrentEmploy) %>% score_summary
 
 # Current employment sector
-empsector_gender <- alumni.data %>% filter(!CurrentSector=="NA") %>% group_by(Gender) %>% count(CurrentSector) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSector, desc(prop))
-empsector_sch <- alumni.data %>% filter(!CurrentSector=="NA") %>% group_by(SchemeNom) %>% count(CurrentSector) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSector, desc(prop))
-empsector_schtype <- alumni.data %>% filter(!CurrentSector=="NA") %>% group_by(SchemeType) %>% count(CurrentSector) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSector, desc(prop))
-empsector_year <- alumni.data %>% filter(!CurrentSector=="NA") %>% group_by(YearGroup) %>% count(CurrentSector) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSector, YearGroup, desc(prop))
-empsector_orireg <- alumni.data %>% filter(!CurrentSector=="NA") %>% group_by(OriginRegion) %>% count(CurrentSector) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSector, desc(prop))
-empsector_resreg <- alumni.data %>% filter(!CurrentSector=="NA") %>% group_by(ResidencyRegion) %>% count(CurrentSector) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(sum(n)>20) %>% arrange(CurrentSector, desc(prop))
-empsector_jacs <- alumni.data %>% filter(!JacsCat=="NA",!CurrentSector=="NA") %>% group_by(JacsCat) %>% count(CurrentSector) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(sum(n)>20) %>% arrange(CurrentSector, desc(prop))
-empsector_score <- alumni.data %>% filter(!CurrentSector=="NA") %>% group_by(CurrentSector) %>% score_summary()
+empsector_gender <- subgroup_summary(alumni.data,~Gender,~CurrentSector)
+empsector_sch <- subgroup_summary(alumni.data,~SchemeNom,~CurrentSector)
+empsector_schtype <- subgroup_summary(alumni.data,~SchemeType,~CurrentSector)
+empsector_year <- subgroup_summary(alumni.data,~YearGroup,~CurrentSector)
+empsector_orireg <- subgroup_summary(alumni.data,~OriginRegion,~CurrentSector)
+empsector_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~CurrentSector)
+empsector_jacs <- subgroup_summary(alumni.data,~JacsCat,~CurrentSector) %>% filter(!JacsCat=="NA", sum(freq)>20)
+empsector_score <- alumni.data %>% group_by(CurrentSector) %>% score_summary
 
 # Current employment skill level match
 empskillmatch_gender <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% group_by(Gender) %>% count(CurrentSkillMatch) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSkillMatch, desc(prop))
@@ -199,49 +193,49 @@ empreturntime_score <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnO
 # prefix = "Aca"
 
 #Overall
-Acapostaward_overall <- pop_summary(alumni.data, ~AcaPostaward)
-Acaquallevel_overall <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% pop_summary(~AcaQualLevel) %>% arrange(desc(prop))
-Acacontribution_overall <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% pop_summary(~AcaQualCMWContribution)
+acapostaward_overall <- pop_summary(alumni.data, ~AcaPostaward)
+acaquallevel_overall <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% pop_summary(~AcaQualLevel) %>% arrange(desc(prop))
+acacontribution_overall <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% pop_summary(~AcaQualCMWContribution)
 
 #Gender
-Acapostaward_gender <- subgroup_summary(alumni.data, ~Gender,~AcaPostaward)
-Acaquallevel_gender <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~Gender,~AcaQualLevel)
-Acacontribution_gender <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~Gender, ~AcaQualCMWContribution)
+acapostaward_gender <- subgroup_summary(alumni.data, ~Gender,~AcaPostaward)
+acaquallevel_gender <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~Gender,~AcaQualLevel)
+acacontribution_gender <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~Gender, ~AcaQualCMWContribution)
 
 #Scheme
-Acapostaward_sch <- subgroup_summary(alumni.data, ~SchemeNom,~AcaPostaward)
-Acaquallevel_sch <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeNom,~AcaQualLevel)
-Acacontribution_sch <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeNom, ~AcaQualCMWContribution)
+acapostaward_sch <- subgroup_summary(alumni.data, ~SchemeNom,~AcaPostaward)
+acaquallevel_sch <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeNom,~AcaQualLevel)
+acacontribution_sch <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeNom, ~AcaQualCMWContribution)
 
 #Scheme Type
-Acapostaward_schtype <- subgroup_summary(alumni.data, ~SchemeType,~AcaPostaward)
-Acaquallevel_schtype <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeType,~AcaQualLevel)
-Acacontribution_schtype <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeType, ~AcaQualCMWContribution)
+acapostaward_schtype <- subgroup_summary(alumni.data, ~SchemeType,~AcaPostaward)
+acaquallevel_schtype <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeType,~AcaQualLevel)
+acacontribution_schtype <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~SchemeType, ~AcaQualCMWContribution)
 
 #Year Group
-Acapostaward_year <- subgroup_summary(alumni.data, ~YearGroup,~AcaPostaward)
-Acaquallevel_year <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~YearGroup,~AcaQualLevel)
-Acacontribution_year <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~YearGroup, ~AcaQualCMWContribution)
+acapostaward_year <- subgroup_summary(alumni.data, ~YearGroup,~AcaPostaward)
+acaquallevel_year <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~YearGroup,~AcaQualLevel)
+acacontribution_year <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~YearGroup, ~AcaQualCMWContribution)
 
 #Origin Region
-Acapostaward_orireg <- subgroup_summary(alumni.data, ~OriginRegion,~AcaPostaward)
-Acaquallevel_orireg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~OriginRegion,~AcaQualLevel)
-Acacontribution_orireg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~OriginRegion, ~AcaQualCMWContribution)
+acapostaward_orireg <- subgroup_summary(alumni.data, ~OriginRegion,~AcaPostaward)
+acaquallevel_orireg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~OriginRegion,~AcaQualLevel)
+acacontribution_orireg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~OriginRegion, ~AcaQualCMWContribution)
 
 #Residency Region
-Acapostaward_resreg <- subgroup_summary(alumni.data, ~ResidencyRegion,~AcaPostaward)
-Acaquallevel_resreg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~ResidencyRegion,~AcaQualLevel)
-Acacontribution_resreg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~ResidencyRegion, ~AcaQualCMWContribution)
+acapostaward_resreg <- subgroup_summary(alumni.data, ~ResidencyRegion,~AcaPostaward)
+acaquallevel_resreg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~ResidencyRegion,~AcaQualLevel)
+acacontribution_resreg <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% subgroup_summary(~ResidencyRegion, ~AcaQualCMWContribution)
 
 #Subect Studied
-Acapostaward_jacs <- subgroup_summary(alumni.data, ~JacsCat,~AcaPostaward) %>% filter(!JacsCat=="NA", sum(freq)>20)
-Acaquallevel_jacs <- alumni.data %>% filter(!is.na(AcaQualLevel),!JacsCat=="NA") %>% subgroup_summary(~JacsCat,~AcaQualLevel)
-Acacontribution_jacs <- alumni.data %>% filter(!is.na(AcaQualLevel),!JacsCat=="NA") %>% subgroup_summary(~JacsCat, ~AcaQualCMWContribution)
+acapostaward_jacs <- subgroup_summary(alumni.data, ~JacsCat,~AcaPostaward) %>% filter(!JacsCat=="NA", sum(freq)>20)
+acaquallevel_jacs <- alumni.data %>% filter(!is.na(AcaQualLevel),!JacsCat=="NA") %>% subgroup_summary(~JacsCat,~AcaQualLevel)
+acacontribution_jacs <- alumni.data %>% filter(!is.na(AcaQualLevel),!JacsCat=="NA") %>% subgroup_summary(~JacsCat, ~AcaQualCMWContribution)
 
 #Committee Score
-Acapostaward_score <- alumni.data %>% group_by(AcaPostaward) %>% score_summary()
-Acaquallevel_score <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% group_by(AcaQualLevel) %>% score_summary()
-Acacontribution_score <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% group_by(AcaQualCMWContribution) %>% score_summary()
+acapostaward_score <- alumni.data %>% group_by(AcaPostaward) %>% score_summary()
+acaquallevel_score <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% group_by(AcaQualLevel) %>% score_summary()
+acacontribution_score <- alumni.data %>% filter(!is.na(AcaQualLevel)) %>% group_by(AcaQualCMWContribution) %>% score_summary()
 
 ## e] Leadership ----
 
@@ -748,13 +742,6 @@ teachdoctorate_score <- alumni.data %>% group_by(TeachDoctorate) %>% score_summa
 teachtvet_score <- alumni.data %>% group_by(TeachTVET) %>% score_summary()
 
 
-#Example simplified table of teaching activity by a group
-rbind(teachschool_year,teachundergrad_year,teachpostgrad_year,teachdoctorate_year,teachtvet_year) %>% 
-  filter(Response=="Yes") %>% 
-  select(-freq,-Response) %>% 
-  spread(Variable, prop)
-
-
 ## i] Networks and links----
 
 # prefix= 'Net'
@@ -980,20 +967,6 @@ impecon_score <- alumni.data %>% group_by(ImpEcon) %>% score_summary()
 imppolicy_score <- alumni.data %>% group_by(ImpPolicy) %>% score_summary()
 
 
-#Example of a concise table for impact level
-bind_rows(impinstitutional_year,implocal_year,impnational_year,impinternational_year) %>% 
-  filter(Response=="Yes") %>% 
-  select(-freq,-Response) %>% 
-  spread(Variable, prop)
-
-#Example of a concise table for impact type
-bind_rows(impsocial_year,impcivic_year,impecon_year,imppolicy_year) %>% 
-  filter(Response=="Yes") %>% 
-  select(-freq,-Response) %>% 
-  spread(Variable, prop)
-
-
-
 ## k] Analytic indices----
 
 #prefix = "i."
@@ -1012,7 +985,8 @@ indexldr_gender <- alumni.data %>%
             Mean = round(mean(i.ldr),2),
             SD = round(sd(i.ldr),2),
             Max = round(max(i.ldr),2),
-            Min = round(min(i.ldr),2) )
+            Min = round(min(i.ldr),2) ) %>% 
+
                                                                    
 indexcollab_gender <- 
   alumni.data %>% 

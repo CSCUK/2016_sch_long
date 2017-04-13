@@ -8,7 +8,8 @@ output:
 
 
 ```{r setup, include = FALSE}
-load("2016_sch_long_core.rdata")
+
+source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_basicanalysis.r")
 
 library(pacman)
 pacman:: p_load(tidyverse, pander,knitr, RODBC)
@@ -647,6 +648,24 @@ app_overall <-
   spread(Response,prop) 
 ```
 
+
+
+# 4. Broader impact
+
+```{r, echo=FALSE}
+
+#Example of a concise table for impact level
+bind_rows(impinstitutional_year,implocal_year,impnational_year,impinternational_year) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq,-Response) %>% 
+  spread(Variable, prop)
+
+#Example of a concise table for impact type
+bind_rows(impsocial_year,impcivic_year,impecon_year,imppolicy_year) %>% 
+  filter(Response=="Yes") %>% 
+  select(-freq,-Response) %>% 
+  spread(Variable, prop)
+```
 
 
 # Technical appendix {.tabset}

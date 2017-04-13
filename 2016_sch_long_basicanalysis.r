@@ -985,7 +985,7 @@ indexldr_gender <- alumni.data %>%
             Mean = round(mean(i.ldr),2),
             SD = round(sd(i.ldr),2),
             Max = round(max(i.ldr),2),
-            Min = round(min(i.ldr),2) ) %>% 
+            Min = round(min(i.ldr),2) ) 
 
                                                                    
 indexcollab_gender <- 

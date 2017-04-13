@@ -1,8 +1,10 @@
 ---
-title: "Sch_2016_SchemeType"
-author: "Matt Mawer"
+title: '2016 Alumni surveys: Scheme Type Breakdown'
+author: "CSC E&M Team"
 date: "13 April 2017"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 
@@ -13,9 +15,12 @@ source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Cryst
 library(pacman)
 pacman:: p_load(tidyverse, pander,knitr, RODBC)
 
-set.alignment("left")
+set.alignment("left", permanent = T)
+panderOptions("table.split.table",Inf)
 
 ```
+
+This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
 
 # 1. Data overview
 
@@ -64,6 +69,7 @@ Study of additional qualifications post-Commonwealth Scholarship. Note: be cauti
 ```{r, echo=FALSE}
 acapostaward_schtype %>% 
   filter(Response=="Yes") %>% 
+  arrange(desc(prop)) %>% 
   select(-freq, -Response, "Proportion (%)"=prop) %>% 
   mutate(Variable = fct_recode(Variable,"Additional qualification"="AcaPostaward")) %>% 
   pander
@@ -153,6 +159,7 @@ Academic productivity
 ```{r, echo=FALSE}
 
 bind_rows(rescomparticles_schtype,rescompprojects_schtype,rescompfunding_schtype) %>% 
+  filter(!Response=="NA") %>% 
   select(-freq) %>% 
   mutate(Variable = fct_recode(Variable,"Published articles"="ResCompArticles","Applied for funding"="ResCompFunding",
                                "Involved in projects" = "ResCompProjects")) %>% 
@@ -220,8 +227,8 @@ Frequency of contact with networks of various kinds:
 rbind(netacad_schtype,netuk_schtype,nethome_schtype,netother_schtype,netpersonal_schtype) %>% 
   select(-freq) %>% 
   spread(SchemeType, prop) %>% 
-  mutate(Variable = fct_recode(Variable,"Academic"="NetAcad", "UK professional network"="NetUK", "Home pofessional network"="NetHome",
-         "Personal contacts"="NetPersonal", "Other"="NetOther")) %>% 
+  mutate(Variable = fct_recode(Variable,"Academic"="NetAcad", "Professional (UK)"="NetUK", "Pofessional (Home)"="NetHome",
+         "Personal"="NetPersonal", "Other"="NetOther")) %>% 
   pander
 
 ```

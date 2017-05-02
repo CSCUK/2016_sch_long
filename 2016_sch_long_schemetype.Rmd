@@ -20,13 +20,15 @@ panderOptions("table.split.table",Inf)
 
 ```
 
-This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. Figures in tables are proportions (%) of the total (e.g. 89% of Split site Scholars replied 'Often'). For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
+This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. Figures in tables are proportions (%) of the total (e.g. 89% of Split site Scholars replied 'Often') unless otherwise stated. For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
 
 # 1. Data overview
 
+Counts of cases are not typically shown in the results tables; note should taken where the table below indicates few respondents in a particular category.
+
 ```{r, echo=FALSE}
 overview_schtype %>% 
-  select(-Variable,Count=freq, 'Proportion (%)'=prop) %>% 
+  select(-Variable,"Scheme Type"=Response,Cases=freq, 'Proportion (%)'=prop) %>% 
   pander
 ```
 
@@ -34,9 +36,10 @@ overview_schtype %>%
 
 ```{r, echo=FALSE}
 bind_rows(rescountry_schtype,resregion_schtype) %>% 
-  select(-freq) %>% 
+  filter(Response=="Home") %>% 
+  select(-freq, -Response, "Scheme Type"=SchemeType) %>% 
   mutate(Variable = fct_recode(Variable, "Country"="resStatusCountry","Region"="resStatusRegion")) %>% 
-  spread(SchemeType, prop) %>% 
+  spread(Variable, prop) %>% 
   pander
 ```
 
@@ -46,9 +49,8 @@ Employment status:
 
 ```{r, echo=FALSE}
 empcurrent_schtype %>% 
-  select(-freq) %>% 
-  mutate(Variable = fct_recode(Variable,"Current Employment"="CurrentEmploy")) %>% 
-  spread(SchemeType, prop) %>% 
+  select(-freq,-Variable, "Scheme Type"=SchemeType) %>% 
+  spread("Scheme Type", prop) %>% 
   pander
 ```
 
@@ -56,32 +58,31 @@ Current sector of employment:
 
 ```{r, echo=FALSE}
 empsector_schtype %>% 
-  select(-freq) %>% 
-  mutate(Variable = fct_recode(Variable,"Current Job Sector"="CurrentSector")) %>% 
-  spread(SchemeType, prop) %>% 
+  select(-freq,-Variable, "Scheme Type"=SchemeType, "Current Sector"=Response) %>% 
+  spread("Scheme Type", prop) %>% 
   pander
 ```
 
 # 4. Further qualificiations
 
-Study of additional qualifications post-Commonwealth Scholarship. Note: be cautious of low size for groups distorting figures.
+Study of additional qualifications post-Commonwealth Scholarship. Note: be cautious of low size for groups distorting figures for these questions.
+
+Respondents who had undertaken additional qualifications since completing their Commonwealth Scholarship:
 
 ```{r, echo=FALSE}
 acapostaward_schtype %>% 
-  filter(Response=="Yes") %>% 
+  filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-freq, -Response, "Proportion (%)"=prop) %>% 
-  mutate(Variable = fct_recode(Variable,"Additional qualification"="AcaPostaward")) %>% 
+  select( -Response,-Variable, "Proportion (%)"=prop,"Cases"=freq,"Scheme Type"=SchemeType) %>% 
   pander
 ```
 
-Qualification levels (in rows: Scheme Type in columns):
+Level of qualification studied (each level is shown as a proportion of respondentws who had undertaken additional qualifications):
 
 ```{r, echo=FALSE}
 acaquallevel_schtype %>% 
-  select(-freq) %>% 
-  mutate(Variable = fct_recode(Variable,"Qualification type"="AcaQualLevel")) %>% 
-  spread(SchemeType, prop) %>% 
+  select(-freq, -Variable, "Scheme Type"=SchemeType, "Degree studied"=Response) %>% 
+  spread("Scheme Type",prop) %>% 
   pander
 ```
 
@@ -108,7 +109,7 @@ Use of skills from Scholarship in various circumstances. Divided into three over
 ```{r, echo=FALSE}
 bind_rows(
     appskillwork_schtype, appskillnonwork_schtype,appapproach_schtype) %>% 
-  select(-freq) %>% 
+  select(-freq, "Scheme Type"=SchemeType) %>% 
   mutate(Variable = fct_recode(Variable,"Used in workplace"="AppSkillWork", "Used elsewhere"="AppSkillNonwork",
                                "Took new approach"="AppApproachProblem")) %>% 
   spread(Response,prop) %>% 
@@ -122,7 +123,7 @@ bind_rows(
 ```{r, echo=FALSE}
 bind_rows(
     apptrain_schtype,appresources_schtype) %>% 
-  select(-freq) %>% 
+  select(-freq,"Scheme Type"=SchemeType) %>% 
   mutate(Variable = fct_recode(Variable,"Trained others"="AppTrainColleagues","Developed resources" = "AppDevelopResources")) %>% 
   spread(Response,prop) %>% 
   pander
@@ -134,7 +135,7 @@ bind_rows(
 ```{r, echo=FALSE}
 bind_rows(
     appadvocate_schtype,appchange_schtype) %>% 
-  select(-freq) %>% 
+  select(-freq,"Scheme Type"=SchemeType) %>% 
   mutate(Variable = fct_recode(Variable,"Advocated change"="AppAdvocateChange","Introduced change"="AppMakeChange")) %>% 
   spread(Response,prop) %>% 
   pander
@@ -149,47 +150,88 @@ Overall involvement in academic research:
 resmain_schtype %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-freq, -Response, "Proportion (%)"=prop) %>% 
-  mutate(Variable = fct_recode(Variable,"Research involvement"="ResMain")) %>% 
+  select(-Response,-Variable, "Scheme Type"=SchemeType,Cases=freq, "Proportion (%)"=prop) %>% 
   pander
 ```
 
-Academic productivity
+__[1] Academic Productivity__
+
+Results in the <NA> column indicate the proportion within the category not involved in the activity at all.
+
+Publishing journal articles:
 
 ```{r, echo=FALSE}
-
-bind_rows(rescomparticles_schtype,rescompprojects_schtype,rescompfunding_schtype) %>% 
-  filter(!Response=="NA") %>% 
-  select(-freq) %>% 
-  mutate(Variable = fct_recode(Variable,"Published articles"="ResCompArticles","Applied for funding"="ResCompFunding",
-                               "Involved in projects" = "ResCompProjects")) %>% 
+rescomparticles_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
   spread(Response,prop) %>% 
   pander
 
 ```
 
-Academic community activities:
+Involvement in academic projects:
+
+```{r, echo=FALSE}
+rescompprojects_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>% 
+  pander
+
+```
+
+Applying for grants / funding:
+
+```{r, echo=FALSE}
+rescompfunding_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>% 
+  pander
+
+```
+
+__[2] Academic community activities__
 
 ```{r, echo=FALSE}
 bind_rows(reseditor_schtype,resreviewer_schtype,resorganiser_schtype) %>% 
   filter(Response=="Yes") %>% 
-  select(-freq,-Response, "Proportion (%)"=prop) %>%
-  mutate(Variable = fct_recode(Variable,"Journal editor"="ResEditor","Peer reviewer"="ResReviewer",
-                               "Conference organiser" = "ResOrganiser")) %>%
+  select(-freq,-Response) %>%
+  spread(Variable, prop) %>% 
+  select( "Scheme Type"=SchemeType,"Journal Editor"=ResEditor,"Peer reviewer"=ResReviewer,"Conference organiser" = ResOrganiser) %>%
   pander
-
 
 ```
 
-International collaboration 9activities with colleagues from outside Scholar's country of origin):
+__[3] International collaboration__ 
+
+Defined by research activities with colleagues from outside Scholar's country of origin.
+
+Collaborative authorship of papers:
 
 ```{r, echo=FALSE}
 
-bind_rows(rescollabauthor_schtype,rescollabgrant_schtype,rescollabconf_schtype) %>% 
-  filter(!Response=="NA") %>% 
-  select(-freq) %>% 
-  mutate(Variable = fct_recode(Variable,"Authored articles"="ResCollabAuthor","Applied for grants"="ResCollabGrant",
-                               "Attended conference" = "ResCollabConf")) %>% 
+rescollabauthor_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>% 
+  pander
+
+```
+
+Collaborative applications for grants:
+
+```{r, echo=FALSE}
+
+rescollabgrant_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>% 
+  pander
+
+```
+
+Attendance at international conferences:
+
+```{r, echo=FALSE}
+
+rescollabconf_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
   spread(Response,prop) %>% 
   pander
 

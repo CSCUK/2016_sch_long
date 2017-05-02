@@ -4,7 +4,7 @@
 # Matt Mawer, The Association of Commonwealth Universities
 # February, 2017
 
-## NOTE - Update years in 'WHERE' statement of database query ('Data connection and import, section [b]) to appropriate values for survey
+## NOTE - 
 
 # --- Library calls ----
 
@@ -16,6 +16,10 @@ opar = par()
 # --- Data connection and import ----
 
 ## a] DB connections ----
+
+# Update this section to use new data - 
+# Update years in 'WHERE' statement of database query ('Data connection and import, section [b]) to appropriate values for survey
+# Update name of survey variable so that it displays correctly in markdown file
 
 con.evaldb <- odbcConnect("EvalDb")
 con.evaldb
@@ -64,7 +68,10 @@ res.data <- res.data %>%
 
 SurveyName <- "2016 Alumni Survey"
 
+
 # --- Analysis ----
+
+# This section can be left alone unless you want to change the output (design, analyses conducted etc.)
 
 ## --- a] Basic RR ----
 

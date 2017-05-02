@@ -1,9 +1,9 @@
 ---
-title: "2016 Scholar Alumni surveys response rates Analysis"
+title: 'CSC Evaluation: Survey response rates'
 author: "Matt Mawer"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
-  html_document: default
-  html_notebook: default
+  word_document: default
   pdf_document: default
 ---
 
@@ -16,8 +16,9 @@ pacman:: p_load(tidyverse, pander,knitr, RODBC)
 
 ```
 
+This paper relates to the __`r SurveyName`__.  
 
-This paper relates to the `r SurveyName`. Basic data on response rates is presented in the sections below, including comparisons within gender, scholar origin, PhD / non-PhD scholars, and year groups within the evaluation framework. Incidence of failed email contacts are highlighted separately in Section 2.
+Basic data on response rates is presented in the sections below, including comparisons within gender, scholar origin, PhD / non-PhD scholars, and year groups within the evaluation framework. Incidence of failed email contacts are highlighted separately in Section 2.
 
 Response rates are calculated based on eligible recipients. For this dataset, there were `r sum(resp.overall$n)` eligible recipients. To be defined as eligible, a recipient must meet the criteria of the survey (e.g. our alumni surveys go to Scholars 2, 4, 6, 8, and 10 years after they complete CSC funding) and not have opted out of participating in evaluation research. Failed email addresses are _not_ excluded as eligible recipients and so the response rates reported here will typically be lower than those of the early evaluation program, when the rate was calculated based on those who _received_ the survey.
 
@@ -26,15 +27,15 @@ For more detail, please contact the evaluation team: [evaluation@cscuk.org.uk](m
 # 1. Basic Response Rates {.tabset}
 
 ## Overall
-
+  
 ```{r echo=FALSE, results='asis'}
 rename(resp.overall, Cases = n,"Rate (%)" = Rate) %>% 
   pander()
 ```
 
 ## Year Group
-
-Note: Year Group refers to the evaluation group a Scholar is assigned to, based on when they completed their CSC funding. A Scholar who completed their funding in 2014 would be assigned to the 2014 year group.
+  
+Year Group refers to the evaluation group a Scholar is assigned to, based on when they completed their CSC funding. A Scholar who completed their funding in 2014 would be assigned to the 2014 year group.  
 
 ```{r echo=FALSE}
 filter(resp.YearGroup, Response == "Complete") %>% 
@@ -42,6 +43,8 @@ filter(resp.YearGroup, Response == "Complete") %>%
   pander()
 
 ```
+
+\pagebreak 
 
 ## Scheme
 
@@ -74,9 +77,7 @@ filter(resp.phd, Response == "Complete") %>%
 
 ## Scholar origin
 
-Origin can be examined at country and regional level. It is usually more difficult to make informed analyses at country level because there is limited data for some countries (e.g. few surveys are sent to many of the smaller Commonwealth states). Regional analysis can help overcome this problem by aggregating data on countries, but it can also 'smooth over' variations between countries that may be of interest and thus should be treated with caution.
-
-In the first table are response rates for countries for which at least 30 participants were included in the current survey.
+Origin can be examined at country and regional level. It is usually more difficult to make informed analyses at country level because there is limited data for some countries (e.g. few surveys are sent to many of the smaller Commonwealth states). Regional analysis can help overcome this problem by aggregating data on countries, but it can also 'smooth over' variations between countries that may be of interest and thus should be treated with caution. In the first table, response rates are for countries for which at least 30 participants were included in the current survey.
 
 ```{r echo=FALSE}
 filter(resp.country, sum(n)>30, Response=="Complete") %>% 
@@ -85,7 +86,7 @@ filter(resp.country, sum(n)>30, Response=="Complete") %>%
   pander()
 ```
 
-In the second table are response rates for aggregated regions (including all data).
+In the second table, response rates are for aggregated regions (including all data).
 
 ```{r echo=FALSE}
 
@@ -97,9 +98,7 @@ filter(resp.region, Response == "Complete") %>%
 
 # 2. Failed contacts {.tabset}
 
-The CSC evaluation, programme, and alumni teams help to keep records updated and provide usable contact details for Scholars. However, sometimes these details fail and we are unable to send the survey. Failed email addresses are not removed from response rate calculations: these individuals should have the opportunity to participate in the survey and so are included here as a special category of 'non-completions'.
-
-As noted above, there were `r resp.overall %>% filter(Response=="Failed") %>% select(n)` failed email addresses (`r resp.overall %>% filter(Response=="Failed") %>% select(Rate)`%). The sections below give a breakdown of failed emails by various categories.
+There were `r resp.overall %>% filter(Response=="Failed") %>% select(n)` failed email addresses (`r resp.overall %>% filter(Response=="Failed") %>% select(Rate)`%).
 
 ## Year Group
 
@@ -140,7 +139,7 @@ filter(resp.phd, Response == "Failed") %>%
 
 ## Scholar origin
 
-In the first table are response rates for countries for which at least 30 participants were included in the current survey.
+In the first table, response rates are for countries for which at least 30 participants were included in the current survey.
 
 ```{r echo=FALSE}
 filter(resp.country, sum(n)>30, Response=="Failed") %>% 
@@ -149,7 +148,7 @@ filter(resp.country, sum(n)>30, Response=="Failed") %>%
   pander()
 ```
 
-In the second table are response rates for aggregated regions (including all data).
+In the second table, response rates are for aggregated regions (including all data).
 
 ```{r echo=FALSE}
 
@@ -166,7 +165,7 @@ filter(resp.region, Response == "Failed") %>%
 
 Examining the response rate helps to identify systemic non-response that might introduce bias into the data, such as a particular group that is regularly overly-represented in our analyses because they disproportionately complete the survey (or vice versa). Year-to-year random variations within the response rates of particular groups are to be expected in any research survey, but systemic non-response bias is a pressing concern for analytic validity and the CSC attempts to identify such problems where possible. Response rates are often viewed through the lens of the 'proportion' of the survey population covered, e.g. 10% of Scholars responded. While this is interesting information, it is not as important as systemic non-response bias for understanding the validity of analyses.
 
-Numerical breakdown of response rates is indicative, but not explanatory. Separate analysis must be conducted to ascertain why eligible participants chose not to respond. Informally, the CSC is aware that internet or power outages and inaccessibility of internet whilst on field trips contribute to lower response rates for some eligible participants and that these pressures may disproportinately affect respondents who fall into certain groups (e.g. respondents residing in low income countries with unreliable infrastructure). To determine how far such factors shaped the cohort of survey respondents in any particular year is beyond the capacity of response rates alone to explain: richer contextual information is required.
+Numerical breakdown of response rates is indicative, but not explanatory. Separate analysis must be conducted to ascertain why eligible participants chose not to respond. Informally, the CSC is aware that internet or power outages and inaccessibility of internet whilst on field trips contribute to lower response rates for some eligible participants and that these pressures may disproportionately affect respondents who fall into certain groups (e.g. respondents residing in low income countries with unreliable infrastructure). To determine how far such factors shaped the cohort of survey respondents in any particular year is beyond the capacity of response rates alone to explain: richer contextual information is required.
 
 ## Data
 

@@ -14,6 +14,8 @@ source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Cryst
 library(pacman)
 pacman:: p_load(tidyverse, pander,knitr, RODBC)
 
+# Preferred option with this markdown is to knit to MS Word and apply style template saved for quick formatting.
+
 ```
 
 This paper relates to the __`r SurveyName`__.  

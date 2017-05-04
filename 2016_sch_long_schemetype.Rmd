@@ -156,7 +156,7 @@ resmain_schtype %>%
 
 __[1] Academic Productivity__
 
-Results in the <NA> column indicate the proportion within the category not involved in the activity at all.
+Results in the <NA> column indicate the proportion within the category not involved in the academic research activity at all.
 
 Publishing journal articles:
 
@@ -202,12 +202,12 @@ bind_rows(reseditor_schtype,resreviewer_schtype,resorganiser_schtype) %>%
 
 __[3] International collaboration__ 
 
-Defined by research activities with colleagues from outside Scholar's country of origin.
+Research activities with colleagues from outside Scholar's country of origin or based outisde the Scholar's country of origin.
+Results in the <NA> column indicate the proportion within the category not involved in the academic research activity at all.
 
 Collaborative authorship of papers:
 
 ```{r, echo=FALSE}
-
 rescollabauthor_schtype %>% 
   select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
   spread(Response,prop) %>% 
@@ -245,12 +245,11 @@ Overall involvement in teaching:
 teachmain_schtype %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-freq, -Response, "Proportion (%)"=prop) %>% 
-  mutate(Variable = fct_recode(Variable,"Teaching responsibility"="TeachMain")) %>% 
+  select(-Response,-Variable, "Scheme Type"=SchemeType,Cases=freq, "Proportion (%)"=prop) %>% 
   pander
 ```
 
-Levels of education at which Scholars are teaching:
+Levels of education at which Scholars are teaching (note - a single Scholar may teach at multiple levels: percentages are proportion of the category who reported teaching at that level):
 
 ```{r, echo=FALSE}
 rbind(teachschool_schtype,teachundergrad_schtype,teachpostgrad_schtype,teachdoctorate_schtype,teachtvet_schtype) %>% 
@@ -259,20 +258,56 @@ rbind(teachschool_schtype,teachundergrad_schtype,teachpostgrad_schtype,teachdoct
   spread(Variable,prop) %>% 
   select(SchemeType,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,Undergraduate=TeachUndergrad,TVET=TeachTVET,School=TeachSchool) %>% 
   pander
+
 ```
 
 # 9. Networks and links
 
-Frequency of contact with networks of various kinds:
+Frequency of contact with networks of various kinds.
+
+__[1] Academic contacts__
 
 ```{r, echo=FALSE}
-rbind(netacad_schtype,netuk_schtype,nethome_schtype,netother_schtype,netpersonal_schtype) %>% 
-  select(-freq) %>% 
-  spread(SchemeType, prop) %>% 
-  mutate(Variable = fct_recode(Variable,"Academic"="NetAcad", "Professional (UK)"="NetUK", "Pofessional (Home)"="NetHome",
-         "Personal"="NetPersonal", "Other"="NetOther")) %>% 
+netacad_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>% 
   pander
 
+```
+
+__[2] Professional networks in the UK__
+
+```{r, echo=FALSE}
+netuk_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>% 
+  pander
+```
+
+__[3] Professional networks in the Scholar's home country__
+
+```{r, echo=FALSE}
+nethome_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>% 
+  pander
+```
+
+__[3] Professional networks elsewhere abroad__
+
+```{r, echo=FALSE}
+netother_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>% 
+  pander
+```
+__[4] Personal networks abroad__
+
+```{r, echo=FALSE}
+netpersonal_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>% 
+  pander
 ```
 
 # 10. Broader impact

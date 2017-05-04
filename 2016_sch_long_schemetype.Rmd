@@ -312,14 +312,14 @@ netpersonal_schtype %>%
 
 # 10. Broader impact
 
-Breadth of impact reported:
+Proportion of Scholars who reported impact at different breadths:
 
 ```{r, echo=FALSE}
 bind_rows(impinstitutional_schtype,implocal_schtype,impnational_schtype,impinternational_schtype) %>% 
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable, prop) %>% 
-  select(SchemeType, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
+  select("Scheme Type" = SchemeType, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
   pander
 
 ```
@@ -331,20 +331,20 @@ bind_rows(impsocial_schtype,impcivic_schtype,impecon_schtype,imppolicy_schtype) 
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable, prop) %>%
-  rename('Civic Engagement'=ImpCivic, Economic = ImpEcon,'Policymaking'=ImpPolicy, 'Social Development' =ImpSocial) %>% 
+  rename("Scheme Type" = SchemeType,"Civic Engagement"=ImpCivic, "Economic Development" = ImpEcon,
+         "Policymaking"=ImpPolicy, "Social Development" =ImpSocial) %>% 
   pander
-
 
 ```
 
 # 11. Analytic indices
 
-Comparative indices, ranging from 0 (low) to 1 (high), based on responses to questions on application of skills, leadership, research activity, and international research collaboration. Methodology detailed elsewhere: please contact the E&M Team for details.
+Comparative indices, ranging from 0 (lowest) to 1 (highest), based on responses to questions on application of skills, leadership, research activity, and international research collaboration. Methodology detailed elsewhere: please contact the E&M Team for details.
 
 ```{r, echo=FALSE}
-bind_cols(select(indexskills_schtype, SchemeType, Skills=Mean),
+bind_cols(select(indexskills_schtype, "Scheme Type" = SchemeType, Skills=Mean),
           select(indexldr_schtype, Leadership=Mean),
-          select(indexresearch_schtype, "Research activity"=Mean),
+          select(indexresearch_schtype, "Research productivity"=Mean),
           select(indexcollab_schtype, "Research collaboration"=Mean)) %>% 
   pander
 

@@ -268,7 +268,7 @@ alumni.data <-
                                 "CA"="University Staff", 
                                 "CS"="Agency: Developing",
                                 "CN"="Split Site",
-                                "SS"="Shared Scholar"),
+                                "SS"="Shared Scholars"),
     SchemeType = recode(SchemeType, "SS" = "Shared", "Distance Learning" = "Distance")
     )
 

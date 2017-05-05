@@ -79,7 +79,7 @@ str(alumni.data, list.len=nrow(alumni.data))
 
 ## a] Data overview ----
 overview_gender <- pop_summary(alumni.data,~Gender) %>% arrange(desc(prop))
-overview_sch <- pop_summary(alumni.data,~Scheme) %>% arrange(desc(prop))
+overview_sch <- pop_summary(alumni.data,~SchemeNom) %>% arrange(desc(prop))
 overview_schtype <- pop_summary(alumni.data,~SchemeType) %>% arrange(desc(prop))
 overview_year <- pop_summary(alumni.data,~YearGroup) %>% arrange(desc(prop))
 overview_orireg <- pop_summary(alumni.data,~OriginRegion) %>% arrange(desc(prop))

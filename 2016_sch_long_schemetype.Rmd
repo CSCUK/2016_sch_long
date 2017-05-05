@@ -1,7 +1,7 @@
 ---
 title: '2016 Alumni surveys: Scheme Type Breakdown'
 author: "CSC E&M Team"
-date: "13 April 2017"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:
   pdf_document: default
   html_document: default

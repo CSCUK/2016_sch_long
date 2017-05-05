@@ -67,7 +67,7 @@ empsector_gender %>%
 
 # 4. Further qualificiations
 
-Study of additional qualifications post-Commonwealth Scholarship. Note: be cautious of low size for groups distorting figures for these questions.
+Study of additional qualifications in the last two years. Note: be cautious of low size for groups distorting figures for these questions.
 
 Respondents who had undertaken additional qualifications since completing their Commonwealth Scholarship:
 

@@ -1,12 +1,11 @@
 ---
-title: '2016 Alumni surveys: Scheme Type Breakdown'
+title: '2016 Alumni surveys: Nominating Route Breakdown'
 author: "CSC E&M Team"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output:
   pdf_document: default
   html_document: default
 ---
-
 
 ```{r setup, include = FALSE}
 
@@ -27,17 +26,17 @@ This document relates to `r SurveyName` and is a intended as a short overview of
 Counts of cases are not typically shown in the results tables; note should taken where the table below indicates few respondents in a particular category.
 
 ```{r, echo=FALSE}
-overview_schtype %>% 
-  select(-Variable,"Scheme Type"=Response,Cases=freq, 'Proportion (%)'=prop) %>% 
+overview_sch %>% 
+  select(-Variable,Route=Response,Cases=freq, 'Proportion (%)'=prop) %>% 
   pander
 ```
 
 # 2. Current residency
 
 ```{r, echo=FALSE}
-bind_rows(rescountry_schtype,resregion_schtype) %>% 
+bind_rows(rescountry_sch,resregion_sch) %>% 
   filter(Response=="Home") %>% 
-  select(-freq, -Response, "Scheme Type"=SchemeType) %>% 
+  select(-freq, -Response, Route=SchemeNom) %>% 
   mutate(Variable = fct_recode(Variable, "Country"="resStatusCountry","Region"="resStatusRegion")) %>% 
   spread(Variable, prop) %>% 
   pander
@@ -48,19 +47,19 @@ bind_rows(rescountry_schtype,resregion_schtype) %>%
 Employment status:
 
 ```{r, echo=FALSE}
-empcurrent_schtype %>% 
-  select(-freq,-Variable, "Scheme Type"=SchemeType) %>% 
+empcurrent_sch %>% 
+  select(-freq,-Variable) %>% 
   mutate(Response = fct_recode(Response, "Other" = "Neither employed nor studying")) %>% 
   spread(Response, prop) %>% 
-  select(contains("Scheme Type"), Employed, contains("Employed and studying"),Studying, Other) %>% 
+  select(Route=SchemeNom, Employed, contains("Employed and studying"),Studying, Other) %>% 
   pander
 ```
 
 Current sector of employment of Scholars (Note: percentages may not sum to 100%: proportions are of all Scholars in each category, including any not currently employed):
 
 ```{r, echo=FALSE}
-empsector_schtype %>% 
-  select(-freq,-Variable, "Scheme Type"=SchemeType) %>% 
+empsector_sch %>% 
+  select(-freq,-Variable, Route=SchemeNom) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response, prop) %>% 
   pander
@@ -68,25 +67,25 @@ empsector_schtype %>%
 
 # 4. Further qualificiations
 
-Study of additional qualifications in the last two years. Note: be cautious of low size for groups distorting figures for these questions.
+Study of additional qualifications in last two years. Note: be cautious of low size for groups distorting figures for these questions.
 
 Respondents who had undertaken additional qualifications since completing their Commonwealth Scholarship:
 
 ```{r, echo=FALSE}
-acapostaward_schtype %>% 
+acapostaward_sch %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select( -Response,-Variable, "Proportion (%)"=prop,"Cases"=freq,"Scheme Type"=SchemeType) %>% 
+  select( -Response,-Variable,  Route=SchemeNom,"Proportion (%)"=prop,"Cases"=freq) %>% 
   pander
 ```
 
 Level of qualification studied (each level is shown as a proportion of respondents who had undertaken additional qualifications):
 
 ```{r, echo=FALSE}
-acaquallevel_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"=SchemeType, "Degree studied"=Response) %>% 
-  spread("Degree studied",prop) %>% 
-  select(contains("Scheme Type"), Doctorate,contains("Master's degree"),contains("Professional accreditation"),contains("Technical training"),
+acaquallevel_sch %>% 
+  select(-freq, -Variable) %>% 
+  spread(Response,prop) %>%
+  select(Route=SchemeNom, Doctorate,contains("Master's degree"),contains("Professional accreditation"),contains("Technical training"),
          contains("Undergraduate degree"), Other) %>% 
   pander
 ```
@@ -96,9 +95,9 @@ acaquallevel_schtype %>%
 Workplace related leadership activities:
 
 ```{r, echo=FALSE}
-bind_rows(ldrbudget_schtype, ldrmanaging_schtype, ldrsupervise_schtype,ldrstrategy_schtype) %>% 
+bind_rows(ldrbudget_sch, ldrmanaging_sch, ldrsupervise_sch,ldrstrategy_sch) %>% 
   filter(Response=="Yes") %>% 
-  select(-freq, -Response, "Scheme Type"=SchemeType) %>% 
+  select(-freq, -Response, Route=SchemeNom) %>% 
   mutate(Variable = fct_recode(Variable,"Overseeing budgets"="LdrBudget","Managing Company / department" = "LdrManaging",
                                "Setting strategy"="LdrStrategy","Supervising others"="LdrSupervising")) %>% 
   spread(Variable, prop) %>% 
@@ -116,8 +115,8 @@ Three variables constitute the 'use of skills' group: application of skills lear
 Use of skills in the workplace:
 
 ```{r, echo=FALSE}
-appskillwork_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+appskillwork_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -125,8 +124,8 @@ appskillwork_schtype %>%
 Use of skills outside of the workplace:
 
 ```{r, echo=FALSE}
-appskillnonwork_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+appskillnonwork_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -134,8 +133,8 @@ appskillnonwork_schtype %>%
 Approach a problem differently:
 
 ```{r, echo=FALSE}
-appapproach_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+appapproach_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -147,8 +146,8 @@ Two variables constitute the 'knowledge transfer' group: teaching a colleague so
 Teaching a colleague:
 
 ```{r, echo=FALSE}
-apptrain_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+apptrain_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -156,8 +155,8 @@ apptrain_schtype %>%
 Developing training resources:
 
 ```{r, echo=FALSE}
-appresources_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+appresources_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -169,8 +168,8 @@ Two variables constitute the 'advocacy and influencing change' group: Encouragin
 Encouraging senior managers to make change:
 
 ```{r, echo=FALSE}
-appadvocate_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+appadvocate_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -178,8 +177,8 @@ appadvocate_schtype %>%
 Personally making a change to organisational practice:
 
 ```{r, echo=FALSE}
-appchange_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+appchange_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -189,10 +188,10 @@ appchange_schtype %>%
 Overall involvement in academic research:
 
 ```{r, echo=FALSE}
-resmain_schtype %>% 
+resmain_sch %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-Response,-Variable, "Scheme Type"=SchemeType,Cases=freq, "Proportion (%)"=prop) %>% 
+  select(-Response,-Variable, Route=SchemeNom,Cases=freq, "Proportion (%)"=prop) %>% 
   pander
 ```
 
@@ -203,8 +202,8 @@ Results do not sum to 100% in each row because some Scholars are not involved in
 Publishing journal articles:
 
 ```{r, echo=FALSE}
-rescomparticles_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+rescomparticles_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>%
   pander
@@ -213,8 +212,8 @@ rescomparticles_schtype %>%
 Involvement in academic projects:
 
 ```{r, echo=FALSE}
-rescompprojects_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+rescompprojects_sch %>% 
+  select(-freq, -Variable) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -224,8 +223,8 @@ rescompprojects_schtype %>%
 Applying for grants / funding:
 
 ```{r, echo=FALSE}
-rescompfunding_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+rescompfunding_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -235,11 +234,11 @@ rescompfunding_schtype %>%
 __[7.2] Academic community activities__
 
 ```{r, echo=FALSE}
-bind_rows(reseditor_schtype,resreviewer_schtype,resorganiser_schtype) %>% 
+bind_rows(reseditor_sch,resreviewer_sch,resorganiser_sch) %>% 
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>%
   spread(Variable, prop) %>% 
-  select( "Scheme Type"=SchemeType,"Journal Editor"=ResEditor,"Peer reviewer"=ResReviewer,"Conference organiser" = ResOrganiser) %>%
+  select(Route=SchemeNom,"Journal Editor"=ResEditor,"Peer reviewer"=ResReviewer,"Conference organiser" = ResOrganiser) %>%
   pander
 
 ```
@@ -252,8 +251,8 @@ Research activities with colleagues from outside Scholar's country of origin or 
 Collaborative authorship of papers:
 
 ```{r, echo=FALSE}
-rescollabauthor_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+rescollabauthor_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -264,8 +263,8 @@ Collaborative applications for grants:
 
 ```{r, echo=FALSE}
 
-rescollabgrant_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>%
+rescollabgrant_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>%
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -276,8 +275,8 @@ Attendance at international conferences:
 
 ```{r, echo=FALSE}
 
-rescollabconf_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+rescollabconf_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -289,22 +288,21 @@ rescollabconf_schtype %>%
 Overall involvement in teaching:
 
 ```{r, echo=FALSE}
-teachmain_schtype %>% 
+teachmain_sch %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-Response,-Variable, "Scheme Type"=SchemeType,Cases=freq, "Proportion (%)"=prop) %>% 
+  select(-Response,-Variable, Route=SchemeNom,Cases=freq, "Proportion (%)"=prop) %>% 
   pander
 ```
 
 Levels of education at which Scholars are teaching (note - a single Scholar may teach at multiple levels: percentages are proportion of the category who reported teaching at that level):
 
 ```{r, echo=FALSE}
-rbind(teachschool_schtype,teachundergrad_schtype,teachpostgrad_schtype,teachdoctorate_schtype,teachtvet_schtype) %>% 
+rbind(teachschool_sch,teachundergrad_sch,teachpostgrad_sch,teachdoctorate_sch,teachtvet_sch) %>% 
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable,prop) %>% 
-  select(SchemeType,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,Undergraduate=TeachUndergrad,TVET=TeachTVET,School=TeachSchool) %>% 
-  pander
+  select(Route=SchemeNom,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,Undergraduate=TeachUndergrad,TVET=TeachTVET,School=TeachSchool) %>%   pander
 
 ```
 
@@ -315,8 +313,8 @@ Frequency of contact with networks of various kinds.
 Academic contacts at UK host institution:
 
 ```{r, echo=FALSE}
-netacad_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+netacad_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>% 
   pander
 
@@ -325,8 +323,8 @@ netacad_schtype %>%
 Professional networks in the UK:
 
 ```{r, echo=FALSE}
-netuk_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+netuk_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -334,8 +332,8 @@ netuk_schtype %>%
 Professional networks in the Scholar's home country:
 
 ```{r, echo=FALSE}
-nethome_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+nethome_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -343,8 +341,8 @@ nethome_schtype %>%
 Professional networks elsewhere abroad:
 
 ```{r, echo=FALSE}
-netother_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+netother_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -352,8 +350,8 @@ netother_schtype %>%
 Personal networks abroad:
 
 ```{r, echo=FALSE}
-netpersonal_schtype %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+netpersonal_sch %>% 
+  select(-freq, -Variable, Route=SchemeNom) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -363,11 +361,11 @@ netpersonal_schtype %>%
 Proportion of Scholars who reported impact at different breadths:
 
 ```{r, echo=FALSE}
-bind_rows(impinstitutional_schtype,implocal_schtype,impnational_schtype,impinternational_schtype) %>% 
+bind_rows(impinstitutional_sch,implocal_sch,impnational_sch,impinternational_sch) %>% 
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable, prop) %>% 
-  select("Scheme Type" = SchemeType, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
+  select(Route=SchemeNom, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
   pander
 
 ```
@@ -375,11 +373,11 @@ bind_rows(impinstitutional_schtype,implocal_schtype,impnational_schtype,impinter
 Types of impact reported:
 
 ```{r, echo=FALSE}
-bind_rows(impsocial_schtype,impcivic_schtype,impecon_schtype,imppolicy_schtype) %>% 
+bind_rows(impsocial_sch,impcivic_sch,impecon_sch,imppolicy_sch) %>% 
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable, prop) %>%
-  rename("Scheme Type" = SchemeType,"Civic Engagement"=ImpCivic, "Economic Development" = ImpEcon,
+  rename(Route=SchemeNom,"Civic Engagement"=ImpCivic, "Economic Development" = ImpEcon,
          "Policymaking"=ImpPolicy, "Social Development" =ImpSocial) %>% 
   pander
 
@@ -390,10 +388,10 @@ bind_rows(impsocial_schtype,impcivic_schtype,impecon_schtype,imppolicy_schtype) 
 Comparative indices, ranging from 0 (lowest) to 1 (highest), based on responses to questions on application of skills, leadership, research activity, and international research collaboration. Methodology detailed elsewhere: please contact the CSC E&M Team for details.
 
 ```{r, echo=FALSE}
-bind_cols(select(indexskills_schtype, "Scheme Type" = SchemeType, Skills=Mean),
-          select(indexldr_schtype, Leadership=Mean),
-          select(indexresearch_schtype, "Research productivity"=Mean),
-          select(indexcollab_schtype, "Research collaboration"=Mean)) %>% 
+bind_cols(select(indexskills_sch, Route=SchemeNom, Skills=Mean),
+          select(indexldr_sch, Leadership=Mean),
+          select(indexresearch_sch, "Research productivity"=Mean),
+          select(indexcollab_sch, "Research collaboration"=Mean)) %>% 
   pander
 
 ```

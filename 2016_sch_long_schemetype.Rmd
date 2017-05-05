@@ -52,6 +52,7 @@ empcurrent_schtype %>%
   select(-freq,-Variable, "Scheme Type"=SchemeType) %>% 
   mutate(Response = fct_recode(Response, "Other" = "Neither employed nor studying")) %>% 
   spread(Response, prop) %>% 
+  select(contains("Scheme Type"), Employed, contains("Employed and studying"),Studying, Other) %>% 
   pander
 ```
 
@@ -309,7 +310,7 @@ rbind(teachschool_schtype,teachundergrad_schtype,teachpostgrad_schtype,teachdoct
 
 Frequency of contact with networks of various kinds.
 
-__[9.1] Academic contacts__
+Academic contacts at UK host institution:
 
 ```{r, echo=FALSE}
 netacad_schtype %>% 
@@ -319,7 +320,7 @@ netacad_schtype %>%
 
 ```
 
-__[9.2] Professional networks in the UK__
+Professional networks in the UK:
 
 ```{r, echo=FALSE}
 netuk_schtype %>% 
@@ -328,7 +329,7 @@ netuk_schtype %>%
   pander
 ```
 
-__[9.3] Professional networks in the Scholar's home country__
+Professional networks in the Scholar's home country:
 
 ```{r, echo=FALSE}
 nethome_schtype %>% 
@@ -337,7 +338,7 @@ nethome_schtype %>%
   pander
 ```
 
-__[9.4] Professional networks elsewhere abroad__
+Professional networks elsewhere abroad:
 
 ```{r, echo=FALSE}
 netother_schtype %>% 
@@ -345,7 +346,8 @@ netother_schtype %>%
   spread(Response,prop) %>% 
   pander
 ```
-__[9.5] Personal networks abroad__
+
+Personal networks abroad:
 
 ```{r, echo=FALSE}
 netpersonal_schtype %>% 

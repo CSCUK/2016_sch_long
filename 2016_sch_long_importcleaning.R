@@ -77,11 +77,12 @@ population <- population %>%
                         ifelse(Scheme %in% c("CA", "CS", "CR") & DegreeCode %in% doctorateCodes, "PhD", 
                         ifelse(Scheme %in% c("CS", "CA", "CR"), "Masters",   
                         ifelse(Scheme %in% ("CN"), "Split Site",
-                        ifelse(Scheme %in% ("CD"), "Distance Learning",
+                        ifelse(Scheme %in% ("CD"), "Distance",
+                        ifelse(Scheme %in% ("SS"), "Shared",
                         ifelse(Scheme %in% ("CF"), "Academic Fellow",
                         ifelse(Scheme %in% ("CM"), "Medical Fellow",
                         ifelse(Scheme %in% ("CP"), "Professional Fellow",
-                        paste(Scheme) )))))))),
+                        paste(Scheme) ))))))))),
                      CtteeGroup = ifelse(Scheme %in% "CR","Agency: Developed", paste(SchemeType))
                 )
 
@@ -267,8 +268,8 @@ alumni.data <-
                                 "CA"="University Staff", 
                                 "CS"="Agency: Developing",
                                 "CN"="Split Site",
-                                "SS"="Shared Scholars"),
-    SchemeType = recode(SchemeType, "SS" = "Shared Scholars")
+                                "SS"="Shared Scholar"),
+    SchemeType = recode(SchemeType, "SS" = "Shared", "Distance Learning" = "Distance")
     )
 
 base.data <- 
@@ -290,7 +291,7 @@ base.data <-
                        "CS"="Agency: Developing",
                        "CN"="Split Site",
                        "SS"="Shared Scholars"),
-    SchemeType = recode(SchemeType, "SS" = "Shared Scholars")
+    SchemeType = recode(SchemeType, "SS" = "Shared","Distance Learning" = "Distance")
   )
 
 ## e] Cleanup ----

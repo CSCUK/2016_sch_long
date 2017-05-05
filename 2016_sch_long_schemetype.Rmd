@@ -55,7 +55,7 @@ empcurrent_schtype %>%
   pander
 ```
 
-Current sector of employment of Sscholars (Note: percentages may not sum to 100%: proportions are of all Scholars in each category, including any not currently employed):
+Current sector of employment of Scholars (Note: percentages may not sum to 100%: proportions are of all Scholars in each category, including any not currently employed):
 
 ```{r, echo=FALSE}
 empsector_schtype %>% 
@@ -195,7 +195,7 @@ resmain_schtype %>%
 
 __[7.1] Academic Productivity__
 
-Results do not sum to 100% in each row because some Scholars are not involved in the academic research activity at all: these respondents are excluded from the table, but the proportions shown are based on all Scholars within each category, not _only_ Scholars involved in academic research. This applies to "7.1. Academic Productivity" and "7.3. Research Collaboration".
+Results do not sum to 100% in each row because some Scholars are not involved in academic research activity at all: these respondents are excluded from the table, but the proportions shown are based on all Scholars within each category, not _only_ Scholars involved in academic research. The category "Never" thus means a Scholar who has indicated involvement in academic research generally, but has indicated that they are never involved in this specific academic activity (e.g. publishing journal articles). This applies to "7.1. Academic Productivity" and "7.3. Research Collaboration".
 
 Publishing journal articles:
 

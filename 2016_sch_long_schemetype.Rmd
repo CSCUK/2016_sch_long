@@ -50,6 +50,7 @@ Employment status:
 ```{r, echo=FALSE}
 empcurrent_schtype %>% 
   select(-freq,-Variable, "Scheme Type"=SchemeType) %>% 
+  mutate(Response = fct_recode(Response, "Other" = "Neither employed nor studying")) %>% 
   spread(Response, prop) %>% 
   pander
 ```
@@ -103,44 +104,81 @@ bind_rows(ldrbudget_schtype, ldrmanaging_schtype, ldrsupervise_schtype,ldrstrate
 
 # 6. Skill application
 
-Use of skills from Scholarship in various circumstances. Divided into three overall groups: 
+Use of skills from Scholarship in various circumstances. Divided into three overall groups: Use of skills, knowledge transfer, and advocating for change.
 
-[1] Use of skills
+__[6.1] Use of skills__
+
+Three variables constitute the 'use of skills' group: application of skills learned during your studies in the workplace; application of skills learned during your studies outside of the workplace; and approaching a problem differently based on something learned during your studies.
+
+Use of skills in the workplace:
 
 ```{r, echo=FALSE}
-bind_rows(
-    appskillwork_schtype, appskillnonwork_schtype,appapproach_schtype) %>% 
-  select(-freq, "Scheme Type"=SchemeType) %>% 
-  mutate(Variable = fct_recode(Variable,"Used in workplace"="AppSkillWork", "Used elsewhere"="AppSkillNonwork",
-                               "Took new approach"="AppApproachProblem")) %>% 
-  spread(Response,prop) %>% 
-  arrange(desc(Variable)) %>% 
+appskillwork_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>%
   pander
-
 ```
 
-[2] Knowledge transfer
+Use of skills outside of the workplace:
 
 ```{r, echo=FALSE}
-bind_rows(
-    apptrain_schtype,appresources_schtype) %>% 
-  select(-freq,"Scheme Type"=SchemeType) %>% 
-  mutate(Variable = fct_recode(Variable,"Trained others"="AppTrainColleagues","Developed resources" = "AppDevelopResources")) %>% 
-  spread(Response,prop) %>% 
+appskillnonwork_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>%
   pander
-
 ```
 
-[3] Advocacy and influencing change
+Approach a problem differently:
 
 ```{r, echo=FALSE}
-bind_rows(
-    appadvocate_schtype,appchange_schtype) %>% 
-  select(-freq,"Scheme Type"=SchemeType) %>% 
-  mutate(Variable = fct_recode(Variable,"Advocated change"="AppAdvocateChange","Introduced change"="AppMakeChange")) %>% 
-  spread(Response,prop) %>% 
+appapproach_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>%
   pander
+```
 
+__[6.2] Knowledge transfer__
+
+Two variables constitute the 'knowledge transfer' group: teaching a colleague something learned during your studies and developing training resources for others based something learned during your studies.
+
+Teaching a colleague:
+
+```{r, echo=FALSE}
+apptrain_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>%
+  pander
+```
+
+Developing training resources:
+
+```{r, echo=FALSE}
+appresources_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>%
+  pander
+```
+
+__[6.3] Advocacy and influencing change__
+
+Two variables constitute the 'advocacy and influencing change' group: Encouraging senior managers to make change based on something learned during your studies and making a change to your organisation's working practice based on something learned during your studies.
+
+Encouraging senior managers to make change:
+
+```{r, echo=FALSE}
+appadvocate_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>%
+  pander
+```
+
+Personally making a change to organisational practice:
+
+```{r, echo=FALSE}
+appchange_schtype %>% 
+  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  spread(Response,prop) %>%
+  pander
 ```
 
 # 7. Research activity
@@ -167,7 +205,6 @@ rescomparticles_schtype %>%
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>%
   pander
-
 ```
 
 Involvement in academic projects:

@@ -49,10 +49,10 @@ Employment status:
 
 ```{r, echo=FALSE}
 empcurrent_orireg %>% 
-  select(-freq,-Variable, "Scheme Type"=SchemeType) %>% 
+  select(-freq,-Variable, Origin = OriginRegion) %>% 
   mutate(Response = fct_recode(Response, "Other" = "Neither employed nor studying")) %>% 
   spread(Response, prop) %>% 
-  select(contains("Scheme Type"), Employed, contains("Employed and studying"),Studying, Other) %>% 
+  select(Origin, Employed, contains("Employed and studying"),Studying, Other) %>% 
   pander
 ```
 
@@ -60,7 +60,7 @@ Current sector of employment of Scholars (Note: percentages may not sum to 100%:
 
 ```{r, echo=FALSE}
 empsector_orireg %>% 
-  select(-freq,-Variable, "Scheme Type"=SchemeType) %>% 
+  select(-freq,-Variable,  Origin = OriginRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response, prop) %>% 
   pander
@@ -76,7 +76,7 @@ Respondents who had undertaken additional qualifications since completing their 
 acapostaward_orireg %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select( -Response,-Variable, "Proportion (%)"=prop,"Cases"=freq,"Scheme Type"=SchemeType) %>% 
+  select( -Response,-Variable, "Proportion (%)"=prop,"Cases"=freq, Origin = OriginRegion) %>% 
   pander
 ```
 
@@ -84,9 +84,9 @@ Level of qualification studied (each level is shown as a proportion of responden
 
 ```{r, echo=FALSE}
 acaquallevel_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"=SchemeType, "Degree studied"=Response) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion, "Degree studied"=Response) %>% 
   spread("Degree studied",prop) %>% 
-  select(contains("Scheme Type"), Doctorate,contains("Master's degree"),contains("Professional accreditation"),contains("Technical training"),
+  select(Origin, Doctorate,contains("Master's degree"),contains("Professional accreditation"),contains("Technical training"),
          contains("Undergraduate degree"), Other) %>% 
   pander
 ```
@@ -98,7 +98,7 @@ Workplace related leadership activities:
 ```{r, echo=FALSE}
 bind_rows(ldrbudget_orireg, ldrmanaging_orireg, ldrsupervise_orireg,ldrstrategy_orireg) %>% 
   filter(Response=="Yes") %>% 
-  select(-freq, -Response, "Scheme Type"=SchemeType) %>% 
+  select(-freq, -Response,  Origin = OriginRegion) %>% 
   mutate(Variable = fct_recode(Variable,"Overseeing budgets"="LdrBudget","Managing Company / department" = "LdrManaging",
                                "Setting strategy"="LdrStrategy","Supervising others"="LdrSupervising")) %>% 
   spread(Variable, prop) %>% 
@@ -117,7 +117,7 @@ Use of skills in the workplace:
 
 ```{r, echo=FALSE}
 appskillwork_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -126,7 +126,7 @@ Use of skills outside of the workplace:
 
 ```{r, echo=FALSE}
 appskillnonwork_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -135,7 +135,7 @@ Approach a problem differently:
 
 ```{r, echo=FALSE}
 appapproach_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -148,7 +148,7 @@ Teaching a colleague:
 
 ```{r, echo=FALSE}
 apptrain_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -157,7 +157,7 @@ Developing training resources:
 
 ```{r, echo=FALSE}
 appresources_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -170,7 +170,7 @@ Encouraging senior managers to make change:
 
 ```{r, echo=FALSE}
 appadvocate_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -179,7 +179,7 @@ Personally making a change to organisational practice:
 
 ```{r, echo=FALSE}
 appchange_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -192,7 +192,7 @@ Overall involvement in academic research:
 resmain_orireg %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-Response,-Variable, "Scheme Type"=SchemeType,Cases=freq, "Proportion (%)"=prop) %>% 
+  select(-Response,-Variable,  Origin = OriginRegion,Cases=freq, "Proportion (%)"=prop) %>% 
   pander
 ```
 
@@ -204,7 +204,7 @@ Publishing journal articles:
 
 ```{r, echo=FALSE}
 rescomparticles_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>%
   pander
@@ -214,7 +214,7 @@ Involvement in academic projects:
 
 ```{r, echo=FALSE}
 rescompprojects_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -225,7 +225,7 @@ Applying for grants / funding:
 
 ```{r, echo=FALSE}
 rescompfunding_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -239,7 +239,7 @@ bind_rows(reseditor_orireg,resreviewer_orireg,resorganiser_orireg) %>%
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>%
   spread(Variable, prop) %>% 
-  select( "Scheme Type"=SchemeType,"Journal Editor"=ResEditor,"Peer reviewer"=ResReviewer,"Conference organiser" = ResOrganiser) %>%
+  select(Origin = OriginRegion,"Journal Editor"=ResEditor,"Peer reviewer"=ResReviewer,"Conference organiser" = ResOrganiser) %>%
   pander
 
 ```
@@ -253,7 +253,7 @@ Collaborative authorship of papers:
 
 ```{r, echo=FALSE}
 rescollabauthor_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,  Origin = OriginRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -265,7 +265,7 @@ Collaborative applications for grants:
 ```{r, echo=FALSE}
 
 rescollabgrant_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>%
+  select(-freq, -Variable,  Origin = OriginRegion) %>%
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -277,7 +277,7 @@ Attendance at international conferences:
 ```{r, echo=FALSE}
 
 rescollabconf_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,Origin = OriginRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -292,7 +292,7 @@ Overall involvement in teaching:
 teachmain_orireg %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-Response,-Variable, "Scheme Type"=SchemeType,Cases=freq, "Proportion (%)"=prop) %>% 
+  select(-Response,-Variable, Origin = OriginRegion,Cases=freq, "Proportion (%)"=prop) %>% 
   pander
 ```
 
@@ -303,7 +303,8 @@ rbind(teachschool_orireg,teachundergrad_orireg,teachpostgrad_orireg,teachdoctora
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable,prop) %>% 
-  select(SchemeType,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,Undergraduate=TeachUndergrad,TVET=TeachTVET,School=TeachSchool) %>% 
+  select(Origin = OriginRegion,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,
+         Undergraduate=TeachUndergrad,TVET=TeachTVET,School=TeachSchool) %>% 
   pander
 
 ```
@@ -316,7 +317,7 @@ Academic contacts at UK host institution:
 
 ```{r, echo=FALSE}
 netacad_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable, Origin = OriginRegion) %>% 
   spread(Response,prop) %>% 
   pander
 
@@ -326,7 +327,7 @@ Professional networks in the UK:
 
 ```{r, echo=FALSE}
 netuk_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable,Origin = OriginRegion) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -335,7 +336,7 @@ Professional networks in the Scholar's home country:
 
 ```{r, echo=FALSE}
 nethome_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable, Origin = OriginRegion) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -344,7 +345,7 @@ Professional networks elsewhere abroad:
 
 ```{r, echo=FALSE}
 netother_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable, Origin = OriginRegion) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -353,7 +354,7 @@ Personal networks abroad:
 
 ```{r, echo=FALSE}
 netpersonal_orireg %>% 
-  select(-freq, -Variable, "Scheme Type"= SchemeType) %>% 
+  select(-freq, -Variable, Origin = OriginRegion) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -367,7 +368,7 @@ bind_rows(impinstitutional_orireg,implocal_orireg,impnational_orireg,impinternat
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable, prop) %>% 
-  select("Scheme Type" = SchemeType, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
+  select( Origin = OriginRegion, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
   pander
 
 ```
@@ -379,7 +380,7 @@ bind_rows(impsocial_orireg,impcivic_orireg,impecon_orireg,imppolicy_orireg) %>%
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable, prop) %>%
-  rename("Scheme Type" = SchemeType,"Civic Engagement"=ImpCivic, "Economic Development" = ImpEcon,
+  rename(Origin = OriginRegion,"Civic Engagement"=ImpCivic, "Economic Development" = ImpEcon,
          "Policymaking"=ImpPolicy, "Social Development" =ImpSocial) %>% 
   pander
 
@@ -390,7 +391,7 @@ bind_rows(impsocial_orireg,impcivic_orireg,impecon_orireg,imppolicy_orireg) %>%
 Comparative indices, ranging from 0 (lowest) to 1 (highest), based on responses to questions on application of skills, leadership, research activity, and international research collaboration. Methodology detailed elsewhere: please contact the CSC E&M Team for details.
 
 ```{r, echo=FALSE}
-bind_cols(select(indexskills_orireg, "Origin"=OriginRegion, Skills=Mean),
+bind_cols(select(indexskills_orireg, Origin = OriginRegion, Skills=Mean),
           select(indexldr_orireg, Leadership=Mean),
           select(indexresearch_orireg, "Research productivity"=Mean),
           select(indexcollab_orireg, "Research collaboration"=Mean)) %>% 

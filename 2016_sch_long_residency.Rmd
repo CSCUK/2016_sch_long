@@ -34,14 +34,14 @@ overview_resreg %>%
 
 # 2. Current residency
 
-This interpretation of this table is more complex for this variable, explanatory notes follow: 
-Each row shows a region in which Scholars are currently living (e.g. Sub-Saharan Africa): the percentages shown are the proportion of Scholars currently living in that region who are also living within their home country or region. 
+This interpretation of this table is more complex for this variable. Each row shows a region in which Scholars are currently living (e.g. Sub-Saharan Africa): the percentages shown are the proportion of Scholars currently living in that region who are also living within their home country or region.
+
 An example: a Nigerian living in Nigeria would have a Residency of 'Sub Saharan Africa' and would be both living in their home country and region and so would be included in both columns of the table below. A Nigerian living in Kenya would _not_ be living in their home country but _would_ be living in their home region, so they would be included in the 'region' column but not the 'country' column. A Nigerian living in the UK would be living in neither their home country nor region and so would not be included in either column.
 
 ```{r, echo=FALSE}
 bind_rows(rescountry_resreg,resregion_resreg) %>% 
   filter(Response=="Home") %>% 
-  select(-freq, -Response, "Residency Region"=Response) %>% 
+  select(-freq, -Response, "Residency Region"=ResidencyRegion) %>% 
   mutate(Variable = fct_recode(Variable, "Country"="resStatusCountry","Region"="resStatusRegion")) %>% 
   spread(Variable, prop) %>% 
   pander
@@ -53,18 +53,19 @@ Employment status:
 
 ```{r, echo=FALSE}
 empcurrent_resreg %>% 
-  select(-freq,-Variable, Origin = OriginRegion) %>% 
+  select(-freq,-Variable,ResidencyRegion) %>% 
   mutate(Response = fct_recode(Response, "Other" = "Neither employed nor studying")) %>% 
   spread(Response, prop) %>% 
-  select(Origin, Employed, contains("Employed and studying"),Studying, Other) %>% 
+  select("Residency Region"=ResidencyRegion, Employed, contains("Employed and studying"),Studying, Other) %>% 
   pander
+
 ```
 
 Current sector of employment of Scholars (Note: percentages may not sum to 100%: proportions are of all Scholars in each category, including any not currently employed):
 
 ```{r, echo=FALSE}
 empsector_resreg %>% 
-  select(-freq,-Variable,  Origin = OriginRegion) %>% 
+  select(-freq,-Variable, "Residency Region"=ResidencyRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response, prop) %>% 
   pander
@@ -80,7 +81,7 @@ Respondents who had undertaken additional qualifications since completing their 
 acapostaward_resreg %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select( -Response,-Variable, "Proportion (%)"=prop,"Cases"=freq, Origin = OriginRegion) %>% 
+  select( -Response,-Variable, "Proportion (%)"=prop,"Cases"=freq, "Residency Region"=ResidencyRegion) %>% 
   pander
 ```
 
@@ -88,9 +89,9 @@ Level of qualification studied (each level is shown as a proportion of responden
 
 ```{r, echo=FALSE}
 acaquallevel_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion, "Degree studied"=Response) %>% 
+  select(-freq, -Variable, ResidencyRegion, "Degree studied"=Response) %>% 
   spread("Degree studied",prop) %>% 
-  select(Origin, Doctorate,contains("Master's degree"),contains("Professional accreditation"),contains("Technical training"),
+  select("Residency Region"=ResidencyRegion, Doctorate,contains("Master's degree"),contains("Professional accreditation"),contains("Technical training"),
          contains("Undergraduate degree"), Other) %>% 
   pander
 ```
@@ -102,7 +103,7 @@ Workplace related leadership activities:
 ```{r, echo=FALSE}
 bind_rows(ldrbudget_resreg, ldrmanaging_resreg, ldrsupervise_resreg,ldrstrategy_resreg) %>% 
   filter(Response=="Yes") %>% 
-  select(-freq, -Response,  Origin = OriginRegion) %>% 
+  select(-freq, -Response,"Residency Region"=ResidencyRegion) %>% 
   mutate(Variable = fct_recode(Variable,"Overseeing budgets"="LdrBudget","Managing Company / department" = "LdrManaging",
                                "Setting strategy"="LdrStrategy","Supervising others"="LdrSupervising")) %>% 
   spread(Variable, prop) %>% 
@@ -121,7 +122,7 @@ Use of skills in the workplace:
 
 ```{r, echo=FALSE}
 appskillwork_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -130,7 +131,7 @@ Use of skills outside of the workplace:
 
 ```{r, echo=FALSE}
 appskillnonwork_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable,  "Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -139,7 +140,7 @@ Approach a problem differently:
 
 ```{r, echo=FALSE}
 appapproach_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable,  "Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -152,7 +153,7 @@ Teaching a colleague:
 
 ```{r, echo=FALSE}
 apptrain_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable,  "Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -161,7 +162,7 @@ Developing training resources:
 
 ```{r, echo=FALSE}
 appresources_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable, "Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -174,7 +175,7 @@ Encouraging senior managers to make change:
 
 ```{r, echo=FALSE}
 appadvocate_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -183,7 +184,7 @@ Personally making a change to organisational practice:
 
 ```{r, echo=FALSE}
 appchange_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -196,7 +197,7 @@ Overall involvement in academic research:
 resmain_resreg %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-Response,-Variable,  Origin = OriginRegion,Cases=freq, "Proportion (%)"=prop) %>% 
+  select(-Response,-Variable,"Residency Region"=ResidencyRegion,Cases=freq, "Proportion (%)"=prop) %>% 
   pander
 ```
 
@@ -208,7 +209,7 @@ Publishing journal articles:
 
 ```{r, echo=FALSE}
 rescomparticles_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>%
   pander
@@ -218,7 +219,7 @@ Involvement in academic projects:
 
 ```{r, echo=FALSE}
 rescompprojects_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -229,7 +230,7 @@ Applying for grants / funding:
 
 ```{r, echo=FALSE}
 rescompfunding_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -243,7 +244,7 @@ bind_rows(reseditor_resreg,resreviewer_resreg,resorganiser_resreg) %>%
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>%
   spread(Variable, prop) %>% 
-  select(Origin = OriginRegion,"Journal Editor"=ResEditor,"Peer reviewer"=ResReviewer,"Conference organiser" = ResOrganiser) %>%
+  select("Residency Region"=ResidencyRegion,"Journal Editor"=ResEditor,"Peer reviewer"=ResReviewer,"Conference organiser" = ResOrganiser) %>%
   pander
 
 ```
@@ -257,7 +258,7 @@ Collaborative authorship of papers:
 
 ```{r, echo=FALSE}
 rescollabauthor_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -269,7 +270,7 @@ Collaborative applications for grants:
 ```{r, echo=FALSE}
 
 rescollabgrant_resreg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>%
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>%
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -281,7 +282,7 @@ Attendance at international conferences:
 ```{r, echo=FALSE}
 
 rescollabconf_resreg %>% 
-  select(-freq, -Variable,Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -296,7 +297,7 @@ Overall involvement in teaching:
 teachmain_resreg %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-Response,-Variable, Origin = OriginRegion,Cases=freq, "Proportion (%)"=prop) %>% 
+  select(-Response,-Variable,"Residency Region"=ResidencyRegion,Cases=freq, "Proportion (%)"=prop) %>% 
   pander
 ```
 
@@ -307,7 +308,7 @@ rbind(teachschool_resreg,teachundergrad_resreg,teachpostgrad_resreg,teachdoctora
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable,prop) %>% 
-  select(Origin = OriginRegion,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,
+  select("Residency Region"=ResidencyRegion,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,
          Undergraduate=TeachUndergrad,TVET=TeachTVET,School=TeachSchool) %>% 
   pander
 
@@ -321,7 +322,7 @@ Academic contacts at UK host institution:
 
 ```{r, echo=FALSE}
 netacad_resreg %>% 
-  select(-freq, -Variable, Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>% 
   pander
 
@@ -331,7 +332,7 @@ Professional networks in the UK:
 
 ```{r, echo=FALSE}
 netuk_resreg %>% 
-  select(-freq, -Variable,Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -340,7 +341,7 @@ Professional networks in the Scholar's home country:
 
 ```{r, echo=FALSE}
 nethome_resreg %>% 
-  select(-freq, -Variable, Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -349,7 +350,7 @@ Professional networks elsewhere abroad:
 
 ```{r, echo=FALSE}
 netother_resreg %>% 
-  select(-freq, -Variable, Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -358,7 +359,7 @@ Personal networks abroad:
 
 ```{r, echo=FALSE}
 netpersonal_resreg %>% 
-  select(-freq, -Variable, Origin = OriginRegion) %>% 
+  select(-freq, -Variable,"Residency Region"=ResidencyRegion) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -372,7 +373,8 @@ bind_rows(impinstitutional_resreg,implocal_resreg,impnational_resreg,impinternat
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable, prop) %>% 
-  select( Origin = OriginRegion, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
+  select("Residency Region"=ResidencyRegion, Institutional=ImpInstitutional,Local=ImpLocal,
+         National=ImpNational,International=ImpInternational) %>%
   pander
 
 ```
@@ -384,7 +386,7 @@ bind_rows(impsocial_resreg,impcivic_resreg,impecon_resreg,imppolicy_resreg) %>%
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable, prop) %>%
-  rename(Origin = OriginRegion,"Civic Engagement"=ImpCivic, "Economic Development" = ImpEcon,
+  rename("Residency Region"=ResidencyRegion,"Civic Engagement"=ImpCivic, "Economic Development" = ImpEcon,
          "Policymaking"=ImpPolicy, "Social Development" =ImpSocial) %>% 
   pander
 
@@ -395,10 +397,16 @@ bind_rows(impsocial_resreg,impcivic_resreg,impecon_resreg,imppolicy_resreg) %>%
 Comparative indices, ranging from 0 (lowest) to 1 (highest), based on responses to questions on application of skills, leadership, research activity, and international research collaboration. Methodology detailed elsewhere: please contact the CSC E&M Team for details.
 
 ```{r, echo=FALSE}
-bind_cols(select(indexskills_resreg, Origin = OriginRegion, Skills=Mean),
+bind_cols(select(indexskills_resreg,"Residency Region"=ResidencyRegion, Skills=Mean),
           select(indexldr_resreg, Leadership=Mean),
           select(indexresearch_resreg, "Research productivity"=Mean),
           select(indexcollab_resreg, "Research collaboration"=Mean)) %>% 
   pander
+
+```
+
+```{r, echo=FALSE}
+
+rmarkdown::render("2016_sch_long_residency.Rmd",output_format='pdf_document')
 
 ```

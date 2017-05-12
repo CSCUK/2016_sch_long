@@ -404,9 +404,3 @@ bind_cols(select(indexskills_resreg,"Residency Region"=ResidencyRegion, Skills=M
   pander
 
 ```
-
-```{r, echo=FALSE}
-
-rmarkdown::render("2016_sch_long_residency.Rmd",output_format='pdf_document')
-
-```

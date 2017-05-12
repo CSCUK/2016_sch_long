@@ -8,7 +8,7 @@ output:
 ---
 
 
-```{r setup, include = FALSE}
+```{r, include = FALSE}
 
 source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_basicanalysis.r")
 
@@ -20,26 +20,27 @@ panderOptions("table.split.table",Inf)
 
 ```
 
-This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. Figures in tables are proportions (%) of the total (e.g. 89% of Split site Scholars replied 'Often') unless otherwise stated. For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
+This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. Figures in tables are proportions (%) of the total (e.g. 89% of Split site Scholars replied 'Often') unless otherwise stated. Subjects of study are standardised by the JACS 3.0 categories, produced by the Higher Education Statistics Agency (UK). In this document only JACS Categories (top level subject coding) are used. For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
 
 # 1. Data overview
 
-Counts of cases are not typically shown in the results tables; note should taken where the table below indicates few respondents in a particular category.
+Counts of cases are not typically shown in the results tables; note should taken where the table below indicates few respondents in a particular category. In this document, only categories with at least 20 cases are included in results tables (other than the overview table below).
 
 ```{r, echo=FALSE}
-overview_orireg %>% 
-  select(-Variable,Origin=Response,Cases=freq, 'Proportion (%)'=prop) %>% 
+overview_jacs %>% 
+  select(-Variable,Subject=Response,Cases=freq, 'Proportion (%)'=prop) %>% 
   pander
 ```
 
 # 2. Current residency
 
 ```{r, echo=FALSE}
-bind_rows(rescountry_orireg,resregion_orireg) %>% 
+bind_rows(rescountry_jacs,resregion_jacs) %>% 
   filter(Response=="Home") %>% 
-  select(-freq, -Response, Origin=OriginRegion) %>% 
+  select(-freq, -Response, Subject=JacsCat) %>% 
   mutate(Variable = fct_recode(Variable, "Country"="resStatusCountry","Region"="resStatusRegion")) %>% 
   spread(Variable, prop) %>% 
+  arrange(desc(Country)) %>% 
   pander
 ```
 
@@ -48,19 +49,20 @@ bind_rows(rescountry_orireg,resregion_orireg) %>%
 Employment status:
 
 ```{r, echo=FALSE}
-empcurrent_orireg %>% 
-  select(-freq,-Variable, Origin = OriginRegion) %>% 
+empcurrent_jacs %>% 
+  select(-freq,-Variable, Subject=JacsCat) %>% 
   mutate(Response = fct_recode(Response, "Other" = "Neither employed nor studying")) %>% 
   spread(Response, prop) %>% 
-  select(Origin, Employed, contains("Employed and studying"),Studying, Other) %>% 
+  select(Subject, Employed, contains("Employed and studying"),Studying, Other) %>% 
+  arrange(desc(Employed)) %>% 
   pander
 ```
 
 Current sector of employment of Scholars (Note: percentages may not sum to 100%: proportions are of all Scholars in each category, including any not currently employed):
 
 ```{r, echo=FALSE}
-empsector_orireg %>% 
-  select(-freq,-Variable,  Origin = OriginRegion) %>% 
+empsector_jacs %>% 
+  select(-freq,-Variable,Subject=JacsCat) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response, prop) %>% 
   pander
@@ -73,20 +75,20 @@ Study of additional qualifications in the last two years. Note: be cautious of l
 Respondents who had undertaken additional qualifications since completing their Commonwealth Scholarship:
 
 ```{r, echo=FALSE}
-acapostaward_orireg %>% 
+acapostaward_jacs %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select( -Response,-Variable, "Proportion (%)"=prop,"Cases"=freq, Origin = OriginRegion) %>% 
+  select( -Response,-Variable, "Proportion (%)"=prop,"Cases"=freq, Subject=JacsCat) %>% 
   pander
 ```
 
-Level of qualification studied (each level is shown as a proportion of respondents who had undertaken additional qualifications):
+Level of qualification studied (each level is shown as a proportion of respondents who had undertaken additional qualifications). Note: entries are not limited to subjects with 20 or more cases so be cautious of how results might be distorted by low numbers of cases.
 
 ```{r, echo=FALSE}
-acaquallevel_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion, "Degree studied"=Response) %>% 
+acaquallevel_jacs %>% 
+  select(-freq, -Variable,Subject=JacsCat, "Degree studied"=Response) %>% 
   spread("Degree studied",prop) %>% 
-  select(Origin, Doctorate,contains("Master's degree"),contains("Professional accreditation"),contains("Technical training"),
+  select(Subject, Doctorate,contains("Master's degree"),contains("Professional accreditation"),contains("Technical training"),
          contains("Undergraduate degree"), Other) %>% 
   pander
 ```
@@ -96,9 +98,9 @@ acaquallevel_orireg %>%
 Workplace related leadership activities:
 
 ```{r, echo=FALSE}
-bind_rows(ldrbudget_orireg, ldrmanaging_orireg, ldrsupervise_orireg,ldrstrategy_orireg) %>% 
+bind_rows(ldrbudget_jacs, ldrmanaging_jacs, ldrsupervise_jacs,ldrstrategy_jacs) %>% 
   filter(Response=="Yes") %>% 
-  select(-freq, -Response,  Origin = OriginRegion) %>% 
+  select(-freq, -Response,Subject=JacsCat) %>% 
   mutate(Variable = fct_recode(Variable,"Overseeing budgets"="LdrBudget","Managing Company / department" = "LdrManaging",
                                "Setting strategy"="LdrStrategy","Supervising others"="LdrSupervising")) %>% 
   spread(Variable, prop) %>% 
@@ -116,8 +118,8 @@ Three variables constitute the 'use of skills' group: application of skills lear
 Use of skills in the workplace:
 
 ```{r, echo=FALSE}
-appskillwork_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+appskillwork_jacs %>% 
+  select(-freq, -Variable,Subject=JacsCat) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -125,8 +127,8 @@ appskillwork_orireg %>%
 Use of skills outside of the workplace:
 
 ```{r, echo=FALSE}
-appskillnonwork_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+appskillnonwork_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -134,8 +136,8 @@ appskillnonwork_orireg %>%
 Approach a problem differently:
 
 ```{r, echo=FALSE}
-appapproach_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+appapproach_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -147,8 +149,8 @@ Two variables constitute the 'knowledge transfer' group: teaching a colleague so
 Teaching a colleague:
 
 ```{r, echo=FALSE}
-apptrain_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+apptrain_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -156,8 +158,8 @@ apptrain_orireg %>%
 Developing training resources:
 
 ```{r, echo=FALSE}
-appresources_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+appresources_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -169,8 +171,8 @@ Two variables constitute the 'advocacy and influencing change' group: Encouragin
 Encouraging senior managers to make change:
 
 ```{r, echo=FALSE}
-appadvocate_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+appadvocate_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -178,8 +180,8 @@ appadvocate_orireg %>%
 Personally making a change to organisational practice:
 
 ```{r, echo=FALSE}
-appchange_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+appchange_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>% 
   spread(Response,prop) %>%
   pander
 ```
@@ -189,10 +191,10 @@ appchange_orireg %>%
 Overall involvement in academic research:
 
 ```{r, echo=FALSE}
-resmain_orireg %>% 
+resmain_jacs %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-Response,-Variable,  Origin = OriginRegion,Cases=freq, "Proportion (%)"=prop) %>% 
+  select(-Response,-Variable,  Subject=JacsCat,Cases=freq, "Proportion (%)"=prop) %>% 
   pander
 ```
 
@@ -203,8 +205,8 @@ Results do not sum to 100% in each row because some Scholars are not involved in
 Publishing journal articles:
 
 ```{r, echo=FALSE}
-rescomparticles_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+rescomparticles_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>%
   pander
@@ -213,8 +215,8 @@ rescomparticles_orireg %>%
 Involvement in academic projects:
 
 ```{r, echo=FALSE}
-rescompprojects_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+rescompprojects_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -224,8 +226,8 @@ rescompprojects_orireg %>%
 Applying for grants / funding:
 
 ```{r, echo=FALSE}
-rescompfunding_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+rescompfunding_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -235,11 +237,11 @@ rescompfunding_orireg %>%
 __[7.2] Academic community activities__
 
 ```{r, echo=FALSE}
-bind_rows(reseditor_orireg,resreviewer_orireg,resorganiser_orireg) %>% 
+bind_rows(reseditor_jacs,resreviewer_jacs,resorganiser_jacs) %>% 
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>%
   spread(Variable, prop) %>% 
-  select(Origin = OriginRegion,"Journal Editor"=ResEditor,"Peer reviewer"=ResReviewer,"Conference organiser" = ResOrganiser) %>%
+  select(Subject=JacsCat,"Journal Editor"=ResEditor,"Peer reviewer"=ResReviewer,"Conference organiser" = ResOrganiser) %>%
   pander
 
 ```
@@ -252,8 +254,8 @@ Research activities with colleagues from outside Scholar's country of origin or 
 Collaborative authorship of papers:
 
 ```{r, echo=FALSE}
-rescollabauthor_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>% 
+rescollabauthor_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -264,8 +266,8 @@ Collaborative applications for grants:
 
 ```{r, echo=FALSE}
 
-rescollabgrant_orireg %>% 
-  select(-freq, -Variable,  Origin = OriginRegion) %>%
+rescollabgrant_jacs %>% 
+  select(-freq, -Variable,  Subject=JacsCat) %>%
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -276,8 +278,8 @@ Attendance at international conferences:
 
 ```{r, echo=FALSE}
 
-rescollabconf_orireg %>% 
-  select(-freq, -Variable,Origin = OriginRegion) %>% 
+rescollabconf_jacs %>% 
+  select(-freq, -Variable,Subject=JacsCat) %>% 
   filter(!is.na(Response)) %>% 
   spread(Response,prop) %>% 
   pander
@@ -289,21 +291,21 @@ rescollabconf_orireg %>%
 Overall involvement in teaching:
 
 ```{r, echo=FALSE}
-teachmain_orireg %>% 
+teachmain_jacs %>% 
   filter(Response=="Yes") %>%
   arrange(desc(prop)) %>% 
-  select(-Response,-Variable, Origin = OriginRegion,Cases=freq, "Proportion (%)"=prop) %>% 
+  select(-Response,-Variable, Subject=JacsCat,Cases=freq, "Proportion (%)"=prop) %>% 
   pander
 ```
 
 Levels of education at which Scholars are teaching (note - a single Scholar may teach at multiple levels: percentages are proportion of the category who reported teaching at that level):
 
 ```{r, echo=FALSE}
-rbind(teachschool_orireg,teachundergrad_orireg,teachpostgrad_orireg,teachdoctorate_orireg,teachtvet_orireg) %>% 
+rbind(teachschool_jacs,teachundergrad_jacs,teachpostgrad_jacs,teachdoctorate_jacs,teachtvet_jacs) %>% 
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable,prop) %>% 
-  select(Origin = OriginRegion,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,
+  select(Subject=JacsCat,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,
          Undergraduate=TeachUndergrad,TVET=TeachTVET,School=TeachSchool) %>% 
   pander
 
@@ -316,8 +318,8 @@ Frequency of contact with networks of various kinds.
 Academic contacts at UK host institution:
 
 ```{r, echo=FALSE}
-netacad_orireg %>% 
-  select(-freq, -Variable, Origin = OriginRegion) %>% 
+netacad_jacs %>% 
+  select(-freq, -Variable, Subject=JacsCat) %>% 
   spread(Response,prop) %>% 
   pander
 
@@ -326,8 +328,8 @@ netacad_orireg %>%
 Professional networks in the UK:
 
 ```{r, echo=FALSE}
-netuk_orireg %>% 
-  select(-freq, -Variable,Origin = OriginRegion) %>% 
+netuk_jacs %>% 
+  select(-freq, -Variable,Subject=JacsCat) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -335,8 +337,8 @@ netuk_orireg %>%
 Professional networks in the Scholar's home country:
 
 ```{r, echo=FALSE}
-nethome_orireg %>% 
-  select(-freq, -Variable, Origin = OriginRegion) %>% 
+nethome_jacs %>% 
+  select(-freq, -Variable, Subject=JacsCat) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -344,8 +346,8 @@ nethome_orireg %>%
 Professional networks elsewhere abroad:
 
 ```{r, echo=FALSE}
-netother_orireg %>% 
-  select(-freq, -Variable, Origin = OriginRegion) %>% 
+netother_jacs %>% 
+  select(-freq, -Variable, Subject=JacsCat) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -353,8 +355,8 @@ netother_orireg %>%
 Personal networks abroad:
 
 ```{r, echo=FALSE}
-netpersonal_orireg %>% 
-  select(-freq, -Variable, Origin = OriginRegion) %>% 
+netpersonal_jacs %>% 
+  select(-freq, -Variable, Subject=JacsCat) %>% 
   spread(Response,prop) %>% 
   pander
 ```
@@ -364,11 +366,11 @@ netpersonal_orireg %>%
 Proportion of Scholars who reported impact at different breadths:
 
 ```{r, echo=FALSE}
-bind_rows(impinstitutional_orireg,implocal_orireg,impnational_orireg,impinternational_orireg) %>% 
+bind_rows(impinstitutional_jacs,implocal_jacs,impnational_jacs,impinternational_jacs) %>% 
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable, prop) %>% 
-  select( Origin = OriginRegion, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
+  select( Subject=JacsCat, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
   pander
 
 ```
@@ -376,11 +378,11 @@ bind_rows(impinstitutional_orireg,implocal_orireg,impnational_orireg,impinternat
 Types of impact reported:
 
 ```{r, echo=FALSE}
-bind_rows(impsocial_orireg,impcivic_orireg,impecon_orireg,imppolicy_orireg) %>% 
+bind_rows(impsocial_jacs,impcivic_jacs,impecon_jacs,imppolicy_jacs) %>% 
   filter(Response=="Yes") %>% 
   select(-freq,-Response) %>% 
   spread(Variable, prop) %>%
-  rename(Origin = OriginRegion,"Civic Engagement"=ImpCivic, "Economic Development" = ImpEcon,
+  rename(Subject=JacsCat,"Civic Engagement"=ImpCivic, "Economic Development" = ImpEcon,
          "Policymaking"=ImpPolicy, "Social Development" =ImpSocial) %>% 
   pander
 
@@ -391,10 +393,10 @@ bind_rows(impsocial_orireg,impcivic_orireg,impecon_orireg,imppolicy_orireg) %>%
 Comparative indices, ranging from 0 (lowest) to 1 (highest), based on responses to questions on application of skills, leadership, research activity, and international research collaboration. Methodology detailed elsewhere: please contact the CSC E&M Team for details.
 
 ```{r, echo=FALSE}
-bind_cols(select(indexskills_orireg, Origin = OriginRegion, Skills=Mean),
-          select(indexldr_orireg, Leadership=Mean),
-          select(indexresearch_orireg, "Research productivity"=Mean),
-          select(indexcollab_orireg, "Research collaboration"=Mean)) %>% 
+bind_cols(select(indexskills_jacs, Subject=JacsCat, Skills=Mean),
+          select(indexldr_jacs, Leadership=Mean),
+          select(indexresearch_jacs, "Research productivity"=Mean),
+          select(indexcollab_jacs, "Research collaboration"=Mean)) %>% 
   pander
 
 ```

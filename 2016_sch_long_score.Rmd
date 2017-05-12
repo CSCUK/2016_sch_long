@@ -20,11 +20,15 @@ panderOptions("table.split.table",Inf)
 
 ```
 
-This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. Figures in tables are proportions (%) of the total (e.g. 89% of Split site Scholars replied 'Often') unless otherwise stated. In this document only JACS Categories (top level subject coding) are used. For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
+This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. Selection score is the committee-asigned score a candidate receives at application to become a Commonwealth Scholar. Each score is constituted by several grades which are weighted to create a final score. The weighting for scores and quality of the applications may differ subtly from year to year, and scoring is only relevant in comparison to other candidates for the same funding (e.g. A split-site candidate is never compared against a masters degree candidate during the scholarship selection process). Not all candidates receive selection scores: some scheme types (e.g. Shared Scholarships) do not use selection scores.
+
+To allow selection scoring data to be used for analysis, we create a standardised score based on the deviation of an individual candidate's score from the average score of candidates within the selection process in their year of application. Four groups are formed - Agency: Developed, Masters, PhD, Split site - and candidates for scholarships within those groups are assigned standardised scores within each application year. A positive standardised score indicates a higher than average selection score, while a negative standardised score indicates a selection score lower than average within the year of application.
+
+For more detailed interpretation or explanation of the figures, please contact the evaluation team: [evaluation@cscuk.org.uk](mailto:evaluation@cscuk.org.uk)
 
 # 1. Data overview
 
-Counts of cases are not typically shown in the results tables; note should taken where the table below indicates few respondents in a particular category. In this document, only categories with at least 20 cases are included in results tables (other than the overview table below).
+Counts of cases are not typically shown in the results tables; note should taken where the table below indicates few respondents in a particular category.
 
 ```{r, echo=FALSE}
 overview_score %>% 
@@ -34,13 +38,21 @@ overview_score %>%
 
 # 2. Current residency
 
+Residency in home country:
+
 ```{r, echo=FALSE}
-bind_rows(rescountry_score,resregion_score) %>% 
-  filter(Response=="Home") %>% 
-  select(-freq, -Response, Subject=JacsCat) %>% 
-  mutate(Variable = fct_recode(Variable, "Country"="resStatusCountry","Region"="resStatusRegion")) %>% 
-  spread(Variable, prop) %>% 
-  arrange(desc(Country)) %>% 
+rescountry_score %>% 
+  mutate(Variable = fct_recode(Variable, "Country"="resStatusCountry")) %>% 
+  select(-Variable, "Current residency"=Response,Cases=Freq) %>%
+  pander
+```
+
+Residency in home region:
+
+```{r, echo=FALSE}
+resregion_score %>% 
+  mutate(Variable = fct_recode(Variable, "Region"="resStatusRegion")) %>% 
+  select(-Variable, "Current residency"=Response,Cases=Freq) %>%
   pander
 ```
 
@@ -50,21 +62,17 @@ Employment status:
 
 ```{r, echo=FALSE}
 empcurrent_score %>% 
-  select(-freq,-Variable, Subject=JacsCat) %>% 
   mutate(Response = fct_recode(Response, "Other" = "Neither employed nor studying")) %>% 
-  spread(Response, prop) %>% 
-  select(Subject, Employed, contains("Employed and studying"),Studying, Other) %>% 
-  arrange(desc(Employed)) %>% 
+  select(-Variable, "Employment status"=Response,Cases=Freq) %>% 
   pander
 ```
 
-Current sector of employment of Scholars (Note: percentages may not sum to 100%: proportions are of all Scholars in each category, including any not currently employed):
+Current sector of employment of Scholars:
 
 ```{r, echo=FALSE}
 empsector_score %>% 
-  select(-freq,-Variable,Subject=JacsCat) %>% 
   filter(!is.na(Response)) %>% 
-  spread(Response, prop) %>% 
+  select(-Variable, "Employment sector"=Response,Cases=Freq) %>% 
   pander
 ```
 
@@ -76,35 +84,65 @@ Respondents who had undertaken additional qualifications since completing their 
 
 ```{r, echo=FALSE}
 acapostaward_score %>% 
-  filter(Response=="Yes") %>%
-  arrange(desc(prop)) %>% 
-  select( -Response,-Variable, "Proportion (%)"=prop,"Cases"=freq, Subject=JacsCat) %>% 
+  arrange(desc(Response)) %>% 
+  select(-Variable, "Further qualification" = Response, Cases=Freq) %>% 
   pander
 ```
 
-Level of qualification studied (each level is shown as a proportion of respondents who had undertaken additional qualifications). Note: entries are not limited to subjects with 20 or more cases so be cautious of how results might be distorted by low numbers of cases.
+Level of qualification studied:
 
 ```{r, echo=FALSE}
 acaquallevel_score %>% 
-  select(-freq, -Variable,Subject=JacsCat, "Degree studied"=Response) %>% 
-  spread("Degree studied",prop) %>% 
-  select(Subject, Doctorate,contains("Master's degree"),contains("Professional accreditation"),contains("Technical training"),
-         contains("Undergraduate degree"), Other) %>% 
+  select(-Variable, "Qualification type"=Response,Cases=Freq) %>% 
   pander
 ```
 
 # 5. Leadership activities
 
-Workplace related leadership activities:
+Workplace related leadership activities divided into four areas.
+
+Overseeing budgets:
 
 ```{r, echo=FALSE}
-bind_rows(ldrbudget_score, ldrmanaging_score, ldrsupervise_score,ldrstrategy_score) %>% 
-  filter(Response=="Yes") %>% 
-  select(-freq, -Response,Subject=JacsCat) %>% 
-  mutate(Variable = fct_recode(Variable,"Overseeing budgets"="LdrBudget","Managing Company / department" = "LdrManaging",
-                               "Setting strategy"="LdrStrategy","Supervising others"="LdrSupervising")) %>% 
-  spread(Variable, prop) %>% 
+ldrbudget_score %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>% 
+  select(-Variable, "Overseeing Budgets"=Response, Cases=Freq) %>%
   pander
+
+```
+
+Managing a company or department:
+
+```{r, echo=FALSE}
+ldrmanaging_score %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>% 
+  select(-Variable, "Managing"=Response, Cases=Freq) %>%
+  pander
+
+```
+
+Setting strategy for an organisation:
+
+```{r, echo=FALSE}
+ldrstrategy_score %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>% 
+  select(-Variable, "Setting strategy"=Response, Cases=Freq) %>%
+  pander
+
+```
+
+Supervising others:
+
+```{r, echo=FALSE}
+ldrsupervise_score %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>% 
+  select(-Variable, "Supervising"=Response, Cases=Freq) %>%
+  pander
+
 ```
 
 # 6. Skill application
@@ -119,8 +157,7 @@ Use of skills in the workplace:
 
 ```{r, echo=FALSE}
 appskillwork_score %>% 
-  select(-freq, -Variable,Subject=JacsCat) %>% 
-  spread(Response,prop) %>%
+  select(-Variable,Cases=Freq) %>% 
   pander
 ```
 
@@ -128,8 +165,7 @@ Use of skills outside of the workplace:
 
 ```{r, echo=FALSE}
 appskillnonwork_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>% 
-  spread(Response,prop) %>%
+  select(-Variable,Cases=Freq) %>% 
   pander
 ```
 
@@ -137,8 +173,7 @@ Approach a problem differently:
 
 ```{r, echo=FALSE}
 appapproach_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>% 
-  spread(Response,prop) %>%
+  select(-Variable, Cases=Freq) %>% 
   pander
 ```
 
@@ -150,8 +185,7 @@ Teaching a colleague:
 
 ```{r, echo=FALSE}
 apptrain_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>% 
-  spread(Response,prop) %>%
+  select(-Variable,Cases=Freq) %>% 
   pander
 ```
 
@@ -159,8 +193,7 @@ Developing training resources:
 
 ```{r, echo=FALSE}
 appresources_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>% 
-  spread(Response,prop) %>%
+  select(-Variable, Cases=Freq) %>% 
   pander
 ```
 
@@ -172,8 +205,7 @@ Encouraging senior managers to make change:
 
 ```{r, echo=FALSE}
 appadvocate_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>% 
-  spread(Response,prop) %>%
+  select(-Variable, Cases=Freq) %>% 
   pander
 ```
 
@@ -181,8 +213,7 @@ Personally making a change to organisational practice:
 
 ```{r, echo=FALSE}
 appchange_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>% 
-  spread(Response,prop) %>%
+  select(-Variable,Cases=Freq) %>% 
   pander
 ```
 
@@ -192,9 +223,9 @@ Overall involvement in academic research:
 
 ```{r, echo=FALSE}
 resmain_score %>% 
-  filter(Response=="Yes") %>%
-  arrange(desc(prop)) %>% 
-  select(-Response,-Variable,  Subject=JacsCat,Cases=freq, "Proportion (%)"=prop) %>% 
+  filter(!is.na(Response)) %>%
+  arrange(desc(Response)) %>% 
+  select(-Variable, "Research activity"=Response, Cases=Freq) %>% 
   pander
 ```
 

@@ -20,7 +20,7 @@ panderOptions("table.split.table",Inf)
 
 ```
 
-This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. Selection score is the committee-asigned score a candidate receives at application to become a Commonwealth Scholar. Each score is constituted by several grades which are weighted to create a final score. The weighting for scores and quality of the applications may differ subtly from year to year, and scoring is only relevant in comparison to other candidates for the same funding (e.g. A split-site candidate is never compared against a masters degree candidate during the scholarship selection process). Not all candidates receive selection scores: some scheme types (e.g. Shared Scholarships) do not use selection scores.
+This document relates to `r SurveyName` and is a intended as a short overview of basic findings by a key variable. Selection score is the committee-asigned score a candidate receives at application to become a Commonwealth Scholar. Each score is constituted by several grades which are weighted to create a final score. The weighting for scores and quality of the applications may differ subtly from year to year, and scoring is only relevant in comparison to other candidates for the same funding (e.g. A split-site candidate is never compared against a masters degree candidate during the scholarship selection process). Not all candidates receive selection scores: some scheme types (e.g. Shared Scholarships) do not use selection scores. As such, there are fewer cases for all topics than in other key variable comparisons (e.g. subject or gender).
 
 To allow selection scoring data to be used for analysis, we create a standardised score based on the deviation of an individual candidate's score from the average score of candidates within the selection process in their year of application. Four groups are formed - Agency: Developed, Masters, PhD, Split site - and candidates for scholarships within those groups are assigned standardised scores within each application year. A positive standardised score indicates a higher than average selection score, while a negative standardised score indicates a selection score lower than average within the year of application.
 
@@ -107,7 +107,7 @@ Overseeing budgets:
 ldrbudget_score %>% 
   filter(!is.na(Response)) %>% 
   arrange(desc(Response)) %>% 
-  select(-Variable, "Overseeing Budgets"=Response, Cases=Freq) %>%
+  select(-Variable,Cases=Freq) %>%
   pander
 
 ```
@@ -118,7 +118,7 @@ Managing a company or department:
 ldrmanaging_score %>% 
   filter(!is.na(Response)) %>% 
   arrange(desc(Response)) %>% 
-  select(-Variable, "Managing"=Response, Cases=Freq) %>%
+  select(-Variable,Cases=Freq) %>%
   pander
 
 ```
@@ -129,7 +129,7 @@ Setting strategy for an organisation:
 ldrstrategy_score %>% 
   filter(!is.na(Response)) %>% 
   arrange(desc(Response)) %>% 
-  select(-Variable, "Setting strategy"=Response, Cases=Freq) %>%
+  select(-Variable,Cases=Freq) %>%
   pander
 
 ```
@@ -140,7 +140,7 @@ Supervising others:
 ldrsupervise_score %>% 
   filter(!is.na(Response)) %>% 
   arrange(desc(Response)) %>% 
-  select(-Variable, "Supervising"=Response, Cases=Freq) %>%
+  select(-Variable,Cases=Freq) %>%
   pander
 
 ```
@@ -231,15 +231,14 @@ resmain_score %>%
 
 __[7.1] Academic Productivity__
 
-Results do not sum to 100% in each row because some Scholars are not involved in academic research activity at all: these respondents are excluded from the table, but the proportions shown are based on all Scholars within each category, not _only_ Scholars involved in academic research. The category "Never" thus means a Scholar who has indicated involvement in academic research generally, but has indicated that they are never involved in this specific academic activity (e.g. publishing journal articles). This applies to "7.1. Academic Productivity" and "7.3. Research Collaboration".
+The category "Never" indicates a Scholar who has indicated involvement in academic research generally (i.e. answered 'yes' to the question in the table above), but has indicated that they are never involved in this specific academic activity (e.g. publishing journal articles). This applies to "7.1. Academic Productivity" and "7.3. Research Collaboration".
 
 Publishing journal articles:
 
 ```{r, echo=FALSE}
 rescomparticles_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>% 
   filter(!is.na(Response)) %>% 
-  spread(Response,prop) %>%
+  select(-Variable, Cases=Freq) %>% 
   pander
 ```
 
@@ -247,9 +246,8 @@ Involvement in academic projects:
 
 ```{r, echo=FALSE}
 rescompprojects_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>% 
   filter(!is.na(Response)) %>% 
-  spread(Response,prop) %>% 
+  select(-Variable, Cases=Freq) %>% 
   pander
 
 ```
@@ -258,21 +256,44 @@ Applying for grants / funding:
 
 ```{r, echo=FALSE}
 rescompfunding_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>% 
   filter(!is.na(Response)) %>% 
-  spread(Response,prop) %>% 
+  select(-Variable, Cases=Freq) %>% 
   pander
 
 ```
 
 __[7.2] Academic community activities__
 
+Participation in the broader academic community, separated into three areas.
+
+Acting as editor or steering group member for an academic journal:
+
 ```{r, echo=FALSE}
-bind_rows(reseditor_score,resreviewer_score,resorganiser_score) %>% 
-  filter(Response=="Yes") %>% 
-  select(-freq,-Response) %>%
-  spread(Variable, prop) %>% 
-  select(Subject=JacsCat,"Journal Editor"=ResEditor,"Peer reviewer"=ResReviewer,"Conference organiser" = ResOrganiser) %>%
+reseditor_score %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  select(-Variable, Cases=Freq) %>% 
+  pander
+```
+
+Acting as a reviewer for an academic journal:
+
+```{r, echo=FALSE}
+reseditor_score %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  select(-Variable, Cases=Freq) %>%
+  pander
+
+```
+
+Acting as an organiser for a research group or conference committee:
+
+```{r, echo=FALSE}
+resorganiser_score %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  select(-Variable, Cases=Freq) %>%
   pander
 
 ```
@@ -281,14 +302,12 @@ __[7.3] International collaboration__
 
 Research activities with colleagues from outside Scholar's country of origin or based outisde the Scholar's country of origin.
 
-
 Collaborative authorship of papers:
 
 ```{r, echo=FALSE}
 rescollabauthor_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>% 
+  select(-Variable,Cases=Freq) %>% 
   filter(!is.na(Response)) %>% 
-  spread(Response,prop) %>% 
   pander
 
 ```
@@ -296,11 +315,9 @@ rescollabauthor_score %>%
 Collaborative applications for grants:
 
 ```{r, echo=FALSE}
-
 rescollabgrant_score %>% 
-  select(-freq, -Variable,  Subject=JacsCat) %>%
+  select(-Variable,Cases=Freq) %>% 
   filter(!is.na(Response)) %>% 
-  spread(Response,prop) %>% 
   pander
 
 ```
@@ -308,11 +325,9 @@ rescollabgrant_score %>%
 Attendance at international conferences:
 
 ```{r, echo=FALSE}
-
 rescollabconf_score %>% 
-  select(-freq, -Variable,Subject=JacsCat) %>% 
+  select(-Variable,Cases=Freq) %>% 
   filter(!is.na(Response)) %>% 
-  spread(Response,prop) %>% 
   pander
 
 ```
@@ -323,23 +338,64 @@ Overall involvement in teaching:
 
 ```{r, echo=FALSE}
 teachmain_score %>% 
-  filter(Response=="Yes") %>%
-  arrange(desc(prop)) %>% 
-  select(-Response,-Variable, Subject=JacsCat,Cases=freq, "Proportion (%)"=prop) %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
   pander
 ```
 
-Levels of education at which Scholars are teaching (note - a single Scholar may teach at multiple levels: percentages are proportion of the category who reported teaching at that level):
+__[8.1] Education levels of teaching__
+
+Levels of education at which Scholars are teaching. Note: a single Scholar may teach at multiple levels.
+
+School level:
 
 ```{r, echo=FALSE}
-rbind(teachschool_score,teachundergrad_score,teachpostgrad_score,teachdoctorate_score,teachtvet_score) %>% 
-  filter(Response=="Yes") %>% 
-  select(-freq,-Response) %>% 
-  spread(Variable,prop) %>% 
-  select(Subject=JacsCat,Doctoral=TeachDoctorate,Postgraduate=TeachPostgrad,
-         Undergraduate=TeachUndergrad,TVET=TeachTVET,School=TeachSchool) %>% 
+teachschool_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
   pander
+```
 
+Undergraduate level:
+
+```{r, echo=FALSE}
+teachundergrad_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  pander
+```
+
+Postgraduate level:
+
+```{r, echo=FALSE}
+teachpostgrad_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  pander
+```
+
+Doctoral level:
+
+```{r, echo=FALSE}
+teachdoctorate_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  pander
+```
+
+Technical and Vocational Education (all levels):
+
+```{r, echo=FALSE}
+teachtvet_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  pander
 ```
 
 # 9. Networks and links
@@ -350,8 +406,8 @@ Academic contacts at UK host institution:
 
 ```{r, echo=FALSE}
 netacad_score %>% 
-  select(-freq, -Variable, Subject=JacsCat) %>% 
-  spread(Response,prop) %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
   pander
 
 ```
@@ -360,8 +416,8 @@ Professional networks in the UK:
 
 ```{r, echo=FALSE}
 netuk_score %>% 
-  select(-freq, -Variable,Subject=JacsCat) %>% 
-  spread(Response,prop) %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
   pander
 ```
 
@@ -369,8 +425,8 @@ Professional networks in the Scholar's home country:
 
 ```{r, echo=FALSE}
 nethome_score %>% 
-  select(-freq, -Variable, Subject=JacsCat) %>% 
-  spread(Response,prop) %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
   pander
 ```
 
@@ -378,8 +434,8 @@ Professional networks elsewhere abroad:
 
 ```{r, echo=FALSE}
 netother_score %>% 
-  select(-freq, -Variable, Subject=JacsCat) %>% 
-  spread(Response,prop) %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
   pander
 ```
 
@@ -387,53 +443,146 @@ Personal networks abroad:
 
 ```{r, echo=FALSE}
 netpersonal_score %>% 
-  select(-freq, -Variable, Subject=JacsCat) %>% 
-  spread(Response,prop) %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
   pander
 ```
 
 # 10. Broader impact
 
-Proportion of Scholars who reported impact at different breadths:
+__[10.1] Impact breadth__
+
+Proportion of Scholars who reported impact at different breadths.
+
+Institutional level:
 
 ```{r, echo=FALSE}
-bind_rows(impinstitutional_score,implocal_score,impnational_score,impinternational_score) %>% 
-  filter(Response=="Yes") %>% 
-  select(-freq,-Response) %>% 
-  spread(Variable, prop) %>% 
-  select( Subject=JacsCat, Institutional=ImpInstitutional,Local=ImpLocal,National=ImpNational,International=ImpInternational) %>%
+impinstitutional_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
   pander
-
 ```
 
-Types of impact reported:
+Local level:
 
 ```{r, echo=FALSE}
-bind_rows(impsocial_score,impcivic_score,impecon_score,imppolicy_score) %>% 
-  filter(Response=="Yes") %>% 
-  select(-freq,-Response) %>% 
-  spread(Variable, prop) %>%
-  rename(Subject=JacsCat,"Civic Engagement"=ImpCivic, "Economic Development" = ImpEcon,
-         "Policymaking"=ImpPolicy, "Social Development" =ImpSocial) %>% 
+implocal_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
   pander
+```
 
+National level:
+
+```{r, echo=FALSE}
+impnational_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  pander
+```
+
+International level:
+
+```{r, echo=FALSE}
+impinternational_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  pander
+```
+
+__[10.2] Impact type__
+
+Proportion Scholars who reported impact in four categories.
+
+Social development:
+
+```{r, echo=FALSE}
+impsocial_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  pander
+```
+
+Civic engagement:
+
+```{r, echo=FALSE}
+impcivic_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  pander
+```
+
+Economic development:
+
+```{r, echo=FALSE}
+impecon_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  pander
+```
+
+Policymaking:
+
+```{r, echo=FALSE}
+imppolicy_score %>% 
+  select(-Variable,Cases=Freq) %>% 
+  filter(!is.na(Response)) %>% 
+  arrange(desc(Response)) %>%
+  pander
 ```
 
 # 11. Analytic indices
 
-Comparative indices, ranging from 0 (lowest) to 1 (highest), based on responses to questions on application of skills, leadership, research activity, and international research collaboration. Methodology detailed elsewhere: please contact the CSC E&M Team for details.
+Comparative indices, ranging from 0 (lowest) to 1 (highest), based on responses to questions on application of skills, leadership, research activity, and international research collaboration. Methodology detailed elsewhere: please contact the CSC E&M Team for details. Because both the standardised selection score ('Committee Z-score') and index score are continuous variables, they are visualised as scattergraphs. 
 
-```{r, echo=FALSE}
-bind_cols(select(indexskills_score, Subject=JacsCat, Skills=Mean),
-          select(indexldr_score, Leadership=Mean),
-          select(indexresearch_score, "Research productivity"=Mean),
-          select(indexcollab_score, "Research collaboration"=Mean)) %>% 
-  pander
+__Skill use index:__
 
+```{r, echo=FALSE, warning=FALSE,fig.width=5, fig.height=4}
+ggplot(alumni.data, aes(x=ZCtteeScore, y=i.skills)) + 
+  geom_jitter() +
+  coord_cartesian(ylim=c(0,1.0)) +
+  ylab("Leadership index") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
 ```
 
+__Leadership index:__
 
-```{r, echo=FALSE}
-rmarkdown::render("2016_sch_long_subject.Rmd",output_file="dave",output_format='pdf_document')
+```{r, echo=FALSE, warning=FALSE,fig.width=5, fig.height=4}
+ggplot(alumni.data, aes(x=ZCtteeScore, y=i.ldr)) + 
+  geom_jitter() +
+  coord_cartesian(ylim=c(0,1.0)) +
+  ylab("Leadership index") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
+```
+
+__Research productivity index:__
+
+```{r, echo=FALSE, warning=FALSE,fig.width=5, fig.height=4}
+ggplot(alumni.data, aes(x=ZCtteeScore, y=i.research)) + 
+  geom_jitter() +
+  coord_cartesian(ylim=c(0,1.0)) +
+  ylab("Leadership index") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
+```
+
+__Research collaboration index:__
+
+```{r, echo=FALSE,, warning=FALSE,fig.width=5, fig.height=4}
+ggplot(alumni.data, aes(x=ZCtteeScore, y=i.collab)) + 
+  geom_jitter() +
+  coord_cartesian(ylim=c(0,1.0)) +
+  ylab("Leadership index") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
 ```
 

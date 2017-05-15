@@ -1270,7 +1270,13 @@ indexresearch_jacs <-
 
 #this is much harder to model in a table because both sets of variables are continuous - better to use a scatterplot
 
-qplot(x=i.ldr,y=ZCtteeScore,data=alumni.data, geom="point")
+ggplot(alumni.data, aes(x=ZCtteeScore, y=i.ldr)) + 
+  geom_jitter() +
+  coord_cartesian(ylim=c(0,1.0)) +
+  ylab("Leadership index") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
+
 
 # --- Example table structures----
 

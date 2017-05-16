@@ -494,104 +494,81 @@ netinfpersonal_score <- base.data %>% group_by(NetInfluencePersonal) %>% score_s
 # prefix = "Imp"
 
 #Overall
-impinstitutional_overall <- pop_summary(alumni.data,~ImpInstitutional)
-implocal_overall <- pop_summary(alumni.data,~ImpLocal)
-impnational_overall <- pop_summary(alumni.data,~ImpNational)
-impinternational_overall <- pop_summary(alumni.data,~ImpInternational)
+impinstitutional_overall <- pop_summary(base.data,~ImpInstitutional)
+implocal_overall <- pop_summary(base.data,~ImpLocal)
+impnational_overall <- pop_summary(base.data,~ImpNational)
+impinternational_overall <- pop_summary(base.data,~ImpInternational)
 
-impsocial_overall <- pop_summary(alumni.data,~ImpSocial)
-impcivic_overall <- pop_summary(alumni.data,~ImpCivic)
-impecon_overall <- pop_summary(alumni.data,~ImpEcon)
-imppolicy_overall <- pop_summary(alumni.data,~ImpPolicy)
+impsocial_overall <- pop_summary(base.data,~ImpSocial)
+impcivic_overall <- pop_summary(base.data,~ImpCivic)
+impecon_overall <- pop_summary(base.data,~ImpEcon)
+imppolicy_overall <- pop_summary(base.data,~ImpPolicy)
 
 #Gender
-impinstitutional_gender <- subgroup_summary(alumni.data,~Gender,~ImpInstitutional)
-implocal_gender <- subgroup_summary(alumni.data,~Gender,~ImpLocal)
-impnational_gender <- subgroup_summary(alumni.data,~Gender,~ImpNational)
-impinternational_gender <- subgroup_summary(alumni.data,~Gender,~ImpInternational)
+impinstitutional_gender <- subgroup_summary(base.data,~Gender,~ImpInstitutional)
+implocal_gender <- subgroup_summary(base.data,~Gender,~ImpLocal)
+impnational_gender <- subgroup_summary(base.data,~Gender,~ImpNational)
+impinternational_gender <- subgroup_summary(base.data,~Gender,~ImpInternational)
 
-impsocial_gender <- subgroup_summary(alumni.data,~Gender,~ImpSocial)
-impcivic_gender <- subgroup_summary(alumni.data,~Gender,~ImpCivic)
-impecon_gender <- subgroup_summary(alumni.data,~Gender,~ImpEcon)
-imppolicy_gender <- subgroup_summary(alumni.data,~Gender,~ImpPolicy)
+impsocial_gender <- subgroup_summary(base.data,~Gender,~ImpSocial)
+impcivic_gender <- subgroup_summary(base.data,~Gender,~ImpCivic)
+impecon_gender <- subgroup_summary(base.data,~Gender,~ImpEcon)
+imppolicy_gender <- subgroup_summary(base.data,~Gender,~ImpPolicy)
 
 #Scheme
-impinstitutional_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpInstitutional)
-implocal_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpLocal)
-impnational_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpNational)
-impinternational_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpInternational)
+impinstitutional_sch <- subgroup_summary(base.data,~SchemeNom,~ImpInstitutional)
+implocal_sch <- subgroup_summary(base.data,~SchemeNom,~ImpLocal)
+impnational_sch <- subgroup_summary(base.data,~SchemeNom,~ImpNational)
+impinternational_sch <- subgroup_summary(base.data,~SchemeNom,~ImpInternational)
 
-impsocial_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpSocial)
-impcivic_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpCivic)
-impecon_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpEcon)
-imppolicy_sch <- subgroup_summary(alumni.data,~SchemeNom,~ImpPolicy)
+impsocial_sch <- subgroup_summary(base.data,~SchemeNom,~ImpSocial)
+impcivic_sch <- subgroup_summary(base.data,~SchemeNom,~ImpCivic)
+impecon_sch <- subgroup_summary(base.data,~SchemeNom,~ImpEcon)
+imppolicy_sch <- subgroup_summary(base.data,~SchemeNom,~ImpPolicy)
 
 #Scheme Type
-impinstitutional_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpInstitutional)
-implocal_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpLocal)
-impnational_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpNational)
-impinternational_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpInternational)
+impinstitutional_schtype <- subgroup_summary(base.data,~SchemeType,~ImpInstitutional)
+implocal_schtype <- subgroup_summary(base.data,~SchemeType,~ImpLocal)
+impnational_schtype <- subgroup_summary(base.data,~SchemeType,~ImpNational)
+impinternational_schtype <- subgroup_summary(base.data,~SchemeType,~ImpInternational)
 
-impsocial_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpSocial)
-impcivic_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpCivic)
-impecon_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpEcon)
-imppolicy_schtype <- subgroup_summary(alumni.data,~SchemeType,~ImpPolicy)
-
-#Year Group
-impinstitutional_year <- subgroup_summary(alumni.data,~YearGroup,~ImpInstitutional)
-implocal_year <- subgroup_summary(alumni.data,~YearGroup,~ImpLocal)
-impnational_year <- subgroup_summary(alumni.data,~YearGroup,~ImpNational)
-impinternational_year <- subgroup_summary(alumni.data,~YearGroup,~ImpInternational)
-
-impsocial_year <- subgroup_summary(alumni.data,~YearGroup,~ImpSocial)
-impcivic_year <- subgroup_summary(alumni.data,~YearGroup,~ImpCivic)
-impecon_year <- subgroup_summary(alumni.data,~YearGroup,~ImpEcon)
-imppolicy_year <- subgroup_summary(alumni.data,~YearGroup,~ImpPolicy)
+impsocial_schtype <- subgroup_summary(base.data,~SchemeType,~ImpSocial)
+impcivic_schtype <- subgroup_summary(base.data,~SchemeType,~ImpCivic)
+impecon_schtype <- subgroup_summary(base.data,~SchemeType,~ImpEcon)
+imppolicy_schtype <- subgroup_summary(base.data,~SchemeType,~ImpPolicy)
 
 #Origin Region
-impinstitutional_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpInstitutional)
-implocal_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpLocal)
-impnational_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpNational)
-impinternational_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpInternational)
+impinstitutional_orireg <- subgroup_summary(base.data,~OriginRegion,~ImpInstitutional)
+implocal_orireg <- subgroup_summary(base.data,~OriginRegion,~ImpLocal)
+impnational_orireg <- subgroup_summary(base.data,~OriginRegion,~ImpNational)
+impinternational_orireg <- subgroup_summary(base.data,~OriginRegion,~ImpInternational)
 
-impsocial_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpSocial)
-impcivic_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpCivic)
-impecon_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpEcon)
-imppolicy_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ImpPolicy)
-
-#Residency Region
-impinstitutional_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpInstitutional)
-implocal_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpLocal)
-impnational_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpNational)
-impinternational_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpInternational)
-
-impsocial_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpSocial)
-impcivic_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpCivic)
-impecon_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpEcon)
-imppolicy_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ImpPolicy)
+impsocial_orireg <- subgroup_summary(base.data,~OriginRegion,~ImpSocial)
+impcivic_orireg <- subgroup_summary(base.data,~OriginRegion,~ImpCivic)
+impecon_orireg <- subgroup_summary(base.data,~OriginRegion,~ImpEcon)
+imppolicy_orireg <- subgroup_summary(base.data,~OriginRegion,~ImpPolicy)
 
 #Subect Studied
-impinstitutional_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpInstitutional) %>% filter(!JacsCat=="NA", sum(freq)>20)
-implocal_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpLocal) %>% filter(!JacsCat=="NA", sum(freq)>20)
-impnational_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpNational) %>% filter(!JacsCat=="NA", sum(freq)>20)
-impinternational_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpInternational) %>% filter(!JacsCat=="NA", sum(freq)>20)
+impinstitutional_jacs <- subgroup_summary(base.data,~JacsCat,~ImpInstitutional) %>% filter(!JacsCat=="NA", sum(freq)>20)
+implocal_jacs <- subgroup_summary(base.data,~JacsCat,~ImpLocal) %>% filter(!JacsCat=="NA", sum(freq)>20)
+impnational_jacs <- subgroup_summary(base.data,~JacsCat,~ImpNational) %>% filter(!JacsCat=="NA", sum(freq)>20)
+impinternational_jacs <- subgroup_summary(base.data,~JacsCat,~ImpInternational) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
-impsocial_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpSocial) %>% filter(!JacsCat=="NA", sum(freq)>20)
-impcivic_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpCivic) %>% filter(!JacsCat=="NA", sum(freq)>20)
-impecon_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpEcon) %>% filter(!JacsCat=="NA", sum(freq)>20)
-imppolicy_jacs <- subgroup_summary(alumni.data,~JacsCat,~ImpPolicy) %>% filter(!JacsCat=="NA", sum(freq)>20)
+impsocial_jacs <- subgroup_summary(base.data,~JacsCat,~ImpSocial) %>% filter(!JacsCat=="NA", sum(freq)>20)
+impcivic_jacs <- subgroup_summary(base.data,~JacsCat,~ImpCivic) %>% filter(!JacsCat=="NA", sum(freq)>20)
+impecon_jacs <- subgroup_summary(base.data,~JacsCat,~ImpEcon) %>% filter(!JacsCat=="NA", sum(freq)>20)
+imppolicy_jacs <- subgroup_summary(base.data,~JacsCat,~ImpPolicy) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
 #Committee Score
-impinstitutional_score <- alumni.data %>% group_by(ImpInstitutional) %>% score_summary()
-implocal_score <- alumni.data %>% group_by(ImpLocal) %>% score_summary()
-impnational_score <- alumni.data %>% group_by(ImpNational) %>% score_summary()
-impinternational_score <- alumni.data %>% group_by(ImpInternational) %>% score_summary()
+impinstitutional_score <- base.data %>% group_by(ImpInstitutional) %>% score_summary()
+implocal_score <- base.data %>% group_by(ImpLocal) %>% score_summary()
+impnational_score <- base.data %>% group_by(ImpNational) %>% score_summary()
+impinternational_score <- base.data %>% group_by(ImpInternational) %>% score_summary()
 
-impsocial_score <- alumni.data %>% group_by(ImpSocial) %>% score_summary()
-impcivic_score <- alumni.data %>% group_by(ImpCivic) %>% score_summary()
-impecon_score <- alumni.data %>% group_by(ImpEcon) %>% score_summary()
-imppolicy_score <- alumni.data %>% group_by(ImpPolicy) %>% score_summary()
-
+impsocial_score <- base.data %>% group_by(ImpSocial) %>% score_summary()
+impcivic_score <- base.data %>% group_by(ImpCivic) %>% score_summary()
+impecon_score <- base.data %>% group_by(ImpEcon) %>% score_summary()
+imppolicy_score <- base.data %>% group_by(ImpPolicy) %>% score_summary()
 
 ## k] Analytic indices----
 
@@ -599,12 +576,12 @@ imppolicy_score <- alumni.data %>% group_by(ImpPolicy) %>% score_summary()
 
 #Overall
 
-indices <- select(alumni.data, starts_with("i."))
+indices <- select(base.data, starts_with("i."))
 
 index_overall <- rbind(sapply(indices, summary),SD=sapply(indices, sd)) %>% round(2)
 
 #Gender
-indexldr_gender <- alumni.data %>% 
+indexldr_gender <- base.data %>% 
   group_by(Gender) %>% 
   summarise(Count = n(),
             Median = round(median(i.ldr),2),
@@ -613,9 +590,8 @@ indexldr_gender <- alumni.data %>%
             Max = round(max(i.ldr),2),
             Min = round(min(i.ldr),2) ) 
 
-
 indexcollab_gender <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(Gender) %>% 
   summarise(Count = n(),
             Median = round(median(i.collab),2),
@@ -624,18 +600,8 @@ indexcollab_gender <-
             Max = round(max(i.collab),2),
             Min = round(min(i.collab),2) )
 
-indexskills_gender <- 
-  alumni.data %>% 
-  group_by(Gender) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.skills),2),
-            Mean = round(mean(i.skills),2),
-            SD = round(sd(i.skills),2),
-            Max = round(max(i.skills),2),
-            Min = round(min(i.skills),2) )
-
 indexresearch_gender <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(Gender) %>% 
   summarise(Count = n(),
             Median = round(median(i.research),2),
@@ -645,7 +611,7 @@ indexresearch_gender <-
             Min = round(min(i.research),2) )
 
 #Scheme
-indexldr_sch <- alumni.data %>% 
+indexldr_sch <- base.data %>% 
   group_by(SchemeNom) %>% 
   summarise(Count = n(),
             Median = round(median(i.ldr),2),
@@ -655,7 +621,7 @@ indexldr_sch <- alumni.data %>%
             Min = round(min(i.ldr),2) )
 
 indexcollab_sch <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(SchemeNom) %>% 
   summarise(Count = n(),
             Median = round(median(i.collab),2),
@@ -664,18 +630,8 @@ indexcollab_sch <-
             Max = round(max(i.collab),2),
             Min = round(min(i.collab),2) )
 
-indexskills_sch <- 
-  alumni.data %>% 
-  group_by(SchemeNom) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.skills),2),
-            Mean = round(mean(i.skills),2),
-            SD = round(sd(i.skills),2),
-            Max = round(max(i.skills),2),
-            Min = round(min(i.skills),2) )
-
 indexresearch_sch <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(SchemeNom) %>% 
   summarise(Count = n(),
             Median = round(median(i.research),2),
@@ -686,7 +642,7 @@ indexresearch_sch <-
 
 #Scheme Type
 indexldr_schtype <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(SchemeType) %>% 
   summarise(Count = n(),
             Median = round(median(i.ldr),2),
@@ -696,7 +652,7 @@ indexldr_schtype <-
             Min = round(min(i.ldr),2) )
 
 indexcollab_schtype <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(SchemeType) %>% 
   summarise(Count = n(),
             Median = round(median(i.collab),2),
@@ -704,61 +660,10 @@ indexcollab_schtype <-
             SD = round(sd(i.collab),2),
             Max = round(max(i.collab),2),
             Min = round(min(i.collab),2) )
-
-indexskills_schtype <- 
-  alumni.data %>% 
-  group_by(SchemeType) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.skills),2),
-            Mean = round(mean(i.skills),2),
-            SD = round(sd(i.skills),2),
-            Max = round(max(i.skills),2),
-            Min = round(min(i.skills),2) )
 
 indexresearch_schtype <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(SchemeType) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.research),2),
-            Mean = round(mean(i.research),2),
-            SD = round(sd(i.research),2),
-            Max = round(max(i.research),2),
-            Min = round(min(i.research),2) )
-
-#Year Group
-indexldr_year <- 
-  alumni.data %>% 
-  group_by(YearGroup) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.ldr),2),
-            Mean = round(mean(i.ldr),2),
-            SD = round(sd(i.ldr),2),
-            Max = round(max(i.ldr),2),
-            Min = round(min(i.ldr),2) )
-
-indexcollab_year <- 
-  alumni.data %>% 
-  group_by(YearGroup) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.collab),2),
-            Mean = round(mean(i.collab),2),
-            SD = round(sd(i.collab),2),
-            Max = round(max(i.collab),2),
-            Min = round(min(i.collab),2) )
-
-indexskills_year <- 
-  alumni.data %>% 
-  group_by(YearGroup) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.skills),2),
-            Mean = round(mean(i.skills),2),
-            SD = round(sd(i.skills),2),
-            Max = round(max(i.skills),2),
-            Min = round(min(i.skills),2) )
-
-indexresearch_year <- 
-  alumni.data %>% 
-  group_by(YearGroup) %>% 
   summarise(Count = n(),
             Median = round(median(i.research),2),
             Mean = round(mean(i.research),2),
@@ -767,7 +672,7 @@ indexresearch_year <-
             Min = round(min(i.research),2) )
 
 #Origin Region
-indexldr_orireg <- alumni.data %>% 
+indexldr_orireg <- base.data %>% 
   group_by(OriginRegion) %>% 
   summarise(Count = n(),
             Median = round(median(i.ldr),2),
@@ -777,7 +682,7 @@ indexldr_orireg <- alumni.data %>%
             Min = round(min(i.ldr),2) )
 
 indexcollab_orireg <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(OriginRegion) %>% 
   summarise(Count = n(),
             Median = round(median(i.collab),2),
@@ -785,61 +690,10 @@ indexcollab_orireg <-
             SD = round(sd(i.collab),2),
             Max = round(max(i.collab),2),
             Min = round(min(i.collab),2) )
-
-indexskills_orireg <- 
-  alumni.data %>% 
-  group_by(OriginRegion) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.skills),2),
-            Mean = round(mean(i.skills),2),
-            SD = round(sd(i.skills),2),
-            Max = round(max(i.skills),2),
-            Min = round(min(i.skills),2) )
 
 indexresearch_orireg <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(OriginRegion) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.research),2),
-            Mean = round(mean(i.research),2),
-            SD = round(sd(i.research),2),
-            Max = round(max(i.research),2),
-            Min = round(min(i.research),2) )
-
-#Residency Region
-indexldr_resreg <- 
-  alumni.data %>% 
-  group_by(ResidencyRegion) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.ldr),2),
-            Mean = round(mean(i.ldr),2),
-            SD = round(sd(i.ldr),2),
-            Max = round(max(i.ldr),2),
-            Min = round(min(i.ldr),2) )
-
-indexcollab_resreg <- 
-  alumni.data %>% 
-  group_by(ResidencyRegion) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.collab),2),
-            Mean = round(mean(i.collab),2),
-            SD = round(sd(i.collab),2),
-            Max = round(max(i.collab),2),
-            Min = round(min(i.collab),2) )
-
-indexskills_resreg <- 
-  alumni.data %>% 
-  group_by(ResidencyRegion) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.skills),2),
-            Mean = round(mean(i.skills),2),
-            SD = round(sd(i.skills),2),
-            Max = round(max(i.skills),2),
-            Min = round(min(i.skills),2) )
-
-indexresearch_resreg <- 
-  alumni.data %>% 
-  group_by(ResidencyRegion) %>% 
   summarise(Count = n(),
             Median = round(median(i.research),2),
             Mean = round(mean(i.research),2),
@@ -849,7 +703,7 @@ indexresearch_resreg <-
 
 #Subect Studied
 indexldr_jacs <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(JacsCat) %>%
   summarise(Count = n(),
             Median = round(median(i.ldr),2),
@@ -860,7 +714,7 @@ indexldr_jacs <-
   filter(!JacsCat=="NA", Count>20)
 
 indexcollab_jacs <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(JacsCat) %>% 
   summarise(Count = n(),
             Median = round(median(i.collab),2),
@@ -870,19 +724,8 @@ indexcollab_jacs <-
             Min = round(min(i.collab),2) ) %>% 
   filter(!JacsCat=="NA", Count>20)
 
-indexskills_jacs <- 
-  alumni.data %>% 
-  group_by(JacsCat) %>% 
-  summarise(Count = n(),
-            Median = round(median(i.skills),2),
-            Mean = round(mean(i.skills),2),
-            SD = round(sd(i.skills),2),
-            Max = round(max(i.skills),2),
-            Min = round(min(i.skills),2) ) %>% 
-  filter(!JacsCat=="NA", Count>20)
-
 indexresearch_jacs <- 
-  alumni.data %>% 
+  base.data %>% 
   group_by(JacsCat) %>% 
   summarise(Count = n(),
             Median = round(median(i.research),2),
@@ -896,28 +739,26 @@ indexresearch_jacs <-
 
 #this is much harder to model in a table because both sets of variables are continuous - better to use a scatterplot
 
-ggplot(alumni.data, aes(x=ZCtteeScore, y=i.ldr)) + 
+indexldr_score <- 
+  ggplot(base.data, aes(x=ZCtteeScore, y=i.ldr)) + 
   geom_jitter() +
   coord_cartesian(ylim=c(0,1.0)) +
   ylab("Leadership index") +
   xlab("Committee Z-score (SD)") +
   theme_bw()
 
+indexcollab_score <- 
+  ggplot(base.data, aes(x=ZCtteeScore, y=i.collab)) + 
+  geom_jitter() +
+  coord_cartesian(ylim=c(0,1.0)) +
+  ylab("Leadership index") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
 
-# --- Example table structures----
-
-#example of simplified table looking at proportions reporting positively a single activity
-ldrbudget_orireg %>% filter(Response=="Yes") %>% arrange(desc(prop)) 
-
-#Example table for a simple binary variable, grouped
-rbind(teachschool_year,teachundergrad_year,teachpostgrad_year,teachdoctorate_year,teachtvet_year) %>% 
-  filter(Response=="Yes") %>% 
-  select(-freq,-Response) %>% 
-  spread(Variable, prop)
-
-#Example of a table by several similar variables, grouped
-rbind(netacad_year,netuk_year,nethome_year,netother_year,netpersonal_year) %>% 
-  select(-freq) %>% 
-  spread(YearGroup, prop)
-
-
+indexresearch_score <- 
+  ggplot(base.data, aes(x=ZCtteeScore, y=i.research)) + 
+  geom_jitter() +
+  coord_cartesian(ylim=c(0,1.0)) +
+  ylab("Leadership index") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()

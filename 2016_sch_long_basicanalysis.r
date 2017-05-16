@@ -4,9 +4,10 @@
 # Matt Mawer, The Association of Commonwealth Universities
 # February, 2017
 
-# Script creates an extensive array of basic data tables for the results of the CSC's surveys.
+# Script creates an extensive array of basic data tables for the results of the CSC's longitudinla follow-up surveys.
 # Many tables can be used directly in reports (e.g. in markdown, or exported to excel) or can be used as part of other analyses and visualisations
 # Data structures throughout are data frames (tibbles) in long data format
+# There is an equivalent of this file for the baseline data also (sch_base_basicanalysis)
 
 # Either load the RDATA file directly, or use source() to the importcleaning.r script:
 source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_importcleaning.r")
@@ -40,7 +41,6 @@ score_summary <- function(dataframe){
 } #Statistical summary for committee scores, group data first to yield useful comparisons. In long data format.
 
 
-
 pop_summary <- function(dataframe, variable){
   dataframe %>% 
     group_by_(variable) %>% 
@@ -65,7 +65,6 @@ subgroup_summary <- function(dataframe, group, variable){
 
 # --- Dataset structure ----
 
-str(base.data, list.len=nrow(base.data))
 str(alumni.data, list.len=nrow(alumni.data))
 
 # VARIABLE SUFFIXES:

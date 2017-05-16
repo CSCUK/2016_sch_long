@@ -212,183 +212,6 @@ ldrstrategy_score <- base.data %>% group_by(LdrStrategy) %>% score_summary()
 ldrinnproject_score <- base.data %>% group_by(InnLeadProject) %>% score_summary()
 ldrinnfunding_score <- base.data %>% group_by(InnLeadFunding) %>% score_summary()
 
-## f] Skill application----
-
-# prefix = "App" and "Skill"
-
-#Overall
-
-## Skill gain questions - only asked of +2 year follow up group (_Two)
-skillrestech_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillResearchTechniques)
-skillresfield_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillResearchField)
-skillcritical_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillCritical)
-skilltechnical_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillTechnical)
-skillleadership_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillLeadership)
-skilldisseminate_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillDisseminate)
-skillinfluence_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillInfluence)
-skillethical_overall <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% pop_summary(~SkillEthical)
-
-
-## Application of skills, asked to all alumni survey participants
-appskillwork_overall <- pop_summary(alumni.data,~AppSkillWork)
-appskillnonwork_overall <- pop_summary(alumni.data,~AppSkillNonwork)
-appapproach_overall <- pop_summary(alumni.data,~AppApproachProblem)
-apptrain_overall <- pop_summary(alumni.data,~AppTrainColleagues)
-appresources_overall <- pop_summary(alumni.data,~AppDevelopResources)
-appadvocate_overall <- pop_summary(alumni.data,~AppAdvocateChange)
-appchange_overall <- pop_summary(alumni.data,~AppMakeChange)
-
-#Gender
-## Skill gain
-skillrestech_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillResearchTechniques)
-skillresfield_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillResearchField)
-skillcritical_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillCritical)
-skilltechnical_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillTechnical)
-skillleadership_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillLeadership)
-skilldisseminate_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillDisseminate)
-skillinfluence_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillInfluence)
-skillethical_gender <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~Gender,~SkillEthical)
-
-## Application of skills
-appskillwork_gender <- subgroup_summary(alumni.data,~Gender,~AppSkillWork)
-appskillnonwork_gender <- subgroup_summary(alumni.data,~Gender,~AppSkillNonwork)
-appapproach_gender <- subgroup_summary(alumni.data,~Gender,~AppApproachProblem)
-apptrain_gender <- subgroup_summary(alumni.data,~Gender,~AppTrainColleagues)
-appresources_gender <- subgroup_summary(alumni.data,~Gender,~AppDevelopResources)
-appadvocate_gender <- subgroup_summary(alumni.data,~Gender,~AppAdvocateChange)
-appchange_gender <- subgroup_summary(alumni.data,~Gender,~AppMakeChange)
-
-#Scheme
-## Skill gain
-skillrestech_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillResearchTechniques)
-skillresfield_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillResearchField)
-skillcritical_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillCritical)
-skilltechnical_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillTechnical)
-skillleadership_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillLeadership)
-skilldisseminate_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillDisseminate)
-skillinfluence_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillInfluence)
-skillethical_sch <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeNom,~SkillEthical)
-
-## Application of skills
-appskillwork_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppSkillWork)
-appskillnonwork_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppSkillNonwork)
-appapproach_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppApproachProblem)
-apptrain_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppTrainColleagues)
-appresources_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppDevelopResources)
-appadvocate_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppAdvocateChange)
-appchange_sch <- subgroup_summary(alumni.data,~SchemeNom,~AppMakeChange)
-
-#Scheme Type
-## Skill gain
-skillrestech_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillResearchTechniques)
-skillresfield_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillResearchField)
-skillcritical_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillCritical)
-skilltechnical_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillTechnical)
-skillleadership_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillLeadership)
-skilldisseminate_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillDisseminate)
-skillinfluence_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillInfluence)
-skillethical_schtype <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~SchemeType,~SkillEthical)
-
-## Application of skills
-appskillwork_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppSkillWork)
-appskillnonwork_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppSkillNonwork)
-appapproach_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppApproachProblem)
-apptrain_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppTrainColleagues)
-appresources_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppDevelopResources)
-appadvocate_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppAdvocateChange)
-appchange_schtype <- subgroup_summary(alumni.data,~SchemeType,~AppMakeChange)
-
-#Year Group
-## Skill gain - not meaningful for Year group: question is only asked to +2 year (_Two) group
-
-## Application of skills
-appskillwork_year <- subgroup_summary(alumni.data,~YearGroup,~AppSkillWork)
-appskillnonwork_year <- subgroup_summary(alumni.data,~YearGroup,~AppSkillNonwork)
-appapproach_year <- subgroup_summary(alumni.data,~YearGroup,~AppApproachProblem)
-apptrain_year <- subgroup_summary(alumni.data,~YearGroup,~AppTrainColleagues)
-appresources_year <- subgroup_summary(alumni.data,~YearGroup,~AppDevelopResources)
-appadvocate_year <- subgroup_summary(alumni.data,~YearGroup,~AppAdvocateChange)
-appchange_year <- subgroup_summary(alumni.data,~YearGroup,~AppMakeChange)
-
-#Origin Region
-## Skill gain
-skillrestech_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillResearchTechniques)
-skillresfield_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillResearchField)
-skillcritical_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillCritical)
-skilltechnical_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillTechnical)
-skillleadership_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillLeadership)
-skilldisseminate_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillDisseminate)
-skillinfluence_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillInfluence)
-skillethical_orireg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~OriginRegion,~SkillEthical)
-
-## Application of skills
-appskillwork_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppSkillWork)
-appskillnonwork_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppSkillNonwork)
-appapproach_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppApproachProblem)
-apptrain_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppTrainColleagues)
-appresources_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppDevelopResources)
-appadvocate_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppAdvocateChange)
-appchange_orireg <- subgroup_summary(alumni.data,~OriginRegion,~AppMakeChange)
-
-#Residency Region
-## Skill gain
-skillrestech_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillResearchTechniques)
-skillresfield_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillResearchField)
-skillcritical_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillCritical)
-skilltechnical_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillTechnical)
-skillleadership_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillLeadership)
-skilldisseminate_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillDisseminate)
-skillinfluence_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillInfluence)
-skillethical_resreg <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~ResidencyRegion,~SkillEthical)
-
-## Application of skills
-appskillwork_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppSkillWork)
-appskillnonwork_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppSkillNonwork)
-appapproach_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppApproachProblem)
-apptrain_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppTrainColleagues)
-appresources_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppDevelopResources)
-appadvocate_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppAdvocateChange)
-appchange_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~AppMakeChange)
-
-#Subect Studied
-## Skill gain
-skillrestech_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillResearchTechniques) %>% filter(!JacsCat=="NA", sum(freq)>20)
-skillresfield_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillResearchField) %>% filter(!JacsCat=="NA", sum(freq)>20)
-skillcritical_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillCritical) %>% filter(!JacsCat=="NA", sum(freq)>20)
-skilltechnical_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillTechnical) %>% filter(!JacsCat=="NA", sum(freq)>20)
-skillleadership_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillLeadership) %>% filter(!JacsCat=="NA", sum(freq)>20)
-skilldisseminate_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillDisseminate) %>% filter(!JacsCat=="NA", sum(freq)>20)
-skillinfluence_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillInfluence) %>% filter(!JacsCat=="NA", sum(freq)>20)
-skillethical_jacs <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% subgroup_summary(~JacsCat,~SkillEthical) %>% filter(!JacsCat=="NA", sum(freq)>20)
-
-## Application of skills
-appskillwork_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppSkillWork) %>% filter(!JacsCat=="NA", sum(freq)>20)
-appskillnonwork_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppSkillNonwork) %>% filter(!JacsCat=="NA", sum(freq)>20)
-appapproach_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppApproachProblem) %>% filter(!JacsCat=="NA", sum(freq)>20)
-apptrain_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppTrainColleagues) %>% filter(!JacsCat=="NA", sum(freq)>20)
-appresources_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppDevelopResources) %>% filter(!JacsCat=="NA", sum(freq)>20)
-appadvocate_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppAdvocateChange) %>% filter(!JacsCat=="NA", sum(freq)>20)
-appchange_jacs <- subgroup_summary(alumni.data,~JacsCat,~AppMakeChange) %>% filter(!JacsCat=="NA", sum(freq)>20)
-
-#Committee Score
-## Skill gain
-skillrestech_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillResearchTechniques) %>% score_summary()
-skillresfield_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillResearchField) %>% score_summary()
-skillcritical_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillCritical) %>% score_summary()
-skilltechnical_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillTechnical) %>% score_summary()
-skillleadership_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillLeadership) %>% score_summary()
-skilldisseminate_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillDisseminate) %>% score_summary()
-skillinfluence_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillInfluence) %>% score_summary()
-skillethical_score <- alumni.data %>% filter(grepl("_Two",SurveyID)) %>% group_by(SkillEthical) %>% score_summary()
-
-## Application of skills
-appskillwork_score <- alumni.data %>% group_by(AppSkillWork) %>% score_summary()
-appskillnonwork_score <- alumni.data %>% group_by(AppSkillNonwork) %>% score_summary()
-appapproach_score <- alumni.data %>% group_by(AppApproachProblem) %>% score_summary()
-apptrain_score <- alumni.data %>% group_by(AppTrainColleagues) %>% score_summary()
-appresources_score <- alumni.data %>% group_by(AppDevelopResources) %>% score_summary()
-appadvocate_score <- alumni.data %>% group_by(AppAdvocateChange) %>% score_summary()
-appchange_score <- alumni.data %>% group_by(AppMakeChange) %>% score_summary()
 
 ## g] Research ----
 
@@ -398,124 +221,94 @@ appchange_score <- alumni.data %>% group_by(AppMakeChange) %>% score_summary()
 # NA for ResMain is because unemployed and studying respondents are not presented with the ResMain question
 
 #Overall
-resmain_overall <- pop_summary(alumni.data, ~ResMain) 
+resmain_overall <- pop_summary(base.data, ~ResMain) 
 
-rescollabauthor_overall <- pop_summary(alumni.data,~ResCollabAuthor)
-rescollabgrant_overall <- pop_summary(alumni.data,~ResCollabGrant)
-rescollabconf_overall <- pop_summary(alumni.data,~ResCollabConf)
+rescollabauthor_overall <- pop_summary(base.data,~ResCollabAuthor)
+rescollabgrant_overall <- pop_summary(base.data,~ResCollabGrant)
+rescollabconf_overall <- pop_summary(base.data,~ResCollabConf)
 
-reseditor_overall <- pop_summary(alumni.data, ~ResEditor)
-resreviewer_overall <- pop_summary(alumni.data, ~ResReviewer)
-resorganiser_overall <- pop_summary(alumni.data, ~ResOrganiser)
+reseditor_overall <- pop_summary(base.data, ~ResEditor)
+resreviewer_overall <- pop_summary(base.data, ~ResReviewer)
+resorganiser_overall <- pop_summary(base.data, ~ResOrganiser)
 
-rescomparticles_overall <- pop_summary(alumni.data, ~ResCompArticles)
-rescompprojects_overall <- pop_summary(alumni.data, ~ResCompProjects)
-rescompfunding_overall <- pop_summary(alumni.data, ~ResCompFunding)
+rescomparticles_overall <- pop_summary(base.data, ~ResCompArticles)
+rescompprojects_overall <- pop_summary(base.data, ~ResCompProjects)
+rescompfunding_overall <- pop_summary(base.data, ~ResCompFunding)
 
 #Gender
-resmain_gender <- subgroup_summary(alumni.data,~Gender,~ResMain) 
+resmain_gender <- subgroup_summary(base.data,~Gender,~ResMain) 
 
-rescollabauthor_gender <- subgroup_summary(alumni.data,~Gender,~ResCollabAuthor)
-rescollabgrant_gender <- subgroup_summary(alumni.data,~Gender,~ResCollabGrant)
-rescollabconf_gender <- subgroup_summary(alumni.data,~Gender,~ResCollabConf)
+rescollabauthor_gender <- subgroup_summary(base.data,~Gender,~ResCollabAuthor)
+rescollabgrant_gender <- subgroup_summary(base.data,~Gender,~ResCollabGrant)
+rescollabconf_gender <- subgroup_summary(base.data,~Gender,~ResCollabConf)
 
-reseditor_gender <- subgroup_summary(alumni.data,~Gender,~ResEditor)
-resreviewer_gender <- subgroup_summary(alumni.data,~Gender,~ResReviewer)
-resorganiser_gender <- subgroup_summary(alumni.data,~Gender,~ResOrganiser)
+reseditor_gender <- subgroup_summary(base.data,~Gender,~ResEditor)
+resreviewer_gender <- subgroup_summary(base.data,~Gender,~ResReviewer)
+resorganiser_gender <- subgroup_summary(base.data,~Gender,~ResOrganiser)
 
-rescomparticles_gender <- subgroup_summary(alumni.data,~Gender,~ResCompArticles)
-rescompprojects_gender <- subgroup_summary(alumni.data,~Gender,~ResCompProjects)
-rescompfunding_gender <- subgroup_summary(alumni.data,~Gender,~ResCompFunding)
+rescomparticles_gender <- subgroup_summary(base.data,~Gender,~ResCompArticles)
+rescompprojects_gender <- subgroup_summary(base.data,~Gender,~ResCompProjects)
+rescompfunding_gender <- subgroup_summary(base.data,~Gender,~ResCompFunding)
 
 #Scheme
-resmain_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResMain) 
+resmain_sch <- subgroup_summary(base.data,~SchemeNom,~ResMain) 
 
-rescollabauthor_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCollabAuthor)
-rescollabgrant_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCollabGrant)
-rescollabconf_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCollabConf)
+rescollabauthor_sch <- subgroup_summary(base.data,~SchemeNom,~ResCollabAuthor)
+rescollabgrant_sch <- subgroup_summary(base.data,~SchemeNom,~ResCollabGrant)
+rescollabconf_sch <- subgroup_summary(base.data,~SchemeNom,~ResCollabConf)
 
-reseditor_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResEditor)
-resreviewer_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResReviewer)
-resorganiser_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResOrganiser)
+reseditor_sch <- subgroup_summary(base.data,~SchemeNom,~ResEditor)
+resreviewer_sch <- subgroup_summary(base.data,~SchemeNom,~ResReviewer)
+resorganiser_sch <- subgroup_summary(base.data,~SchemeNom,~ResOrganiser)
 
-rescomparticles_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCompArticles)
-rescompprojects_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCompProjects)
-rescompfunding_sch <- subgroup_summary(alumni.data,~SchemeNom,~ResCompFunding)
+rescomparticles_sch <- subgroup_summary(base.data,~SchemeNom,~ResCompArticles)
+rescompprojects_sch <- subgroup_summary(base.data,~SchemeNom,~ResCompProjects)
+rescompfunding_sch <- subgroup_summary(base.data,~SchemeNom,~ResCompFunding)
 
 #Scheme Type
-resmain_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResMain) 
+resmain_schtype <- subgroup_summary(base.data,~SchemeType,~ResMain) 
 
-rescollabauthor_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCollabAuthor)
-rescollabgrant_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCollabGrant)
-rescollabconf_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCollabConf)
+rescollabauthor_schtype <- subgroup_summary(base.data,~SchemeType,~ResCollabAuthor)
+rescollabgrant_schtype <- subgroup_summary(base.data,~SchemeType,~ResCollabGrant)
+rescollabconf_schtype <- subgroup_summary(base.data,~SchemeType,~ResCollabConf)
 
-reseditor_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResEditor)
-resreviewer_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResReviewer)
-resorganiser_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResOrganiser)
+reseditor_schtype <- subgroup_summary(base.data,~SchemeType,~ResEditor)
+resreviewer_schtype <- subgroup_summary(base.data,~SchemeType,~ResReviewer)
+resorganiser_schtype <- subgroup_summary(base.data,~SchemeType,~ResOrganiser)
 
-rescomparticles_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCompArticles)
-rescompprojects_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCompProjects)
-rescompfunding_schtype <- subgroup_summary(alumni.data,~SchemeType,~ResCompFunding)
-
-#Year Group
-resmain_year <- subgroup_summary(alumni.data,~YearGroup,~ResMain) 
-
-rescollabauthor_year <- subgroup_summary(alumni.data,~YearGroup,~ResCollabAuthor)
-rescollabgrant_year <- subgroup_summary(alumni.data,~YearGroup,~ResCollabGrant)
-rescollabconf_year <- subgroup_summary(alumni.data,~YearGroup,~ResCollabConf)
-
-reseditor_year <- subgroup_summary(alumni.data,~YearGroup,~ResEditor)
-resreviewer_year <- subgroup_summary(alumni.data,~YearGroup,~ResReviewer)
-resorganiser_year <- subgroup_summary(alumni.data,~YearGroup,~ResOrganiser)
-
-rescomparticles_year <- subgroup_summary(alumni.data,~YearGroup,~ResCompArticles)
-rescompprojects_year <- subgroup_summary(alumni.data,~YearGroup,~ResCompProjects)
-rescompfunding_year <- subgroup_summary(alumni.data,~YearGroup,~ResCompFunding)
+rescomparticles_schtype <- subgroup_summary(base.data,~SchemeType,~ResCompArticles)
+rescompprojects_schtype <- subgroup_summary(base.data,~SchemeType,~ResCompProjects)
+rescompfunding_schtype <- subgroup_summary(base.data,~SchemeType,~ResCompFunding)
 
 #Origin Region
-resmain_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResMain) 
+resmain_orireg <- subgroup_summary(base.data,~OriginRegion,~ResMain) 
 
-rescollabauthor_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCollabAuthor)
-rescollabgrant_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCollabGrant)
-rescollabconf_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCollabConf)
+rescollabauthor_orireg <- subgroup_summary(base.data,~OriginRegion,~ResCollabAuthor)
+rescollabgrant_orireg <- subgroup_summary(base.data,~OriginRegion,~ResCollabGrant)
+rescollabconf_orireg <- subgroup_summary(base.data,~OriginRegion,~ResCollabConf)
 
-reseditor_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResEditor)
-resreviewer_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResReviewer)
-resorganiser_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResOrganiser)
+reseditor_orireg <- subgroup_summary(base.data,~OriginRegion,~ResEditor)
+resreviewer_orireg <- subgroup_summary(base.data,~OriginRegion,~ResReviewer)
+resorganiser_orireg <- subgroup_summary(base.data,~OriginRegion,~ResOrganiser)
 
-rescomparticles_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCompArticles)
-rescompprojects_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCompProjects)
-rescompfunding_orireg <- subgroup_summary(alumni.data,~OriginRegion,~ResCompFunding)
-
-#Residency Region
-resmain_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResMain) 
-
-rescollabauthor_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCollabAuthor)
-rescollabgrant_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCollabGrant)
-rescollabconf_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCollabConf)
-
-reseditor_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResEditor)
-resreviewer_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResReviewer)
-resorganiser_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResOrganiser)
-
-rescomparticles_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCompArticles)
-rescompprojects_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCompProjects)
-rescompfunding_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~ResCompFunding)
+rescomparticles_orireg <- subgroup_summary(base.data,~OriginRegion,~ResCompArticles)
+rescompprojects_orireg <- subgroup_summary(base.data,~OriginRegion,~ResCompProjects)
+rescompfunding_orireg <- subgroup_summary(base.data,~OriginRegion,~ResCompFunding)
 
 #Subect Studied
-resmain_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResMain) %>% filter(!JacsCat=="NA", sum(freq)>20)
+resmain_jacs <- subgroup_summary(base.data,~JacsCat,~ResMain) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
-rescollabauthor_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCollabAuthor) %>% filter(!JacsCat=="NA", sum(freq)>20)
-rescollabgrant_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCollabGrant) %>% filter(!JacsCat=="NA", sum(freq)>20)
-rescollabconf_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCollabConf) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescollabauthor_jacs <- subgroup_summary(base.data,~JacsCat,~ResCollabAuthor) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescollabgrant_jacs <- subgroup_summary(base.data,~JacsCat,~ResCollabGrant) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescollabconf_jacs <- subgroup_summary(base.data,~JacsCat,~ResCollabConf) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
-reseditor_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResEditor) %>% filter(!JacsCat=="NA", sum(freq)>20)
-resreviewer_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResReviewer) %>% filter(!JacsCat=="NA", sum(freq)>20)
-resorganiser_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResOrganiser) %>% filter(!JacsCat=="NA", sum(freq)>20)
+reseditor_jacs <- subgroup_summary(base.data,~JacsCat,~ResEditor) %>% filter(!JacsCat=="NA", sum(freq)>20)
+resreviewer_jacs <- subgroup_summary(base.data,~JacsCat,~ResReviewer) %>% filter(!JacsCat=="NA", sum(freq)>20)
+resorganiser_jacs <- subgroup_summary(base.data,~JacsCat,~ResOrganiser) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
-rescomparticles_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCompArticles) %>% filter(!JacsCat=="NA", sum(freq)>20)
-rescompprojects_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCompProjects) %>% filter(!JacsCat=="NA", sum(freq)>20)
-rescompfunding_jacs <- subgroup_summary(alumni.data,~JacsCat,~ResCompFunding) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescomparticles_jacs <- subgroup_summary(base.data,~JacsCat,~ResCompArticles) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescompprojects_jacs <- subgroup_summary(base.data,~JacsCat,~ResCompProjects) %>% filter(!JacsCat=="NA", sum(freq)>20)
+rescompfunding_jacs <- subgroup_summary(base.data,~JacsCat,~ResCompFunding) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
 #Committee Score
 resmain_score <- alumni.data %>% group_by(ResMain) %>% score_summary()
@@ -538,95 +331,67 @@ rescompfunding_score <- alumni.data %>% group_by(ResCompFunding) %>% score_summa
 # prefix = "teach"
 
 #Overall
-teachmain_overall <- pop_summary(alumni.data,~TeachMain)
-teachcmwskills_overall <- pop_summary(alumni.data,~TeachCMWSkills)
+teachmain_overall <- pop_summary(base.data,~TeachMain)
 
-teachschool_overall <- pop_summary(alumni.data,~TeachSchool)
-teachundergrad_overall <- pop_summary(alumni.data,~TeachUndergrad)
-teachpostgrad_overall <- pop_summary(alumni.data,~TeachPostgrad)
-teachdoctorate_overall <- pop_summary(alumni.data,~TeachDoctorate)
-teachtvet_overall <- pop_summary(alumni.data,~TeachTVET)
-
+teachschool_overall <- pop_summary(base.data,~TeachSchool)
+teachundergrad_overall <- pop_summary(base.data,~TeachUndergrad)
+teachpostgrad_overall <- pop_summary(base.data,~TeachPostgrad)
+teachdoctorate_overall <- pop_summary(base.data,~TeachDoctorate)
+teachtvet_overall <- pop_summary(base.data,~TeachTVET)
 
 #Gender
-teachmain_gender <- subgroup_summary(alumni.data,~Gender,~TeachMain)
-teachcmwskills_gender <- subgroup_summary(alumni.data,~Gender,~TeachCMWSkills)
+teachmain_gender <- subgroup_summary(base.data,~Gender,~TeachMain)
 
-teachschool_gender <- subgroup_summary(alumni.data,~Gender,~TeachSchool)
-teachundergrad_gender <- subgroup_summary(alumni.data,~Gender,~TeachUndergrad)
-teachpostgrad_gender <- subgroup_summary(alumni.data,~Gender,~TeachPostgrad)
-teachdoctorate_gender <- subgroup_summary(alumni.data,~Gender,~TeachDoctorate)
-teachtvet_gender <- subgroup_summary(alumni.data,~Gender,~TeachTVET)
+teachschool_gender <- subgroup_summary(base.data,~Gender,~TeachSchool)
+teachundergrad_gender <- subgroup_summary(base.data,~Gender,~TeachUndergrad)
+teachpostgrad_gender <- subgroup_summary(base.data,~Gender,~TeachPostgrad)
+teachdoctorate_gender <- subgroup_summary(base.data,~Gender,~TeachDoctorate)
+teachtvet_gender <- subgroup_summary(base.data,~Gender,~TeachTVET)
 
 #Scheme
-teachmain_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachMain)
-teachcmwskills_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachCMWSkills)
+teachmain_sch <- subgroup_summary(base.data,~SchemeNom,~TeachMain)
 
-teachschool_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachSchool)
-teachundergrad_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachUndergrad)
-teachpostgrad_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachPostgrad)
-teachdoctorate_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachDoctorate)
-teachtvet_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachTVET)
+teachschool_sch <- subgroup_summary(base.data,~SchemeNom,~TeachSchool)
+teachundergrad_sch <- subgroup_summary(base.data,~SchemeNom,~TeachUndergrad)
+teachpostgrad_sch <- subgroup_summary(base.data,~SchemeNom,~TeachPostgrad)
+teachdoctorate_sch <- subgroup_summary(base.data,~SchemeNom,~TeachDoctorate)
+teachtvet_sch <- subgroup_summary(base.data,~SchemeNom,~TeachTVET)
 
 #Scheme Type
-teachmain_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachMain)
-teachcmwskills_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachCMWSkills)
+teachmain_schtype <- subgroup_summary(base.data,~SchemeType,~TeachMain)
 
-teachschool_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachSchool)
-teachundergrad_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachUndergrad)
-teachpostgrad_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachPostgrad)
-teachdoctorate_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachDoctorate)
-teachtvet_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachTVET)
-
-#Year Group
-teachmain_year <- subgroup_summary(alumni.data,~YearGroup,~TeachMain)
-teachcmwskills_year <- subgroup_summary(alumni.data,~YearGroup,~TeachCMWSkills)
-
-teachschool_year <- subgroup_summary(alumni.data,~YearGroup,~TeachSchool)
-teachundergrad_year <- subgroup_summary(alumni.data,~YearGroup,~TeachUndergrad)
-teachpostgrad_year <- subgroup_summary(alumni.data,~YearGroup,~TeachPostgrad)
-teachdoctorate_year <- subgroup_summary(alumni.data,~YearGroup,~TeachDoctorate)
-teachtvet_year <- subgroup_summary(alumni.data,~YearGroup,~TeachTVET)
+teachschool_schtype <- subgroup_summary(base.data,~SchemeType,~TeachSchool)
+teachundergrad_schtype <- subgroup_summary(base.data,~SchemeType,~TeachUndergrad)
+teachpostgrad_schtype <- subgroup_summary(base.data,~SchemeType,~TeachPostgrad)
+teachdoctorate_schtype <- subgroup_summary(base.data,~SchemeType,~TeachDoctorate)
+teachtvet_schtype <- subgroup_summary(base.data,~SchemeType,~TeachTVET)
 
 #Origin Region
-teachmain_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachMain)
-teachcmwskills_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachCMWSkills)
+teachmain_orireg <- subgroup_summary(base.data,~OriginRegion,~TeachMain)
 
-teachschool_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachSchool)
-teachundergrad_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachUndergrad)
-teachpostgrad_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachPostgrad)
-teachdoctorate_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachDoctorate)
-teachtvet_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachTVET)
-
-#Residency Region
-teachmain_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachMain)
-teachcmwskills_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachCMWSkills)
-
-teachschool_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachSchool)
-teachundergrad_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachUndergrad)
-teachpostgrad_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachPostgrad)
-teachdoctorate_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachDoctorate)
-teachtvet_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachTVET)
+teachschool_orireg <- subgroup_summary(base.data,~OriginRegion,~TeachSchool)
+teachundergrad_orireg <- subgroup_summary(base.data,~OriginRegion,~TeachUndergrad)
+teachpostgrad_orireg <- subgroup_summary(base.data,~OriginRegion,~TeachPostgrad)
+teachdoctorate_orireg <- subgroup_summary(base.data,~OriginRegion,~TeachDoctorate)
+teachtvet_orireg <- subgroup_summary(base.data,~OriginRegion,~TeachTVET)
 
 #Subect Studied
-teachmain_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachMain) %>% filter(!JacsCat=="NA", sum(freq)>20)
-teachcmwskills_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachCMWSkills) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachmain_jacs <- subgroup_summary(base.data,~JacsCat,~TeachMain) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
-teachschool_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachSchool) %>% filter(!JacsCat=="NA", sum(freq)>20)
-teachundergrad_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachUndergrad) %>% filter(!JacsCat=="NA", sum(freq)>20)
-teachpostgrad_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachPostgrad) %>% filter(!JacsCat=="NA", sum(freq)>20)
-teachdoctorate_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachDoctorate) %>% filter(!JacsCat=="NA", sum(freq)>20)
-teachtvet_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachTVET) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachschool_jacs <- subgroup_summary(base.data,~JacsCat,~TeachSchool) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachundergrad_jacs <- subgroup_summary(base.data,~JacsCat,~TeachUndergrad) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachpostgrad_jacs <- subgroup_summary(base.data,~JacsCat,~TeachPostgrad) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachdoctorate_jacs <- subgroup_summary(base.data,~JacsCat,~TeachDoctorate) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachtvet_jacs <- subgroup_summary(base.data,~JacsCat,~TeachTVET) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
 #Committee Score
-teachmain_score <- alumni.data %>% group_by(TeachMain) %>% score_summary()
-teachcmwskills_score <- alumni.data %>% group_by(TeachCMWSkills) %>% score_summary()
+teachmain_score <- base.data %>% group_by(TeachMain) %>% score_summary()
 
-teachschool_score <- alumni.data %>% group_by(TeachSchool) %>% score_summary()
-teachundergrad_score <- alumni.data %>% group_by(TeachUndergrad) %>% score_summary()
-teachpostgrad_score <- alumni.data %>% group_by(TeachPostgrad) %>% score_summary()
-teachdoctorate_score <- alumni.data %>% group_by(TeachDoctorate) %>% score_summary()
-teachtvet_score <- alumni.data %>% group_by(TeachTVET) %>% score_summary()
+teachschool_score <- base.data %>% group_by(TeachSchool) %>% score_summary()
+teachundergrad_score <- base.data %>% group_by(TeachUndergrad) %>% score_summary()
+teachpostgrad_score <- base.data %>% group_by(TeachPostgrad) %>% score_summary()
+teachdoctorate_score <- base.data %>% group_by(TeachDoctorate) %>% score_summary()
+teachtvet_score <- base.data %>% group_by(TeachTVET) %>% score_summary()
 
 
 ## i] Networks and links----
@@ -634,121 +399,95 @@ teachtvet_score <- alumni.data %>% group_by(TeachTVET) %>% score_summary()
 # prefix= 'Net'
 
 #Overall
-netacad_overall <- pop_summary(alumni.data,~NetAcad)
-netuk_overall <- pop_summary(alumni.data,~NetUK)
-nethome_overall <- pop_summary(alumni.data,~NetHome)
-netother_overall <- pop_summary(alumni.data,~NetOther)
-netpersonal_overall <- pop_summary(alumni.data,~NetPersonal)
+netacad_overall <- pop_summary(base.data,~NetAcad)
+netuk_overall <- pop_summary(base.data,~NetUK)
+nethome_overall <- pop_summary(base.data,~NetHome)
+netother_overall <- pop_summary(base.data,~NetOther)
+netpersonal_overall <- pop_summary(base.data,~NetPersonal)
 
-netinfacad_overall <- pop_summary(alumni.data,~NetInfluenceAcad)
-netinfuk_overall <- pop_summary(alumni.data,~NetInfluenceUK)
-netinforigin_overall <- pop_summary(alumni.data,~NetInfluenceOrigin)
-netinfother_overall <- pop_summary(alumni.data,~NetInfluenceOther)
-netinfpersonal_overall <- pop_summary(alumni.data,~NetInfluencePersonal)
+netinfacad_overall <- pop_summary(base.data,~NetInfluenceAcad)
+netinfuk_overall <- pop_summary(base.data,~NetInfluenceUK)
+netinforigin_overall <- pop_summary(base.data,~NetInfluenceOrigin)
+netinfother_overall <- pop_summary(base.data,~NetInfluenceOther)
+netinfpersonal_overall <- pop_summary(base.data,~NetInfluencePersonal)
 
 #Gender
-netacad_gender <- subgroup_summary(alumni.data,~Gender,~NetAcad)
-netuk_gender <- subgroup_summary(alumni.data,~Gender,~NetUK)
-nethome_gender <- subgroup_summary(alumni.data,~Gender,~NetHome)
-netother_gender <- subgroup_summary(alumni.data,~Gender,~NetOther)
-netpersonal_gender <- subgroup_summary(alumni.data,~Gender,~NetPersonal)
+netacad_gender <- subgroup_summary(base.data,~Gender,~NetAcad)
+netuk_gender <- subgroup_summary(base.data,~Gender,~NetUK)
+nethome_gender <- subgroup_summary(base.data,~Gender,~NetHome)
+netother_gender <- subgroup_summary(base.data,~Gender,~NetOther)
+netpersonal_gender <- subgroup_summary(base.data,~Gender,~NetPersonal)
 
-netinfacad_gender <- subgroup_summary(alumni.data,~Gender,~NetInfluenceAcad)
-netinfuk_gender <- subgroup_summary(alumni.data,~Gender,~NetInfluenceUK)
-netinforigin_gender <- subgroup_summary(alumni.data,~Gender,~NetInfluenceOrigin)
-netinfother_gender <- subgroup_summary(alumni.data,~Gender,~NetInfluenceOther)
-netinfpersonal_gender <- subgroup_summary(alumni.data,~Gender,~NetInfluencePersonal)
+netinfacad_gender <- subgroup_summary(base.data,~Gender,~NetInfluenceAcad)
+netinfuk_gender <- subgroup_summary(base.data,~Gender,~NetInfluenceUK)
+netinforigin_gender <- subgroup_summary(base.data,~Gender,~NetInfluenceOrigin)
+netinfother_gender <- subgroup_summary(base.data,~Gender,~NetInfluenceOther)
+netinfpersonal_gender <- subgroup_summary(base.data,~Gender,~NetInfluencePersonal)
 
 #Scheme
-netacad_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetAcad)
-netuk_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetUK)
-nethome_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetHome)
-netother_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetOther)
-netpersonal_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetPersonal)
+netacad_sch <- subgroup_summary(base.data,~SchemeNom,~NetAcad)
+netuk_sch <- subgroup_summary(base.data,~SchemeNom,~NetUK)
+nethome_sch <- subgroup_summary(base.data,~SchemeNom,~NetHome)
+netother_sch <- subgroup_summary(base.data,~SchemeNom,~NetOther)
+netpersonal_sch <- subgroup_summary(base.data,~SchemeNom,~NetPersonal)
 
-netinfacad_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetInfluenceAcad)
-netinfuk_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetInfluenceUK)
-netinforigin_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetInfluenceOrigin)
-netinfother_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetInfluenceOther)
-netinfpersonal_sch <- subgroup_summary(alumni.data,~SchemeNom,~NetInfluencePersonal)
+netinfacad_sch <- subgroup_summary(base.data,~SchemeNom,~NetInfluenceAcad)
+netinfuk_sch <- subgroup_summary(base.data,~SchemeNom,~NetInfluenceUK)
+netinforigin_sch <- subgroup_summary(base.data,~SchemeNom,~NetInfluenceOrigin)
+netinfother_sch <- subgroup_summary(base.data,~SchemeNom,~NetInfluenceOther)
+netinfpersonal_sch <- subgroup_summary(base.data,~SchemeNom,~NetInfluencePersonal)
 
 #Scheme Type
-netacad_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetAcad)
-netuk_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetUK)
-nethome_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetHome)
-netother_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetOther)
-netpersonal_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetPersonal)
+netacad_schtype <- subgroup_summary(base.data,~SchemeType,~NetAcad)
+netuk_schtype <- subgroup_summary(base.data,~SchemeType,~NetUK)
+nethome_schtype <- subgroup_summary(base.data,~SchemeType,~NetHome)
+netother_schtype <- subgroup_summary(base.data,~SchemeType,~NetOther)
+netpersonal_schtype <- subgroup_summary(base.data,~SchemeType,~NetPersonal)
 
-netinfacad_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetInfluenceAcad)
-netinfuk_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetInfluenceUK)
-netinforigin_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetInfluenceOrigin)
-netinfother_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetInfluenceOther)
-netinfpersonal_schtype <- subgroup_summary(alumni.data,~SchemeType,~NetInfluencePersonal)
-
-#Year Group
-netacad_year <- subgroup_summary(alumni.data,~YearGroup,~NetAcad)
-netuk_year <- subgroup_summary(alumni.data,~YearGroup,~NetUK)
-nethome_year <- subgroup_summary(alumni.data,~YearGroup,~NetHome)
-netother_year <- subgroup_summary(alumni.data,~YearGroup,~NetOther)
-netpersonal_year <- subgroup_summary(alumni.data,~YearGroup,~NetPersonal)
-
-netinfacad_year <- subgroup_summary(alumni.data,~YearGroup,~NetInfluenceAcad)
-netinfuk_year <- subgroup_summary(alumni.data,~YearGroup,~NetInfluenceUK)
-netinforigin_year <- subgroup_summary(alumni.data,~YearGroup,~NetInfluenceOrigin)
-netinfother_year <- subgroup_summary(alumni.data,~YearGroup,~NetInfluenceOther)
-netinfpersonal_year <- subgroup_summary(alumni.data,~YearGroup,~NetInfluencePersonal)
+netinfacad_schtype <- subgroup_summary(base.data,~SchemeType,~NetInfluenceAcad)
+netinfuk_schtype <- subgroup_summary(base.data,~SchemeType,~NetInfluenceUK)
+netinforigin_schtype <- subgroup_summary(base.data,~SchemeType,~NetInfluenceOrigin)
+netinfother_schtype <- subgroup_summary(base.data,~SchemeType,~NetInfluenceOther)
+netinfpersonal_schtype <- subgroup_summary(base.data,~SchemeType,~NetInfluencePersonal)
 
 #Origin Region
-netacad_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetAcad)
-netuk_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetUK)
-nethome_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetHome)
-netother_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetOther)
-netpersonal_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetPersonal)
+netacad_orireg <- subgroup_summary(base.data,~OriginRegion,~NetAcad)
+netuk_orireg <- subgroup_summary(base.data,~OriginRegion,~NetUK)
+nethome_orireg <- subgroup_summary(base.data,~OriginRegion,~NetHome)
+netother_orireg <- subgroup_summary(base.data,~OriginRegion,~NetOther)
+netpersonal_orireg <- subgroup_summary(base.data,~OriginRegion,~NetPersonal)
 
-netinfacad_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetInfluenceAcad)
-netinfuk_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetInfluenceUK)
-netinforigin_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetInfluenceOrigin)
-netinfother_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetInfluenceOther)
-netinfpersonal_orireg <- subgroup_summary(alumni.data,~OriginRegion,~NetInfluencePersonal)
-
-#Residency Region
-netacad_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetAcad)
-netuk_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetUK)
-nethome_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetHome)
-netother_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetOther)
-netpersonal_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetPersonal)
-
-netinfacad_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetInfluenceAcad)
-netinfuk_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetInfluenceUK)
-netinforigin_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetInfluenceOrigin)
-netinfother_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetInfluenceOther)
-netinfpersonal_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~NetInfluencePersonal)
+netinfacad_orireg <- subgroup_summary(base.data,~OriginRegion,~NetInfluenceAcad)
+netinfuk_orireg <- subgroup_summary(base.data,~OriginRegion,~NetInfluenceUK)
+netinforigin_orireg <- subgroup_summary(base.data,~OriginRegion,~NetInfluenceOrigin)
+netinfother_orireg <- subgroup_summary(base.data,~OriginRegion,~NetInfluenceOther)
+netinfpersonal_orireg <- subgroup_summary(base.data,~OriginRegion,~NetInfluencePersonal)
 
 #Subect Studied
-netacad_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetAcad) %>% filter(!JacsCat=="NA", sum(freq)>20)
-netuk_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetUK) %>% filter(!JacsCat=="NA", sum(freq)>20)
-nethome_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetHome) %>% filter(!JacsCat=="NA", sum(freq)>20)
-netother_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetOther) %>% filter(!JacsCat=="NA", sum(freq)>20)
-netpersonal_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetPersonal) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netacad_jacs <- subgroup_summary(base.data,~JacsCat,~NetAcad) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netuk_jacs <- subgroup_summary(base.data,~JacsCat,~NetUK) %>% filter(!JacsCat=="NA", sum(freq)>20)
+nethome_jacs <- subgroup_summary(base.data,~JacsCat,~NetHome) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netother_jacs <- subgroup_summary(base.data,~JacsCat,~NetOther) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netpersonal_jacs <- subgroup_summary(base.data,~JacsCat,~NetPersonal) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
-netinfacad_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetInfluenceAcad) %>% filter(!JacsCat=="NA", sum(freq)>20)
-netinfuk_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetInfluenceUK) %>% filter(!JacsCat=="NA", sum(freq)>20)
-netinforigin_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetInfluenceOrigin) %>% filter(!JacsCat=="NA", sum(freq)>20)
-netinfother_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetInfluenceOther) %>% filter(!JacsCat=="NA", sum(freq)>20)
-netinfpersonal_jacs <- subgroup_summary(alumni.data,~JacsCat,~NetInfluencePersonal) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netinfacad_jacs <- subgroup_summary(base.data,~JacsCat,~NetInfluenceAcad) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netinfuk_jacs <- subgroup_summary(base.data,~JacsCat,~NetInfluenceUK) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netinforigin_jacs <- subgroup_summary(base.data,~JacsCat,~NetInfluenceOrigin) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netinfother_jacs <- subgroup_summary(base.data,~JacsCat,~NetInfluenceOther) %>% filter(!JacsCat=="NA", sum(freq)>20)
+netinfpersonal_jacs <- subgroup_summary(base.data,~JacsCat,~NetInfluencePersonal) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
 #Committee Score
-netacad_score <- alumni.data %>% group_by(NetAcad) %>% score_summary()
-netuk_score <- alumni.data %>% group_by(NetUK) %>% score_summary()
-nethome_score <- alumni.data %>% group_by(NetHome) %>% score_summary()
-netother_score <- alumni.data %>% group_by(NetOther) %>% score_summary()
-netpersonal_score <- alumni.data %>% group_by(NetPersonal) %>% score_summary()
+netacad_score <- base.data %>% group_by(NetAcad) %>% score_summary()
+netuk_score <- base.data %>% group_by(NetUK) %>% score_summary()
+nethome_score <- base.data %>% group_by(NetHome) %>% score_summary()
+netother_score <- base.data %>% group_by(NetOther) %>% score_summary()
+netpersonal_score <- base.data %>% group_by(NetPersonal) %>% score_summary()
 
-netinfacad_score <- alumni.data %>% group_by(NetInfluenceAcad) %>% score_summary()
-netinfuk_score <- alumni.data %>% group_by(NetInfluenceUK) %>% score_summary()
-netinforigin_score <- alumni.data %>% group_by(NetInfluenceOrigin) %>% score_summary()
-netinfother_score <- alumni.data %>% group_by(NetInfluenceOther) %>% score_summary()
-netinfpersonal_score <- alumni.data %>% group_by(NetInfluencePersonal) %>% score_summary()
+netinfacad_score <- base.data %>% group_by(NetInfluenceAcad) %>% score_summary()
+netinfuk_score <- base.data %>% group_by(NetInfluenceUK) %>% score_summary()
+netinforigin_score <- base.data %>% group_by(NetInfluenceOrigin) %>% score_summary()
+netinfother_score <- base.data %>% group_by(NetInfluenceOther) %>% score_summary()
+netinfpersonal_score <- base.data %>% group_by(NetInfluencePersonal) %>% score_summary()
 
 ## j] Broader impact----
 

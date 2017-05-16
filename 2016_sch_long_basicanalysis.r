@@ -40,7 +40,6 @@ score_summary <- function(dataframe){
   select(Variable = rowname, everything())
 } #Statistical summary for committee scores, group data first to yield useful comparisons. In long data format.
 
-
 pop_summary <- function(dataframe, variable){
   dataframe %>% 
     group_by_(variable) %>% 
@@ -149,43 +148,47 @@ empsector_jacs <- subgroup_summary(alumni.data,~JacsCat,~CurrentSector) %>% filt
 empsector_score <- alumni.data %>% group_by(CurrentSector) %>% score_summary
 
 # Current employment skill level match
-empskillmatch_gender <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% group_by(Gender) %>% count(CurrentSkillMatch) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSkillMatch, desc(prop))
-empskillmatch_sch <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% group_by(SchemeNom) %>% count(CurrentSkillMatch) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSkillMatch, desc(prop))
-empskillmatch_schtype <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% group_by(SchemeType) %>% count(CurrentSkillMatch) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSkillMatch, desc(prop))
-empskillmatch_year <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% group_by(YearGroup) %>% count(CurrentSkillMatch) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSkillMatch, YearGroup, desc(prop))
-empskillmatch_orireg <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% group_by(OriginRegion) %>% count(CurrentSkillMatch) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(CurrentSkillMatch, desc(prop))
-empskillmatch_resreg <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% group_by(ResidencyRegion) %>% count(CurrentSkillMatch) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(sum(n)>20) %>% arrange(CurrentSkillMatch, desc(prop))
-empskillmatch_jacs <- alumni.data %>% filter(!JacsCat=="NA",!CurrentSkillMatch=="NA") %>% group_by(JacsCat) %>% count(CurrentSkillMatch) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(sum(n)>20) %>% arrange(CurrentSkillMatch, desc(prop))
+empskillmatch_gender <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~Gender,~CurrentSkillMatch)
+empskillmatch_sch <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~SchemeNom,~CurrentSkillMatch)
+empskillmatch_schtype <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~SchemeType,~CurrentSkillMatch)
+empskillmatch_year <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~YearGroup,~CurrentSkillMatch)
+empskillmatch_orireg <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~OriginRegion,~CurrentSkillMatch)
+empskillmatch_resreg <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~ResidencyRegion,~CurrentSkillMatch)
+empskillmatch_jacs <- alumni.data %>% filter(!JacsCat=="NA",!CurrentSkillMatch=="NA") %>% subgroup_summary(~JacsCat,~CurrentSkillMatch) %>% filter(sum(freq)>20)
 empskillmatch_score <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% group_by(CurrentSkillMatch) %>% score_summary()
 
-# Job changes in the last 2 years (and then tables limited to 'never', for easier comparison)
-empchange_gender <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% group_by(Gender) %>% count(CurrentJobChange) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(Gender,CurrentJobChange)
-empchange_sch <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% group_by(SchemeNom) %>% count(CurrentJobChange) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(SchemeNom,CurrentJobChange)
-empchange_schtype <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% group_by(SchemeType) %>% count(CurrentJobChange) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(SchemeType,CurrentJobChange)
-empchange_year <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% group_by(YearGroup) %>% count(CurrentJobChange) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(YearGroup,CurrentJobChange)
-empchange_orireg <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% group_by(OriginRegion) %>% count(CurrentJobChange) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(OriginRegion,CurrentJobChange)
-empchange_resreg <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% group_by(ResidencyRegion) %>% count(CurrentJobChange) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(ResidencyRegion,CurrentJobChange)
-empchange_jacs <- alumni.data %>% filter(!JacsCat=="NA",!CurrentJobChange=="NA") %>% group_by(JacsCat) %>% count(CurrentJobChange) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(sum(n)>20) %>% arrange(JacsCat,CurrentJobChange)
+# Job changes in the last 2 years
+empchange_gender <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~Gender,~CurrentJobChange)
+empchange_sch <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~SchemeNom,~CurrentJobChange)
+empchange_schtype <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~SchemeType,~CurrentJobChange)
+empchange_year <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~YearGroup,~CurrentJobChange)
+empchange_orireg <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~OriginRegion,~CurrentJobChange)
+empchange_resreg <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~ResidencyRegion,~CurrentJobChange)
+empchange_jacs <- alumni.data %>% filter(!JacsCat=="NA",!CurrentJobChange=="NA") %>% subgroup_summary(~JacsCat,~CurrentJobChange) %>% filter(sum(freq)>20)
 empchange_score <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% group_by(CurrentJobChange) %>% score_summary()
 
 # Return to previous organisation for +2 year respondents only (note 'YearGroup' is missing as a variable because it is meaningless: all are +2 group)
-empreturnorg_gender <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% group_by(Gender) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(Gender,desc(prop))
-empreturnorg_sch <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% group_by(SchemeNom) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(SchemeNom, desc(ReturnOrganisation))
-empreturnorg_schtype <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% group_by(SchemeType) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(SchemeType, desc(ReturnOrganisation))
-empreturnorg_orireg <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% group_by(OriginRegion) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(OriginRegion, desc(ReturnOrganisation))
-empreturnorg_resreg <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% group_by(ResidencyRegion) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% arrange(ResidencyRegion, desc(ReturnOrganisation))
-empreturnorg_jacs <- alumni.data %>% filter(grepl("_Two$", SurveyID),!JacsCat=="NA") %>% group_by(JacsCat) %>% count(ReturnOrganisation) %>% mutate(prop = round((n / sum(n))*100,1)) %>% filter(sum(n)>20) %>% arrange(JacsCat, desc(ReturnOrganisation))
+empreturnorg_gender <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% subgroup_summary(~Gender,~ReturnOrganisation)
+empreturnorg_sch <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% subgroup_summary(~SchemeNom,~ReturnOrganisation)
+empreturnorg_schtype <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% subgroup_summary(~SchemeType,~ReturnOrganisation)
+empreturnorg_orireg <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% subgroup_summary(~OriginRegion,~ReturnOrganisation)
+empreturnorg_resreg <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% subgroup_summary(~ResidencyRegion,~ReturnOrganisation)
+empreturnorg_jacs <- alumni.data %>% filter(grepl("_Two$", SurveyID),!JacsCat=="NA") %>% subgroup_summary(~JacsCat,~ReturnOrganisation) %>% filter(sum(freq)>20)
 empreturnorg_score <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% group_by(ReturnOrganisation) %>% score_summary()
 
 # Time to gain employment for those +2 year respondents who did not return to their former organistion (N quite small for some groups, not very meaningful)
-empreturntime_gender <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(Gender) %>%  count(ReturnEmploy) %>% mutate(prop = round((n / sum(n))*100,1))
-empreturntime_sch <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(SchemeNom) %>%  count(ReturnEmploy) %>% mutate(prop = round((n / sum(n))*100,1))
-empreturntime_schtype <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(SchemeType) %>%  count(ReturnEmploy) %>% mutate(prop = round((n / sum(n))*100,1))
-empreturntime_orireg <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(OriginRegion) %>%  count(ReturnEmploy) %>% mutate(prop = round((n / sum(n))*100,1))
-empreturntime_resreg <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(ResidencyRegion) %>%  count(ReturnEmploy) %>% mutate(prop = round((n / sum(n))*100,1))
-empreturntime_jacs <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(JacsCat) %>%  count(ReturnEmploy) %>% mutate(prop = round((n / sum(n))*100,1))
-empreturntime_score <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% group_by(ReturnEmploy) %>% score_summary()
-
+# Define a helper function for subsetting (note: subset is easier to use here than Dplyr's filter)
+subset_returntime <- function(dataframe){
+  subset(dataframe, grepl("_Two$", SurveyID) &
+         !ReturnOrganisation=="Yes" &
+         CurrentEmploy=="Employed")}
+empreturntime_gender <- alumni.data %>% subset_returntime() %>% subgroup_summary(~Gender,~ReturnEmploy)
+empreturntime_sch <- alumni.data %>% subset_returntime() %>% subgroup_summary(~SchemeNom,~ReturnEmploy)
+empreturntime_schtype <- alumni.data %>% subset_returntime() %>% subgroup_summary(~SchemeType,~ReturnEmploy)
+empreturntime_orireg <- alumni.data %>% subset_returntime() %>% subgroup_summary(~OriginRegion,~ReturnEmploy)
+empreturntime_resreg <- alumni.data %>% subset_returntime() %>% subgroup_summary(~ResidencyRegion,~ReturnEmploy)
+empreturntime_jacs <- alumni.data %>% subset_returntime() %>% subgroup_summary(~JacsCat,~ReturnEmploy)
+empreturntime_score <- alumni.data %>% subset_returntime() %>% group_by(ReturnEmploy) %>% score_summary()
 
 ## d] Further qualifications----
 
@@ -1269,7 +1272,16 @@ indexresearch_jacs <-
 
 #this is much harder to model in a table because both sets of variables are continuous - better to use a scatterplot
 
-ggplot(alumni.data, aes(x=ZCtteeScore, y=i.ldr)) + 
+indexldr_score <- 
+  ggplot(alumni.data, aes(x=ZCtteeScore, y=i.ldr)) + 
+  geom_jitter() +
+  coord_cartesian(ylim=c(0,1.0)) +
+  ylab("Leadership index") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
+
+indexcollab_score <- 
+  ggplot(alumni.data, aes(x=ZCtteeScore, y=i.collab)) + 
   geom_jitter() +
   coord_cartesian(ylim=c(0,1.0)) +
   ylab("Leadership index") +
@@ -1277,20 +1289,18 @@ ggplot(alumni.data, aes(x=ZCtteeScore, y=i.ldr)) +
   theme_bw()
 
 
-# --- Example table structures----
+indexskills_score <- 
+  ggplot(alumni.data, aes(x=ZCtteeScore, y=i.skills)) + 
+  geom_jitter() +
+  coord_cartesian(ylim=c(0,1.0)) +
+  ylab("Leadership index") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
 
-#example of simplified table looking at proportions reporting positively a single activity
-ldrbudget_orireg %>% filter(Response=="Yes") %>% arrange(desc(prop)) 
-
-#Example table for a simple binary variable, grouped
-rbind(teachschool_year,teachundergrad_year,teachpostgrad_year,teachdoctorate_year,teachtvet_year) %>% 
-  filter(Response=="Yes") %>% 
-  select(-freq,-Response) %>% 
-  spread(Variable, prop)
-
-#Example of a table by several similar variables, grouped
-rbind(netacad_year,netuk_year,nethome_year,netother_year,netpersonal_year) %>% 
-  select(-freq) %>% 
-  spread(YearGroup, prop)
-
-
+indexresearch_score <- 
+  ggplot(alumni.data, aes(x=ZCtteeScore, y=i.research)) + 
+  geom_jitter() +
+  coord_cartesian(ylim=c(0,1.0)) +
+  ylab("Leadership index") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()

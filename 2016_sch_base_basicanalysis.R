@@ -80,7 +80,86 @@ overview_orireg <- pop_summary(base.data,~OriginRegion) %>% arrange(desc(prop))
 overview_jacs <- pop_summary(base.data,~JacsCat) %>% arrange(desc(prop))
 overview_score <- base.data %>% group_by(CtteeGroup) %>% score_summary()
 
-## c] Employment ----
+## b] Previous scholarships
+
+studyscholmain_overall <- pop_summary(base.data,~StudyScholMain)
+studyscholtype_overall <- pop_summary(base.data,~StudyScholType)
+
+studyscholmain_gender <- subgroup_summary(base.data,~Gender,~StudyScholMain)
+studyscholmain_sch <- subgroup_summary(base.data,~SchemeNom,~StudyScholMain)
+studyscholmain_schtype <- subgroup_summary(base.data,~SchemeType,~StudyScholMain)
+studyscholmain_orireg <- subgroup_summary(base.data,~OriginRegion,~StudyScholMain)
+studyscholmain_jacs <- subgroup_summary(base.data,~JacsCat,~StudyScholMain)
+studyscholmain_score <- base.data %>% group_by(StudyScholMain) %>% score_summary()
+
+studyscholtype_gender <- base.data %>% filter(!StudyScholMain=="No") %>% subgroup_summary(~Gender,~StudyScholType)
+studyscholtype_sch <- base.data %>% filter(!StudyScholMain=="No") %>% subgroup_summary(~SchemeNom,~StudyScholType)
+studyscholtype_schtype <- base.data %>% filter(!StudyScholMain=="No") %>% subgroup_summary(~SchemeType,~StudyScholType)
+studyscholtype_orireg <- base.data %>% filter(!StudyScholMain=="No") %>% subgroup_summary(~OriginRegion,~StudyScholType)
+studyscholtype_jacs <- base.data %>% filter(!StudyScholMain=="No") %>% subgroup_summary(~JacsCat,~StudyScholType)
+studyscholtype_score <- base.data %>% filter(!StudyScholMain=="No") %>% group_by(StudyScholType) %>% score_summary()
+
+## c] Counterfactual responses
+
+# Overall
+cfuk_overall <- base.data %>% summarise(Cases = length(CFUK),Median=median(CFUK),Mean= mean(CFUK), SD=sd(CFUK),Max=max(CFUK),Min=min(CFUK))
+cfhome_overall <- base.data %>% summarise(Cases = length(CFHome),Median=median(CFHome),Mean= mean(CFHome), SD=sd(CFHome),Max=max(CFHome),Min=min(CFHome))
+cfother_overall <- base.data %>% summarise(Cases = length(CFOther),Median=median(CFOther),Mean= mean(CFOther), SD=sd(CFOther),Max=max(CFOther),Min=min(CFOther))
+
+cfukfunding_overall <- base.data %>% filter(!CFUKFunding=="NA") %>% pop_summary(~CFUKFunding) %>% arrange(desc(prop))
+cfhomefunding_overall <- base.data %>% filter(!CFHomeFunding=="NA") %>% pop_summary(~CFHomeFunding) %>% arrange(desc(prop))
+cfotherfunding_overall <- base.data %>% filter(!CFOtherFunding=="NA") %>% pop_summary(~CFOtherFunding) %>% arrange(desc(prop))
+
+# Gender
+cfuk_gender <- base.data %>% group_by(Gender) %>% summarise(Cases = length(CFUK),Median=median(CFUK),Mean= mean(CFUK), SD=sd(CFUK),Max=max(CFUK),Min=min(CFUK))
+cfhome_gender <- base.data %>% group_by(Gender) %>% summarise(Cases = length(CFHome),Median=median(CFHome),Mean= mean(CFHome), SD=sd(CFHome),Max=max(CFHome),Min=min(CFHome))
+cfother_gender <- base.data %>% group_by(Gender) %>% summarise(Cases = length(CFOther),Median=median(CFOther),Mean= mean(CFOther), SD=sd(CFOther),Max=max(CFOther),Min=min(CFOther))
+
+cfukfunding_gender <- base.data %>% filter(!CFUKFunding=="NA") %>% subgroup_summary(~Gender,~CFUKFunding)
+cfhomefunding_gender <- base.data %>% filter(!CFHomeFunding=="NA") %>% subgroup_summary(~Gender,~CFHomeFunding)
+cfotherfunding_gender <- base.data %>% filter(!CFOtherFunding=="NA") %>% subgroup_summary(~Gender,~CFOtherFunding)
+
+# Scheme
+cfuk_sch <- base.data %>% group_by(SchemeNom) %>% summarise(Cases = length(CFUK),Median=median(CFUK),Mean= mean(CFUK), SD=sd(CFUK),Max=max(CFUK),Min=min(CFUK))
+cfhome_sch <- base.data %>% group_by(SchemeNom) %>% summarise(Cases = length(CFHome),Median=median(CFHome),Mean= mean(CFHome), SD=sd(CFHome),Max=max(CFHome),Min=min(CFHome))
+cfother_sch <- base.data %>% group_by(SchemeNom) %>% summarise(Cases = length(CFOther),Median=median(CFOther),Mean= mean(CFOther), SD=sd(CFOther),Max=max(CFOther),Min=min(CFOther))
+
+cfukfunding_sch <- base.data %>% filter(!CFUKFunding=="NA") %>% subgroup_summary(~SchemeNom,~CFUKFunding)
+cfhomefunding_sch <- base.data %>% filter(!CFHomeFunding=="NA") %>% subgroup_summary(~SchemeNom,~CFHomeFunding)
+cfotherfunding_sch <- base.data %>% filter(!CFOtherFunding=="NA") %>% subgroup_summary(~SchemeNom,~CFOtherFunding)
+
+# Scheme Type
+cfuk_schtype <- base.data %>% group_by(SchemeType) %>% summarise(Cases = length(CFUK),Median=median(CFUK),Mean= mean(CFUK), SD=sd(CFUK),Max=max(CFUK),Min=min(CFUK))
+cfhome_schtype <- base.data %>% group_by(SchemeType) %>% summarise(Cases = length(CFHome),Median=median(CFHome),Mean= mean(CFHome), SD=sd(CFHome),Max=max(CFHome),Min=min(CFHome))
+cfother_schtype <- base.data %>% group_by(SchemeType) %>% summarise(Cases = length(CFOther),Median=median(CFOther),Mean= mean(CFOther), SD=sd(CFOther),Max=max(CFOther),Min=min(CFOther))
+
+cfukfunding_schtype <- base.data %>% filter(!CFUKFunding=="NA") %>% subgroup_summary(~SchemeType,~CFUKFunding)
+cfhomefunding_schtype <- base.data %>% filter(!CFHomeFunding=="NA") %>% subgroup_summary(~SchemeType,~CFHomeFunding)
+cfotherfunding_schtype <- base.data %>% filter(!CFOtherFunding=="NA") %>% subgroup_summary(~SchemeType,~CFOtherFunding)
+
+# Origin Region
+cfuk_orireg <- base.data %>% group_by(OriginRegion) %>% summarise(Cases = length(CFUK),Median=median(CFUK),Mean= mean(CFUK), SD=sd(CFUK),Max=max(CFUK),Min=min(CFUK))
+cfhome_orireg <- base.data %>% group_by(OriginRegion) %>% summarise(Cases = length(CFHome),Median=median(CFHome),Mean= mean(CFHome), SD=sd(CFHome),Max=max(CFHome),Min=min(CFHome))
+cfother_orireg <- base.data %>% group_by(OriginRegion) %>% summarise(Cases = length(CFOther),Median=median(CFOther),Mean= mean(CFOther), SD=sd(CFOther),Max=max(CFOther),Min=min(CFOther))
+
+cfukfunding_orireg <- base.data %>% filter(!CFUKFunding=="NA") %>% subgroup_summary(~OriginRegion,~CFUKFunding)
+cfhomefunding_orireg <- base.data %>% filter(!CFHomeFunding=="NA") %>% subgroup_summary(~OriginRegion,~CFHomeFunding)
+cfotherfunding_orireg <- base.data %>% filter(!CFOtherFunding=="NA") %>% subgroup_summary(~OriginRegion,~CFOtherFunding)
+
+# Subject studied
+cfuk_sch <- base.data %>% group_by(JacsCat) %>% summarise(Cases = length(CFUK),Median=median(CFUK),Mean= mean(CFUK), SD=sd(CFUK),Max=max(CFUK),Min=min(CFUK)) %>% filter(!JacsCat=="NA", Cases>20)
+cfhome_sch <- base.data %>% group_by(JacsCat) %>% summarise(Cases = length(CFHome),Median=median(CFHome),Mean= mean(CFHome), SD=sd(CFHome),Max=max(CFHome),Min=min(CFHome)) %>% filter(!JacsCat=="NA", Cases>20)
+cfother_sch <- base.data %>% group_by(JacsCat) %>% summarise(Cases = length(CFOther),Median=median(CFOther),Mean= mean(CFOther), SD=sd(CFOther),Max=max(CFOther),Min=min(CFOther)) %>% filter(!JacsCat=="NA", Cases>20)
+
+cfukfunding_sch <- base.data %>% filter(!CFUKFunding=="NA",!JacsCat=="NA") %>% subgroup_summary(~JacsCat,~CFUKFunding)
+cfhomefunding_sch <- base.data %>% filter(!CFHomeFunding=="NA",!JacsCat=="NA") %>% subgroup_summary(~JacsCat,~CFHomeFunding)
+cfotherfunding_sch <- base.data %>% filter(!CFOtherFunding=="NA",!JacsCat=="NA") %>% subgroup_summary(~JacsCat,~CFOtherFunding)
+
+# Score
+# -- Scattergraphs for score - to be added
+
+
+## d] Employment ----
 
 # prefix = 'emp'
 # TO ADD - CONTEXT VARIABLES
@@ -213,7 +292,7 @@ ldrinnproject_score <- base.data %>% group_by(InnLeadProject) %>% score_summary(
 ldrinnfunding_score <- base.data %>% group_by(InnLeadFunding) %>% score_summary()
 
 
-## g] Research ----
+## f] Research ----
 
 # Prefix = "res"
 # Note that there are usually many NA responses for research variables because these questions are only asked to thsoe that report current involvement in research
@@ -326,7 +405,7 @@ rescompprojects_score <- alumni.data %>% group_by(ResCompProjects) %>% score_sum
 rescompfunding_score <- alumni.data %>% group_by(ResCompFunding) %>% score_summary()
 
 
-## h] Teaching ----
+## g] Teaching ----
 
 # prefix = "teach"
 
@@ -394,7 +473,7 @@ teachdoctorate_score <- base.data %>% group_by(TeachDoctorate) %>% score_summary
 teachtvet_score <- base.data %>% group_by(TeachTVET) %>% score_summary()
 
 
-## i] Networks and links----
+## h] Networks and links----
 
 # prefix= 'Net'
 
@@ -489,7 +568,7 @@ netinforigin_score <- base.data %>% group_by(NetInfluenceOrigin) %>% score_summa
 netinfother_score <- base.data %>% group_by(NetInfluenceOther) %>% score_summary()
 netinfpersonal_score <- base.data %>% group_by(NetInfluencePersonal) %>% score_summary()
 
-## j] Broader impact----
+## i] Broader impact----
 
 # prefix = "Imp"
 
@@ -570,7 +649,7 @@ impcivic_score <- base.data %>% group_by(ImpCivic) %>% score_summary()
 impecon_score <- base.data %>% group_by(ImpEcon) %>% score_summary()
 imppolicy_score <- base.data %>% group_by(ImpPolicy) %>% score_summary()
 
-## k] Analytic indices----
+## j] Analytic indices----
 
 #prefix = "i."
 

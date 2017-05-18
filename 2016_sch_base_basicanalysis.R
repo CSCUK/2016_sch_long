@@ -156,7 +156,31 @@ cfhomefunding_sch <- base.data %>% filter(!CFHomeFunding=="NA",!JacsCat=="NA") %
 cfotherfunding_sch <- base.data %>% filter(!CFOtherFunding=="NA",!JacsCat=="NA") %>% subgroup_summary(~JacsCat,~CFOtherFunding)
 
 # Score
-# -- Scattergraphs for score - to be added
+
+cfuk_score <- 
+  ggplot(base.data, aes(x=ZCtteeScore, y=CFUK)) + 
+  geom_jitter() +
+  ylab("Counterfactual (UK) score") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
+
+cfhome_score <- 
+  ggplot(base.data, aes(x=ZCtteeScore, y=CFHome)) + 
+  geom_jitter() +
+  ylab("Counterfactual (Home) score") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
+
+cfother_score <- 
+  ggplot(base.data, aes(x=ZCtteeScore, y=CFOther)) + 
+  geom_jitter() +
+  ylab("Counterfactual (Other) score") +
+  xlab("Committee Z-score (SD)") +
+  theme_bw()
+
+cfukfunding_score <- base.data %>% filter(!CFUKFunding=="NA") %>% score_summary()
+cfhomefunding_score <- base.data %>% filter(!CFHomeFunding=="NA") %>% score_summary()
+cfotherfunding_score <- base.data %>% filter(!CFOtherFunding=="NA") %>% score_summary()
 
 
 ## d] Employment ----

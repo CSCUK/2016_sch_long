@@ -25,7 +25,7 @@ con.libra <- odbcConnect("Libra")
 con.evaldb
 con.libra
 
-# DB query for population data
+# 1. DB query for population data
 
 ## Stage 1] DB query for admin data to join with survey results
 ## Limited to 2000 onwards because: 1) this removes some problems with database query of legacy data, 2) all survey resps. should be >2000
@@ -98,7 +98,7 @@ population <- population %>%
 population <- select(population,-DegreeCode, -SchemeType, -PhD)
   
 
-# DB query for survey data
+# 2. DB query for survey data
 
 ## Query data and join onto admin and geodata
 ## Two step process required for alumni data because +2 survey has diferent variables, so needs join and bind rows, removes unneeded columns
@@ -119,7 +119,7 @@ alumni.data <-
   rename(OriginRegion=Region.x,ResidencyRegion = Region.y, CurrentSector=DCurrentSector) %>% 
   tbl_df()
 
-## DB query for baseline data, joins onto admin and geodata
+## 3. DB query for baseline data, joins onto admin and geodata
 base.data <- 
   sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_0.* FROM tbl_DATA_Sch_0 WHERE tbl_DATA_Sch_0.SurveyID='Sch_2016_0'") %>% 
   left_join(population, by="AWDID") %>% 
@@ -127,6 +127,41 @@ base.data <-
   select(-DateAdded,-StudyScholFunder,-PreSector) %>% 
   rename(OriginRegion = Region, PreSector= DPreSector, StudyScholFunder = DStudyScholFunder) %>% 
   tbl_df() 
+
+# 4. DB query for (alumni) response rates data
+
+long_10 <- "Sch_2006_Ten"
+long_8 <- "Sch_2008_Eight"
+long_6 <- "Sch_2010_Six"
+long_4<- "Sch_2012_Four"
+long_2 <- "Sch_2014_Two"
+base_0 <- "Sch_2016_0"
+
+#define query with dynamic variables
+resp.query <-
+  sprintf("
+    SELECT 
+      tbl_Ctrl_Respondents.AWDID,
+      tbl_LKUP_ResponseStatus.ResponseName
+    FROM
+      tbl_Ctrl_Respondents
+      LEFT JOIN tbl_LKUP_Respondents ON tbl_LKUP_ResponseStatus.StatusCode = tbl_Ctrl_Respondents.ResponseStatus
+    wHERE 
+      tbl_Ctrl_Respondents.SurveyID in ('%s') OR tbl_Ctrl_Respondents.SurveyID in ('%s') OR 
+      tbl_Ctrl_Respondents.SurveyID in ('%s') OR tbl_Ctrl_Respondents.SurveyID in ('%s') OR 
+      tbl_Ctrl_Respondents.SurveyID in ('%s')",
+  long_10,long_8,long_6,long_4,long_2)
+
+#correct line breaks and whitespace introduced by splitting sprintf over multiple lines (worth keeping on multiple lines to make readable)
+resp.query <- str_replace_all(str_replace_all(resp.query,"\n",""),"\\s+"," ")
+
+#query database for response rates data
+response.data <- 
+  sqlQuery(con.evaldb,resp.query) %>% 
+  response.data %>% 
+  left_join(population, by="AWDID") %>% 
+  left_join(sqlQuery(con.evaldb,"SELECT tbl_LKUP_Geodata.CTRYNAME AS Country,tbl_LKUP_Geodata.CSCRegion AS Region FROM tbl_LKUP_Geodata"), by=c("Origin"="Country")) %>%
+  tbl_df()
 
 # Cleanup
 odbcCloseAll()

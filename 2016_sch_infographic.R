@@ -6,21 +6,16 @@
 
 # Script designed to export data for standard infographics on alumni follow-up and baseline surveys
 
-# Either load the RDATA file directly, or use source() to the importcleaning.r script:
-# source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_basicanalysis.r")
-# load("2016_sch_long_core.rdata")
-
 # --- Library calls ----
 
 library(pacman)
-p_load(RODBC, openxlsx, tidyverse,forcats, plotly, pander)
+p_load(RODBC, openxlsx, tidyverse,forcats)
 
 opar = par()
 
 # --- Dataset structure ----
 
 str(alumni.data, list.len=nrow(alumni.data))
-str(base.data, list.len=nrow(base.data))
 
 ## --- ALUMNI INFOGRAPHIC ----
 
@@ -106,10 +101,39 @@ teaching.involvement <-
   select(-Response) %>% 
   mutate(Variable = fct_recode(Variable,"Teaching Involvement" = "TeachMain"))
 
-teaching.cmw <- 
-  teachcmwskills_overall
+teaching.cmw <- select(teachcmwskills_overall,-Variable)
+
+# --- 7] Professional contacts ----
+
+networks.host <- select(netacad_overall,-Variable)
+
+networks.ukprof <- select(netuk_overall,-Variable)
+
+networks.otherprof <- select(netother_overall,-Variable)
 
 # --- Write data to excel ----
 
-write.xlsx(dataframe1, file="filename.xlsx", sheetName="sheet1", row.names=FALSE)
-write.xlsx(dataframe2, file="filename.xlsx", sheetName="sheet2", append=TRUE, row.names=FALSE)
+# Listed by section, but all will export to a single workbook. First line creates workbook: first line should not have append=TRUE.
+
+write.xlsx(response.rate, file="data_infographic.xlsx", sheetName="response.rate", row.names=FALSE)
+write.xlsx(response.countries, file="data_infographic.xlsx", sheetName="response.countries", row.names=FALSE, append=TRUE)
+write.xlsx(employment.sectors, file="data_infographic.xlsx", sheetName="employment.sectors", row.names=FALSE, append=TRUE)
+
+write.xlsx(impact.reach, file="data_infographic.xlsx", sheetName="impact.reach", row.names=FALSE, append=TRUE)
+write.xlsx(impact.type, file="data_infographic.xlsx", sheetName="impact.type", row.names=FALSE, append=TRUE)
+
+write.xlsx(skills.applying, file="data_infographic.xlsx", sheetName="skills.applying", row.names=FALSE, append=TRUE)
+write.xlsx(skills.transfering, file="data_infographic.xlsx", sheetName="skills.transfering", row.names=FALSE, append=TRUE)
+write.xlsx(skills.advocating, file="data_infographic.xlsx", sheetName="skills.advocating", row.names=FALSE, append=TRUE)
+
+write.xlsx(leadership, file="data_infographic.xlsx", sheetName="leadership", row.names=FALSE, append=TRUE)
+
+write.xlsx(research.involvement, file="data_infographic.xlsx", sheetName="res.involvement", row.names=FALSE, append=TRUE)
+write.xlsx(research.collaboration, file="data_infographic.xlsx", sheetName="res.collaboration", row.names=FALSE, append=TRUE)
+
+write.xlsx(teaching.involvement, file="data_infographic.xlsx", sheetName="teach.involvement", row.names=FALSE, append=TRUE)
+write.xlsx(teaching.cmw, file="data_infographic.xlsx", sheetName="teach.CMW", row.names=FALSE, append=TRUE)
+
+write.xlsx(networks.host, file="data_infographic.xlsx", sheetName="employment.sectors", row.names=FALSE, append=TRUE)
+write.xlsx(networks.ukprof, file="data_infographic.xlsx", sheetName="employment.sectors", row.names=FALSE, append=TRUE)
+write.xlsx(networks.otherprof, file="data_infographic.xlsx", sheetName="employment.sectors", row.names=FALSE, append=TRUE)

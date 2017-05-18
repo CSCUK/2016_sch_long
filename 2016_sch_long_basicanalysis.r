@@ -654,7 +654,7 @@ rescompfunding_score <- alumni.data %>% group_by(ResCompFunding) %>% score_summa
 
 #Overall
 teachmain_overall <- pop_summary(alumni.data,~TeachMain)
-teachcmwskills_overall <- pop_summary(alumni.data,~TeachCMWSkills)
+teachcmwskills_overall <- alumni.data %>% filter(TeachMain=="Yes") %>% pop_summary(~TeachCMWSkills)
 
 teachschool_overall <- pop_summary(alumni.data,~TeachSchool)
 teachundergrad_overall <- pop_summary(alumni.data,~TeachUndergrad)
@@ -665,7 +665,7 @@ teachtvet_overall <- pop_summary(alumni.data,~TeachTVET)
 
 #Gender
 teachmain_gender <- subgroup_summary(alumni.data,~Gender,~TeachMain)
-teachcmwskills_gender <- subgroup_summary(alumni.data,~Gender,~TeachCMWSkills)
+teachcmwskills_gender <- alumni.data %>% filter(TeachMain=="Yes") %>% subgroup_summary(~Gender,~TeachCMWSkills)
 
 teachschool_gender <- subgroup_summary(alumni.data,~Gender,~TeachSchool)
 teachundergrad_gender <- subgroup_summary(alumni.data,~Gender,~TeachUndergrad)
@@ -675,7 +675,7 @@ teachtvet_gender <- subgroup_summary(alumni.data,~Gender,~TeachTVET)
 
 #Scheme
 teachmain_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachMain)
-teachcmwskills_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachCMWSkills)
+teachcmwskills_sch <- alumni.data %>% filter(TeachMain=="Yes") %>% subgroup_summary(~SchemeNom,~TeachCMWSkills)
 
 teachschool_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachSchool)
 teachundergrad_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachUndergrad)
@@ -685,7 +685,7 @@ teachtvet_sch <- subgroup_summary(alumni.data,~SchemeNom,~TeachTVET)
 
 #Scheme Type
 teachmain_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachMain)
-teachcmwskills_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachCMWSkills)
+teachcmwskills_schtype <- alumni.data %>% filter(TeachMain=="Yes") %>% subgroup_summary(~SchemeType,~TeachCMWSkills)
 
 teachschool_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachSchool)
 teachundergrad_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachUndergrad)
@@ -695,7 +695,7 @@ teachtvet_schtype <- subgroup_summary(alumni.data,~SchemeType,~TeachTVET)
 
 #Year Group
 teachmain_year <- subgroup_summary(alumni.data,~YearGroup,~TeachMain)
-teachcmwskills_year <- subgroup_summary(alumni.data,~YearGroup,~TeachCMWSkills)
+teachcmwskills_year <- alumni.data %>% filter(TeachMain=="Yes") %>% subgroup_summary(~YearGroup,~TeachCMWSkills)
 
 teachschool_year <- subgroup_summary(alumni.data,~YearGroup,~TeachSchool)
 teachundergrad_year <- subgroup_summary(alumni.data,~YearGroup,~TeachUndergrad)
@@ -705,7 +705,7 @@ teachtvet_year <- subgroup_summary(alumni.data,~YearGroup,~TeachTVET)
 
 #Origin Region
 teachmain_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachMain)
-teachcmwskills_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachCMWSkills)
+teachcmwskills_orireg <- alumni.data %>% filter(TeachMain=="Yes") %>% subgroup_summary(~OriginRegion,~TeachCMWSkills)
 
 teachschool_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachSchool)
 teachundergrad_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachUndergrad)
@@ -715,7 +715,7 @@ teachtvet_orireg <- subgroup_summary(alumni.data,~OriginRegion,~TeachTVET)
 
 #Residency Region
 teachmain_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachMain)
-teachcmwskills_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachCMWSkills)
+teachcmwskills_resreg <- alumni.data %>% filter(TeachMain=="Yes") %>% subgroup_summary(~ResidencyRegion,~TeachCMWSkills)
 
 teachschool_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachSchool)
 teachundergrad_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachUndergrad)
@@ -725,7 +725,7 @@ teachtvet_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~TeachTVET)
 
 #Subect Studied
 teachmain_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachMain) %>% filter(!JacsCat=="NA", sum(freq)>20)
-teachcmwskills_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachCMWSkills) %>% filter(!JacsCat=="NA", sum(freq)>20)
+teachcmwskills_jacs <- alumni.data %>% filter(TeachMain=="Yes") %>% subgroup_summary(~JacsCat,~TeachCMWSkills) %>% filter(!JacsCat=="NA", sum(freq)>20)
 
 teachschool_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachSchool) %>% filter(!JacsCat=="NA", sum(freq)>20)
 teachundergrad_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachUndergrad) %>% filter(!JacsCat=="NA", sum(freq)>20)
@@ -735,7 +735,7 @@ teachtvet_jacs <- subgroup_summary(alumni.data,~JacsCat,~TeachTVET) %>% filter(!
 
 #Committee Score
 teachmain_score <- alumni.data %>% group_by(TeachMain) %>% score_summary()
-teachcmwskills_score <- alumni.data %>% group_by(TeachCMWSkills) %>% score_summary()
+teachcmwskills_score <- alumni.data %>% filter(TeachMain=="Yes") %>% group_by(TeachCMWSkills) %>% score_summary()
 
 teachschool_score <- alumni.data %>% group_by(TeachSchool) %>% score_summary()
 teachundergrad_score <- alumni.data %>% group_by(TeachUndergrad) %>% score_summary()

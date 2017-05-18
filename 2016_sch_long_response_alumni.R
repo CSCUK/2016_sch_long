@@ -83,8 +83,3 @@ x <- ggplot(data = filter(resp.region, Response=="Completed"), aes(x=reorder(Reg
   coord_flip()
 
 ggplotly(x)
-
-## --- Save output --- ##
-
-save.image("2016_response_alumni.rdata") 
-  #update filename as appropriate

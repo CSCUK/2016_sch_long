@@ -340,7 +340,7 @@ response.data <-
   response.data %>% 
     mutate(SchemeNom = recode(Scheme, "CD"="Distance Learners","CR"="Agency: Developed","CA"="University Staff",
                               "CS"="Agency: Developing","CN"="Split Site","SS"="Shared Scholars") ) %>% 
-    select(-Scheme)
+    select(-Scheme, Response=ResponseName)
 
 ## e] Cleanup ----
 

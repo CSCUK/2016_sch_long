@@ -7,9 +7,18 @@
 # --- Library calls ----
 
 library(pacman)
-p_load(RODBC, openxlsx, tidyverse,forcats, plotly, pander)
+p_load(RODBC, openxlsx, tidyverse,forcats,stringr)
 
 opar = par()
+
+# --- Global Variables ----
+
+long_10 <- "Sch_2006_Ten"
+long_8 <- "Sch_2008_Eight"
+long_6 <- "Sch_2010_Six"
+long_4<- "Sch_2012_Four"
+long_2 <- "Sch_2014_Two"
+base_0 <- "Sch_2016_0"
 
 # --- Data connection and import ----
 
@@ -121,7 +130,7 @@ alumni.data <-
 
 ## 3. DB query for baseline data, joins onto admin and geodata
 base.data <- 
-  sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_0.* FROM tbl_DATA_Sch_0 WHERE tbl_DATA_Sch_0.SurveyID='Sch_2016_0'") %>% 
+  sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_0.* FROM tbl_DATA_Sch_0 WHERE tbl_DATA_Sch_0.SurveyID='%s'",base_0)) %>% 
   left_join(population, by="AWDID") %>% 
   left_join(sqlQuery(con.evaldb,"SELECT tbl_LKUP_Geodata.CTRYNAME AS Country,tbl_LKUP_Geodata.CSCRegion AS Region FROM tbl_LKUP_Geodata"), by=c("Origin"="Country")) %>% 
   select(-DateAdded,-StudyScholFunder,-PreSector) %>% 
@@ -130,23 +139,18 @@ base.data <-
 
 # 4. DB query for (alumni) response rates data
 
-long_10 <- "Sch_2006_Ten"
-long_8 <- "Sch_2008_Eight"
-long_6 <- "Sch_2010_Six"
-long_4<- "Sch_2012_Four"
-long_2 <- "Sch_2014_Two"
-base_0 <- "Sch_2016_0"
-
 #define query with dynamic variables
 resp.query <-
   sprintf("
     SELECT 
       tbl_Ctrl_Respondents.AWDID,
-      tbl_LKUP_ResponseStatus.ResponseName
+      tbl_LKUP_ResponseStatus.ResponseName,
+      tbl_Ctrl_EvalInfo.YearGroup
     FROM
-      tbl_Ctrl_Respondents
-      LEFT JOIN tbl_LKUP_Respondents ON tbl_LKUP_ResponseStatus.StatusCode = tbl_Ctrl_Respondents.ResponseStatus
-    wHERE 
+      ((tbl_Ctrl_Respondents
+      LEFT JOIN tbl_LKUP_ResponseStatus ON tbl_LKUP_ResponseStatus.StatusCode = tbl_Ctrl_Respondents.ResponseStatus)
+      LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_Ctrl_Respondents.AWDID)
+    WHERE 
       tbl_Ctrl_Respondents.SurveyID in ('%s') OR tbl_Ctrl_Respondents.SurveyID in ('%s') OR 
       tbl_Ctrl_Respondents.SurveyID in ('%s') OR tbl_Ctrl_Respondents.SurveyID in ('%s') OR 
       tbl_Ctrl_Respondents.SurveyID in ('%s')",
@@ -158,10 +162,12 @@ resp.query <- str_replace_all(str_replace_all(resp.query,"\n",""),"\\s+"," ")
 #query database for response rates data
 response.data <- 
   sqlQuery(con.evaldb,resp.query) %>% 
-  response.data %>% 
   left_join(population, by="AWDID") %>% 
+  left_join(sqlQuery(con.libra,"SELECT TBL_AWARD.AWDID, TBL_LKUPCOUNTRY.CTRYNAME AS Origin FROM TBL_AWARD LEFT JOIN TBL_LKUPCOUNTRY ON TBL_LKUPCOUNTRY.CTRYCODE = TBL_AWARD.AWDCTRYORIGIN"),by="AWDID") %>%  
   left_join(sqlQuery(con.evaldb,"SELECT tbl_LKUP_Geodata.CTRYNAME AS Country,tbl_LKUP_Geodata.CSCRegion AS Region FROM tbl_LKUP_Geodata"), by=c("Origin"="Country")) %>%
+  select(-Year,-Status,-CtteeScore) %>% 
   tbl_df()
+
 
 # Cleanup
 odbcCloseAll()

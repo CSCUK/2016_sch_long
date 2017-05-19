@@ -10,7 +10,7 @@
 # There is an equivalent of this file for the baseline data also (sch_base_basicanalysis)
 
 # Either load the RDATA file directly, or use source() to the importcleaning.r script:
-source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_importcleaning.r")
+# source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_importcleaning.r")
 # load("2016_sch_long_core.rdata")
 
 SurveyName <- "2016 Alumni Survey"
@@ -75,6 +75,20 @@ str(alumni.data, list.len=nrow(alumni.data))
 # Residency region = resreg
 # JACS category = jacs. Note: throughout, JACs categories included in dataframes are limited to those with 20+ cases. JACs = NA is usually excluded.
 
+# --- Survey response rates ----
+
+resp_overall <- pop_summary(response.data,~Response) %>% select(-Variable,Rate=prop)
+
+resp_gender <- subgroup_summary(response.data,~Gender,~Response) %>% select(-Variable,Rate=prop)
+resp_sch <- subgroup_summary(response.data,~SchemeNom,~Response) %>% select(-Variable,Rate=prop)
+resp_schtype <- subgroup_summary(response.data,~SchemeType,~Response) %>% select(-Variable,Rate=prop)
+resp_YearGroup <- subgroup_summary(response.data,~YearGroup,~Response) %>% select(-Variable,Rate=prop)
+resp_orireg <- subgroup_summary(response.data,~OriginRegion,~Response) %>% select(-Variable,Rate=prop)
+resp_ctry <- subgroup_summary(response.data,~Origin,~Response) %>% select(-Variable,Rate=prop)
+resp_jacs <- subgroup_summary(response.data,~JacsCat,~Response) %>% select(-Variable,Rate=prop) %>% filter(!JacsCat=="NA", sum(freq)>20)
+resp_score <- response.data %>% group_by(Response) %>% score_summary()
+
+
 ## a] Data overview ----
 overview_gender <- pop_summary(alumni.data,~Gender) %>% arrange(desc(prop))
 overview_sch <- pop_summary(alumni.data,~SchemeNom) %>% arrange(desc(prop))
@@ -84,6 +98,7 @@ overview_orireg <- pop_summary(alumni.data,~OriginRegion) %>% arrange(desc(prop)
 overview_resreg <- pop_summary(alumni.data,~ResidencyRegion) %>% arrange(desc(prop))
 overview_jacs <- pop_summary(alumni.data,~JacsCat) %>% arrange(desc(prop))
 overview_score <- alumni.data %>% group_by(CtteeGroup) %>% score_summary()
+
 
 ## b] Residency ----
 

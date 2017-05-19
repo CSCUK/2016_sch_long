@@ -10,7 +10,7 @@
 # There is an equivalent of this file for the baseline data also (sch_base_basicanalysis)
 
 # Either load the RDATA file directly, or use source() to the importcleaning.r script:
-# source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_importcleaning.r")
+source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_importcleaning.r")
 # load("2016_sch_long_core.rdata")
 
 SurveyName <- "2016 Alumni Survey"

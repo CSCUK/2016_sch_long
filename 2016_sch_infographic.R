@@ -5,6 +5,8 @@
 # May, 2017
 
 # Script designed to export data for standard infographics on alumni follow-up and baseline surveys
+# If problems occur with the write.xlsx functions (e.g. error about zipping workbook and use of rtools), check this SO solution:
+# http://stackoverflow.com/questions/27952451/error-zipping-up-workbook-failed-when-trying-to-write-xlsx
 
 # --- Library calls ----
 
@@ -13,127 +15,154 @@ p_load(RODBC, openxlsx, tidyverse,forcats)
 
 opar = par()
 
-# --- Dataset structure ----
+## --- Data access ----
 
-str(alumni.data, list.len=nrow(alumni.data))
+source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_basicanalysis.r")
 
 ## --- ALUMNI INFOGRAPHIC ----
 
 # --- 1] Responses ----
 
 # Response rate
-source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_response_alumni.r")
-response.rate <- resp.overall %>% filter(Response=="Completed")
-response.countries <- rbind(head(filter(resp.country,sum(n)>30, Response=="Completed"),3),
-                            tail(filter(resp.country,sum(n)>30, Response=="Completed"),3))
-
-rm(list= ls()[!(ls() %in% c("opar","response.rate","response.countries"))]) #remove everything that doesn't match this list
-gc() #clean the memory
+response_rate <- resp_overall %>% filter(Response=="Complete")
+response_countries <- bind_rows(resp_ctry %>% arrange(desc(Rate)) %>% filter(sum(freq)>30, Response=="Complete") %>% head(3) %>% mutate(Place="Top 3"),
+                                resp_ctry %>% arrange(desc(Rate)) %>% filter(sum(freq)>30, Response=="Complete") %>% tail(3) %>% mutate(Place="Bottom 3"))
 
 # Employment sectors of respondents
-source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_importcleaning.r")
-employment.sectors <- select(empsector_overall,Sector=CurrentSector,prop)
+employment_sectors <- select(empsector_overall,Sector=Response,Proportion=prop) %>% filter(!Sector=="NA") %>% arrange(desc(Proportion))
 
 # --- 2] Impact ----
 
-Impact.reach <- 
+impact_reach <- 
   bind_rows(impinstitutional_overall,implocal_overall,impnational_overall,impinternational_overall) %>% 
   filter(Response=="Yes") %>% 
   mutate(Variable = recode(Variable, "ImpInstitutional"="Institutional","ImpLocal"="Local","ImpNational"="National","ImpInternational"="International")) %>% 
-  select(-Response,"Impact reach"=Variable,prop)
+  select(-Response,"Impact reach"=Variable,Proportion=prop)
 
-
-impact.type <- 
+impact_type <- 
   bind_rows(impsocial_overall,impcivic_overall,impecon_overall,imppolicy_overall) %>% 
   filter(Response=="Yes") %>% 
   mutate(Variable = recode(Variable, "ImpCivic" = "Civic Engagement", "ImpEcon"="Economic Development",
                            "ImpPolicy"="Policymaking","ImpSocial"="Social Development")) %>% 
-  select(-Response,"Impact type"=Variable, prop)
+  select(-Response,"Impact type"=Variable, Proportion=prop)
   
 
 # --- 3] Skills ----
 
-skills.applying <- 
+skills_applying <- 
   bind_rows(appskillwork_overall, appskillnonwork_overall,appapproach_overall) %>% 
   group_by(Response) %>% 
   summarise(Frequency = sum(freq)) %>% 
-  mutate(prop = round((Frequency / sum(Frequency))*100,1))
+  mutate(prop = round((Frequency / sum(Frequency))*100,1)) %>% 
+  select("Applying Skills"=Response, everything())
 
-skills.transfering <- 
+skills_transfering <- 
   bind_rows(apptrain_overall,appresources_overall) %>% 
   group_by(Response) %>% 
   summarise(Frequency = sum(freq)) %>% 
-  mutate(prop = round((Frequency / sum(Frequency))*100,1))
+  mutate(prop = round((Frequency / sum(Frequency))*100,1)) %>% 
+  select("Transferring Skills"=Response, everything())
 
-skills.advocating <- 
+skills_advocating <- 
   bind_rows(appadvocate_overall,appchange_overall) %>% 
   group_by(Response) %>% 
   summarise(Frequency = sum(freq)) %>% 
-  mutate(prop = round((Frequency / sum(Frequency))*100,1))
+  mutate(prop = round((Frequency / sum(Frequency))*100,1)) %>% 
+  select("Advocating change"=Response, everything())
 
 # --- 4] Leadership ----
 
 leadership <- 
   bind_rows(ldrbudget_overall, ldrmanaging_overall, ldrsupervise_overall,ldrstrategy_overall) %>% 
   filter(Response=="Yes") %>% 
-  select(-Response) %>% 
   mutate(Variable = fct_recode(Variable,"Overseeing budgets"="LdrBudget","Managing Company / department" = "LdrManaging",
-                               "Setting strategy"="LdrStrategy","Supervising others"="LdrSupervising"))
+                               "Setting strategy"="LdrStrategy","Supervising others"="LdrSupervising")) %>% 
+  select(-Response,Activity=Variable)
 
 # --- 5] Academic research ----
 
-research.involvement <- 
+research_involvement <- 
   resmain_overall %>% filter(Response=="Yes") %>% 
   select(-Response) %>% 
   mutate(Variable = fct_recode(Variable,"Research Involvement" = "ResMain"))
 
-research.collaboration <- 
+research_collaboration <- 
   bind_rows(rescollabauthor_overall,rescollabgrant_overall,rescollabconf_overall) %>%
   filter(!Response=="NA") %>% 
   group_by(Response) %>% 
   summarise(Frequency = sum(freq)) %>% 
-  mutate(prop = round((Frequency / sum(Frequency))*100,1))
+  mutate(prop = round((Frequency / sum(Frequency))*100,1)) %>% 
+  select(Int.collaboration=Response,everything())
   
 # --- 6] Teaching ----
 
-teaching.involvement <- 
+teaching_involvement <- 
   teachmain_overall %>% filter(Response=="Yes") %>% 
   select(-Response) %>% 
   mutate(Variable = fct_recode(Variable,"Teaching Involvement" = "TeachMain"))
 
-teaching.cmw <- select(teachcmwskills_overall,-Variable)
+teaching_cmw <- select(teachcmwskills_overall,-Variable,"Use CMW skills"=Response)
 
 # --- 7] Professional contacts ----
 
-networks.host <- select(netacad_overall,-Variable)
+networks_host <- select(netacad_overall,-Variable,"UK host academics"=Response)
 
-networks.ukprof <- select(netuk_overall,-Variable)
+networks_ukprof <- select(netuk_overall,-Variable,"UK professional networks"=Response)
 
-networks.otherprof <- select(netother_overall,-Variable)
+networks_otherprof <- select(netother_overall,-Variable,"Other int.prof. networks"=Response)
 
 # --- Write data to excel ----
 
-# Listed by section, but all will export to a single workbook. First line creates workbook: first line should not have append=TRUE.
+# Will export to a single workbook. First line creates workbook: Final line saves the workbook.
 
-write.xlsx(response.rate, file="data_infographic.xlsx", sheetName="response.rate", row.names=FALSE)
-write.xlsx(response.countries, file="data_infographic.xlsx", sheetName="response.countries", row.names=FALSE, append=TRUE)
-write.xlsx(employment.sectors, file="data_infographic.xlsx", sheetName="employment.sectors", row.names=FALSE, append=TRUE)
+wb <- createWorkbook("data_infographic.xlsx")
 
-write.xlsx(impact.reach, file="data_infographic.xlsx", sheetName="impact.reach", row.names=FALSE, append=TRUE)
-write.xlsx(impact.type, file="data_infographic.xlsx", sheetName="impact.type", row.names=FALSE, append=TRUE)
+addWorksheet(wb,"response_rate") 
+writeData(wb,"response_rate",response_rate)
 
-write.xlsx(skills.applying, file="data_infographic.xlsx", sheetName="skills.applying", row.names=FALSE, append=TRUE)
-write.xlsx(skills.transfering, file="data_infographic.xlsx", sheetName="skills.transfering", row.names=FALSE, append=TRUE)
-write.xlsx(skills.advocating, file="data_infographic.xlsx", sheetName="skills.advocating", row.names=FALSE, append=TRUE)
+addWorksheet(wb,"response_countries")
+writeData(wb,"response_countries",response_countries)
 
-write.xlsx(leadership, file="data_infographic.xlsx", sheetName="leadership", row.names=FALSE, append=TRUE)
+addWorksheet(wb,"employment_sectors")
+writeData(wb,"employment_sectors",employment_sectors)
 
-write.xlsx(research.involvement, file="data_infographic.xlsx", sheetName="res.involvement", row.names=FALSE, append=TRUE)
-write.xlsx(research.collaboration, file="data_infographic.xlsx", sheetName="res.collaboration", row.names=FALSE, append=TRUE)
+addWorksheet(wb,"impact_reach")
+writeData(wb,"impact_reach",impact_reach)
 
-write.xlsx(teaching.involvement, file="data_infographic.xlsx", sheetName="teach.involvement", row.names=FALSE, append=TRUE)
-write.xlsx(teaching.cmw, file="data_infographic.xlsx", sheetName="teach.CMW", row.names=FALSE, append=TRUE)
+addWorksheet(wb,"impact_type")
+writeData(wb,"impact_type",impact_type)
 
-write.xlsx(networks.host, file="data_infographic.xlsx", sheetName="employment.sectors", row.names=FALSE, append=TRUE)
-write.xlsx(networks.ukprof, file="data_infographic.xlsx", sheetName="employment.sectors", row.names=FALSE, append=TRUE)
-write.xlsx(networks.otherprof, file="data_infographic.xlsx", sheetName="employment.sectors", row.names=FALSE, append=TRUE)
+addWorksheet(wb,"skills_applying")
+writeData(wb,"skills_applying",skills_applying)
+
+addWorksheet(wb,"skills_transfering")
+writeData(wb,"skills_transfering",skills_transfering)
+
+addWorksheet(wb,"skills_advocating")
+writeData(wb,"skills_advocating",skills_advocating)
+
+addWorksheet(wb,"leadership")
+writeData(wb,"leadership",leadership)
+
+addWorksheet(wb,"research_involvement")
+writeData(wb,"research_involvement",research_involvement)
+
+addWorksheet(wb,"research_collaboration")
+writeData(wb,"research_collaboration",research_collaboration)
+
+addWorksheet(wb,"teaching_involvement")
+writeData(wb,"teaching_involvement",teaching_involvement)
+
+addWorksheet(wb,"teaching_cmw")
+writeData(wb,"teaching_cmw",teaching_cmw)
+
+addWorksheet(wb,"networks_host")
+writeData(wb,"networks_host",networks_host)
+
+addWorksheet(wb,"networks_ukprof")
+writeData(wb,"networks_ukprof",networks_ukprof)
+
+addWorksheet(wb,"networks_otherprof")
+writeData(wb,"networks_otherprof",networks_otherprof)
+
+saveWorkbook(wb, file = paste("data_infographic.xlsx","_",format(Sys.Date(),"%d%b%Y"),".xlsx",sep=""), overwrite = TRUE)

@@ -13,6 +13,8 @@ opar = par()
 
 # --- Global Variables ----
 
+#update these values to correct SurveyIDs for your longitudinal follow-up and baseline surveys
+
 long_10 <- "Sch_2006_Ten"
 long_8 <- "Sch_2008_Eight"
 long_6 <- "Sch_2010_Six"
@@ -113,11 +115,11 @@ population <- select(population,-DegreeCode, -SchemeType, -PhD)
 ## Two step process required for alumni data because +2 survey has diferent variables, so needs join and bind rows, removes unneeded columns
 alumni.data <- 
   bind_rows(list(
-      sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_4.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_4 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_4.AWDID WHERE tbl_DATA_Sch_4.YearGroup=2012"),
-      sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_6.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_6 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_6.AWDID WHERE tbl_DATA_Sch_6.YearGroup=2010"),
-      sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_8.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_8 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_8.AWDID WHERE tbl_DATA_Sch_8.YearGroup=2008"),
-      sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_10.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_10 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_10.AWDID WHERE tbl_DATA_Sch_10.YearGroup=2006"))) %>%
-  full_join(sqlQuery(con.evaldb, "SELECT tbl_DATA_Sch_2.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_2 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_2.AWDID WHERE tbl_DATA_Sch_2.YearGroup=2014"))
+      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_4.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_4 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_4.AWDID WHERE tbl_DATA_Sch_4.SurveyID='%s'",long_4)),
+      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_6.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_6 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_6.AWDID WHERE tbl_DATA_Sch_6.SurveyID='%s'",long_6)),
+      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_8.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_8 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_8.AWDID WHERE tbl_DATA_Sch_8.SurveyID='%s'",long_8)),
+      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_10.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_10 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_10.AWDID WHERE tbl_DATA_Sch_10.SurveyID='%s'",long_10)))) %>%
+  full_join(sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_2.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_2 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_2.AWDID WHERE tbl_DATA_Sch_2.SurveyID='%s'",long_2)))
   
 alumni.data <- 
   alumni.data %>% 
@@ -135,7 +137,7 @@ base.data <-
   left_join(sqlQuery(con.evaldb,"SELECT tbl_LKUP_Geodata.CTRYNAME AS Country,tbl_LKUP_Geodata.CSCRegion AS Region FROM tbl_LKUP_Geodata"), by=c("Origin"="Country")) %>% 
   select(-DateAdded,-StudyScholFunder,-PreSector) %>% 
   rename(OriginRegion = Region, PreSector= DPreSector, StudyScholFunder = DStudyScholFunder) %>% 
-  tbl_df() 
+  tbl_df()
 
 # 4. DB query for (alumni) response rates data
 
@@ -337,5 +339,5 @@ base.data <-
 
 ## e] Cleanup ----
 
-rm(list= ls()[!(ls() %in% c("opar","alumni.data","base.data"))]) #remove everything that doesn't match this list
+rm(list= ls()[!(ls() %in% c("opar","alumni.data","base.data","response.data"))]) #remove everything that doesn't match this list
 gc() #clean the memory

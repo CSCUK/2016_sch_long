@@ -106,7 +106,7 @@ population <- population %>%
               ungroup()
 
 ## Stage 5] Remove intermediary variables used in this process
-population <- select(population,-DegreeCode, -SchemeType, -PhD)
+population <- select(population,-DegreeCode, -PhD)
   
 
 # 2. DB query for survey data
@@ -115,11 +115,11 @@ population <- select(population,-DegreeCode, -SchemeType, -PhD)
 ## Two step process required for alumni data because +2 survey has diferent variables, so needs join and bind rows, removes unneeded columns
 alumni.data <- 
   bind_rows(list(
-      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_4.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_4 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_4.AWDID WHERE tbl_DATA_Sch_4.SurveyID='%s'",long_4)),
-      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_6.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_6 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_6.AWDID WHERE tbl_DATA_Sch_6.SurveyID='%s'",long_6)),
-      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_8.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_8 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_8.AWDID WHERE tbl_DATA_Sch_8.SurveyID='%s'",long_8)),
-      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_10.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_10 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_10.AWDID WHERE tbl_DATA_Sch_10.SurveyID='%s'",long_10)))) %>%
-  full_join(sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_2.*,tbl_Ctrl_EvalInfo.SchemeType,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_2 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_2.AWDID WHERE tbl_DATA_Sch_2.SurveyID='%s'",long_2)))
+      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_4.*,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_4 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_4.AWDID WHERE tbl_DATA_Sch_4.SurveyID='%s'",long_4)),
+      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_6.*,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_6 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_6.AWDID WHERE tbl_DATA_Sch_6.SurveyID='%s'",long_6)),
+      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_8.*,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_8 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_8.AWDID WHERE tbl_DATA_Sch_8.SurveyID='%s'",long_8)),
+      sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_10.*,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_10 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_10.AWDID WHERE tbl_DATA_Sch_10.SurveyID='%s'",long_10)))) %>%
+  full_join(sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_2.*,tbl_Ctrl_EvalInfo.PhD FROM tbl_DATA_Sch_2 LEFT JOIN tbl_Ctrl_EvalInfo ON tbl_Ctrl_EvalInfo.AWDID = tbl_DATA_Sch_2.AWDID WHERE tbl_DATA_Sch_2.SurveyID='%s'",long_2)))
   
 alumni.data <- 
   alumni.data %>% 
@@ -133,7 +133,7 @@ alumni.data <-
 ## 3. DB query for baseline data, joins onto admin and geodata
 base.data <- 
   sqlQuery(con.evaldb, sprintf("SELECT tbl_DATA_Sch_0.* FROM tbl_DATA_Sch_0 WHERE tbl_DATA_Sch_0.SurveyID='%s'",base_0)) %>% 
-  left_join(population, by="AWDID") %>% 
+  left_join(select(population,-SchemeType), by="AWDID") %>% 
   left_join(sqlQuery(con.evaldb,"SELECT tbl_LKUP_Geodata.CTRYNAME AS Country,tbl_LKUP_Geodata.CSCRegion AS Region FROM tbl_LKUP_Geodata"), by=c("Origin"="Country")) %>% 
   select(-DateAdded,-StudyScholFunder,-PreSector) %>% 
   rename(OriginRegion = Region, PreSector= DPreSector, StudyScholFunder = DStudyScholFunder) %>% 
@@ -170,10 +170,9 @@ response.data <-
   select(-Year,-Status,-CtteeScore) %>% 
   tbl_df()
 
-
 # Cleanup
 odbcCloseAll()
-  
+
 ## b] Additional variables ----
 
 #Add residency status variables
@@ -336,6 +335,12 @@ base.data <-
                        "SS"="Shared Scholars"),
     SchemeType = recode(SchemeType, "SS" = "Shared","Distance Learning" = "Distance")
   )
+
+response.data <- 
+  response.data %>% 
+    mutate(SchemeNom = recode(Scheme, "CD"="Distance Learners","CR"="Agency: Developed","CA"="University Staff",
+                              "CS"="Agency: Developing","CN"="Split Site","SS"="Shared Scholars") ) %>% 
+    select(-Scheme)
 
 ## e] Cleanup ----
 

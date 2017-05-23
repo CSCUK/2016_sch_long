@@ -548,7 +548,7 @@ __Skill use index:__
 ggplot(alumni.data, aes(x=ZCtteeScore, y=i.skills)) + 
   geom_jitter() +
   coord_cartesian(ylim=c(0,1.0)) +
-  ylab("Leadership index") +
+  ylab("Skills index") +
   xlab("Committee Z-score (SD)") +
   theme_bw()
 ```
@@ -570,7 +570,7 @@ __Research productivity index:__
 ggplot(alumni.data, aes(x=ZCtteeScore, y=i.research)) + 
   geom_jitter() +
   coord_cartesian(ylim=c(0,1.0)) +
-  ylab("Leadership index") +
+  ylab("Research productivity index") +
   xlab("Committee Z-score (SD)") +
   theme_bw()
 ```
@@ -581,7 +581,7 @@ __Research collaboration index:__
 ggplot(alumni.data, aes(x=ZCtteeScore, y=i.collab)) + 
   geom_jitter() +
   coord_cartesian(ylim=c(0,1.0)) +
-  ylab("Leadership index") +
+  ylab("Research collaboration index") +
   xlab("Committee Z-score (SD)") +
   theme_bw()
 ```

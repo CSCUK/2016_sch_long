@@ -3,8 +3,6 @@ title: "Documentation: Longitudinal Framework basic analysis"
 output: html_notebook
 ---
 
-# Code information
-
 **Longitudinal Scholar tracking survey: data analysis**  
 Matt Mawer, The Association of Commonwealth Universities  
 Feb-Jun, 2017  
@@ -50,7 +48,9 @@ p_load(RODBC, tidyverse, forcats, stringr)
 [RODBC](http://www.statmethods.net/input/dbinterface.html) is a database access package based on ODBC.
 [Tidyverse](http://tidyverse.org/) loads a handful of packages from Hadley's excellent tidyverse. Many packages are installed, but we are going to use dplyr, forcats, and stringr in this script. We have to load the latter two separately because, although tidyverse installs them, they are not loaded automatically by tidyverse.
 
-# [3] Data connection and import
+# [3] Importing and cleaning data
+
+### [3.1] Data connection and import
 
 Next, we need to actually get our data. This part takes quite a bit of coding because we are going to ask for something quite particular - we will ask R to get data from:
 
@@ -259,25 +259,31 @@ We will actually remove the population dataset later, since it was just an inter
 odbcCloseAll()
 ```
 
-# [4] Additional variables
+### [3.2] Additional variables
 
+At this point we have data from the various databases in roughly the format we want, but we are missing some calculated variables not stored with the survey data and we also need to do some cleaning to make our data 'R-friendly'. We start by adding the additional variables we would like.
 
+First, we add the residency status variables that are a simple comparison of whether someone is currently living in their home country and/or home region.
 
-#Add residency status variables
+```{r add_vars_1}
 alumni.data <- 
   alumni.data %>% 
   mutate(
        resStatusCountry = ifelse(Origin==Residency,"Home","Other"),
        resStatusRegion = ifelse(OriginRegion==ResidencyRegion,"Home","Other")
        )
+```
 
-#Add index variables - 
-#1. define function to recode to number
-#2. Select index constituents and apply function
-#3. Calculate index (inc. replacing NA with 0) and join results back onto main dataset
+Next, we need to add the index variables which aggregate several groups of survey questions and allow easier comparison: see separate documentation on how these are calculated (or work it out from the code). To begin, we need to define some helper functions that will convert the labels ('rarely', 'never', etc.) into numbers on which we can perform calculations.
+
+```{r add_vars_2}
 recfct1 <- function(x) {as.numeric(factor(fct_recode(x,"4"="All the time","3"="Often","2"="Rarely","1"="Never"),levels = c("1","2","3","4"), ordered=T))}
 recfct2 <- function(x) {as.numeric(factor(fct_recode(x,"1"="No","2"="Yes"), levels= c("1","2"), ordered=T))}
+```
 
+We apply these functions to the variables in the alumni data that we include in the indices and calculate the index scores - again, see separate documentation - and then merge the result back into the original alumni dataset using a left_join (keeping our four new columns in addition to all of the original survey data). Note that in line 13 we also replace the NA scores (because some people have no index score, due to the way they answer questions) with the lowest point on the scale, so no data is excluded in the calculation of indices.
+
+```{r add_vars_3}
 alumni.data <-  alumni.data %>% 
   select(AWDID,starts_with("App"),starts_with("Ldr"),starts_with("ResCollab"),starts_with("ResComp"), -AppExamples,-LdrGrade) %>% 
   mutate_at(vars(starts_with("App")), .funs=recfct1) %>%
@@ -289,12 +295,15 @@ alumni.data <-  alumni.data %>%
     i.ldr = round((select(.,starts_with("Ldr")) %>% rowSums()-4)/4,2),
     i.research = round((select(.,starts_with("ResCollab")) %>% rowSums()-3)/9,2),
     i.collab = round((select(.,starts_with("ResComp")) %>% rowSums()-3)/9,2)
-  ) %>% 
+    ) %>% 
   replace_na(list(i.skills=0,i.ldr = 0,i.research=0,i.collab=0)) %>% 
   select(AWDID,starts_with("i.")) %>% 
   left_join(alumni.data,by="AWDID")
+```
 
-#base indices
+The same for the baseline data.
+
+```{r add_vars_4}
 base.data <- base.data %>% 
   select(AWDID,starts_with("Ldr"),starts_with("ResCollab"),starts_with("ResComp"),-LdrGrade) %>% 
   mutate_at(vars(starts_with("Ldr")), .funs=recfct2) %>%
@@ -308,22 +317,39 @@ base.data <- base.data %>%
   replace_na(list(i.ldr = 0,i.research=0,i.collab=0)) %>% 
   select(AWDID,starts_with("i.")) %>% 
   left_join(base.data,by="AWDID")
+```
 
+These are all of the additional variables we should need for our basic analysis. Any other variables can, of course, be defined interactively while working with the data.
 
-# [5] Setting variables types
+### [3.3] Setting variable types
 
-# Set ordered factors - note: the ReturnIntention factor is ordered, but it is easier to set this in Section D because it also needs quite specifc recoding (see below)
+To ensure our data behaves as we would expect, we need to set the variable types correctly. 
 
+Many of our variables are ordered factors, so we will need to define some more helper functions to allow us to set those factors as we want, without going through each in turn. Note that each function is designed to factorise and assign an order to a different kind of factor variable used in our data.
+
+```{r set_vars_1}
 recfct3 <- function(x) {parse_factor(x, levels = c("Never","Rarely","Often","All the time"), ordered=T)}
 recfct4 <- function(x) {parse_factor(x, levels = c("Lower","About the same","Higher"), ordered=T)}
 recfct5 <- function(x) {parse_factor(x, levels = c("No change","Slight change","Moderate change","Substantial change"), ordered=T)}
 recfct6 <- function(x) {parse_factor(x, levels = c("5","4","3","2","1"), ordered=T)}
+```
 
+Now we apply those factors to our data.
+
+```{r set_vars_2}
 alumni.data <- alumni.data %>% 
   mutate_at(vars(CurrentSkillMatch, CurrentSalaryChange), .funs=recfct4) %>% 
   mutate_at(vars(starts_with("Skill")), .funs=recfct5) %>% 
   mutate_at(vars(matches("NetA|NetU|NetH|NetO|NetP|NetIn|InnLead|Cxt|AppS|AppA|AppT|AppD|AppM|ResC|TeachCMW")),.funs=recfct3) %>% 
-  mutate_at(vars(ends_with("Grade")),.funs=recfct6) %>% 
+  mutate_at(vars(ends_with("Grade")),.funs=recfct6) 
+```
+
+This sets our various ordered factors to be both factors and ordered. There are a couple of exceptions: we order three factors in the next code block, but they are unique and so not worth making a dedicated helper function for; ReturnIntention factor is an ordered factor as well, but it is easier to set this later because it also needs quite specific recoding of the factor labels (we return to it below). 
+
+For the remainder of our factors, we need to set them as factors in R and to make any declarations about the levels to make sure no levels are omitted if there happens to be no data in a particular survey (e.g. no-one answered "Twice" to the CurrentJobChance question). Again, all of this is done fairly simply in one code block.
+
+```{r set_vars_3}
+alumni.data <- alumni.data %>%
   mutate(
      Scheme = parse_factor(Scheme, levels=c("CA","CD","CN","CS","CR","SS")),
      SurveyID = as.character(SurveyID),
@@ -343,7 +369,11 @@ alumni.data <- alumni.data %>%
      resStatusRegion = factor(resStatusRegion),
      SchemeType = factor(SchemeType)
      )
+```
 
+We do the same for the baseline data as well, although this time we will simply roll in the whole process to single block of code (note the ordered variables being set in the last three lines).
+
+```{r set_vars_4}
 base.data <- base.data %>%
   mutate(
     SurveyID = as.character(SurveyID),
@@ -365,14 +395,14 @@ base.data <- base.data %>%
   mutate_at(vars(ends_with("Grade")),.funs=recfct6) %>%
   mutate_at(vars(matches("NetA|NetU|NetH|NetO|NetP|NetIn|InnLead|Cxt|ResC|TeachCMW")),.funs=recfct3) %>% 
   mutate_at(vars(CurrentSkillMatch), .funs=recfct4)
+```
 
+### [3.4] Recoding factor levels
 
-## d] Recoding factor levels ----
+Some factors have levels with unwieldy names that will make our analysis more difficult and any outputs (tables, graphs etc.) ugly. We can fix this in much the same way we dealt with setting variable types, by using the mutate function and some factor manipulation functions to change the levels from how they appear in the survey to how we would prefer they appear in the analysis
 
-# Correcting various factor levels that have unwieldy names. Note: Worth preserving basic factor names for easier graphs.
-
-alumni.data <- 
-  alumni.data %>% 
+```{r code_vars__1}
+alumni.data <- alumni.data %>% 
   mutate(
     ReturnIntention=replace(as.character(ReturnIntention),grepl("^I never",ReturnIntention),"Never"),
     ReturnOrganisation = fct_recode(ReturnOrganisation,"Unemployed"="I was not employed before my Scholarship"),
@@ -401,9 +431,14 @@ alumni.data <-
                                 "SS"="Shared Scholars"),
     SchemeType = recode(SchemeType, "SS" = "Shared", "Distance Learning" = "Distance")
     )
+```
 
-base.data <- 
-  base.data %>% 
+Note in the ln 3 of the code we use 'grepl', a string (text) search function, to effectively do a find and replace for anything within the ReturnIntention vaiable that starts with 'I never'. Then later, ln 14-20, set the rest of the levels for that factor and declare that it is ordered. This is why we mostly left ReturnIntention alone in [3.3] above.
+
+Again, we do the same with our baseline data.
+
+```{r code_vars_2}
+base.data <- base.data %>% 
   mutate(
     CurrentStatus = fct_recode(CurrentStatus, "Paid leave"="I am on paid leave (full- or part-pay), my job will be held for me",
                                "Unpaid leave"="I am on unpaid leave, my job will be held for me",
@@ -423,49 +458,87 @@ base.data <-
                        "SS"="Shared Scholars"),
     SchemeType = recode(SchemeType, "SS" = "Shared","Distance Learning" = "Distance")
   )
+```
 
+And for our response data. Note that for our response data we also make a slight alteration to the structure of the dataset, dropping the 'Scheme' variable because we have created the 'SchemeNom' (scheme nominating route) variables which is a more attractively labelled version of the same information.
+
+```{r code_vars_3}
 response.data <- 
   response.data %>% 
-    mutate(SchemeNom = recode(Scheme, "CD"="Distance Learners","CR"="Agency: Developed","CA"="University Staff",
-                              "CS"="Agency: Developing","CN"="Split Site","SS"="Shared Scholars") ) %>% 
+    mutate(SchemeNom = recode(Scheme, "CD"="Distance Learners","CR"="Agency: Developed","CA"="University Staff","CS"="Agency: Developing","CN"="Split Site","SS"="Shared Scholars") ) %>% 
     select(-Scheme, Response=ResponseName, OriginRegion=Region)
+```
 
-## e] Cleanup ----
+For the response data we can also do some minor renaming at this stage - originRegion = region etc. - to make our outputs more understandable.
 
+### [3.5] Cleanup
+
+At this stage we have imported all of the data we want to analyse, matched it with the relevant administrative data, added any additional variables we wanted to calculate in advance of our analysis, and cleaned up variable types and names to make them more amenable to clean and tidy analysis. We are finished importing, so we can remove all of our intermediate variables and leave us only with our three datasets (alumni, baseline, alumni responses) and our backup for the R graphical parameters (opar).
+
+```{r imp_cleanup_1}
 rm(list= ls()[!(ls() %in% c("opar","alumni.data","base.data","response.data"))]) #remove everything that doesn't match this list
 gc() #clean the memory
+```
 
+# [4] Basic analysis
 
-**End of import script**
+We can now began creating some basic descriptive statistics and proportion tables for our data. In the next section we focus only on the alumni data - including the response rates - but this can be easily generalised to the baseline data for those variables which are common to both alumni and baseline surveys.
 
+First, we can view the structure of the dataset we have created
 
-# Code information ----
+```{r alum_setup_1}
+str(alumni.data, list.len=nrow(alumni.data))
+```
 
-# Longitudinal Scholar tracking survey: data analysis
-# Matt Mawer, The Association of Commonwealth Universities
-# February, 2017
+So we can see that there are many survey response variables (i.e. answers to questions) and some subgroup or demographic variables (i.e. information about the respondent). To conduct our analysis we want to know what the responses to each question look like overall, and by each of several key variables (subgroups) in which we are routinely interest. Our subgroups will be:
 
-# Script creates an extensive array of basic data tables for the results of the CSC's longitudinla follow-up surveys.
-# Many tables can be used directly in reports (e.g. in markdown, or exported to excel) or can be used as part of other analyses and visualisations
-# Data structures throughout are data frames (tibbles) in long data format
-# There is an equivalent of this file for the baseline data also (sch_base_basicanalysis)
+1. Gender = gender
+2. Scheme = sch
+3. Scheme type = schtype
+4. YearGroup = year
+5. Origin region = orireg
+6. Residency region = resreg
+7. JACS category = jacs. Note: throughout, JACs categories included are limited to those with 20+ cases. JACs = NA is usually excluded.
 
-# Either load the RDATA file directly, or use source() to the importcleaning.r script:
-source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_importcleaning.r")
-# load("2016_sch_long_core.rdata")
+To avoid having to many lines of identical code each time we conduct our analysis - since we will want the same breakdown for each survey response - we will again define some helper functions. These functions are a bit more complicated, so we will examine each in turn.
 
-SurveyName <- "2016 Alumni Survey"
+First, we need a function for our overall response to a survey question, which we will call 'population summary' (pop_summary). Our function will take four actions for us: 1) group a dataset we name by a variable that we name, 2) summarise the frequency of each response, 3) calculate the percentage of the total for each response, 4) make the resulting dataset look prettier.
 
-# --- Library calls ----
+```{r alum_setup_2}
+pop_summary <- function(dataframe, variable){
+  dataframe %>% 
+    group_by_(variable) %>% 
+    summarise_(freq = ~n()) %>% 
+    mutate(prop = round((freq / sum(freq))*100,1)) %>% 
+    rownames_to_column() %>%
+    mutate(rowname=colnames(.)[2]) %>% 
+    rename_(Response = variable) %>% 
+    select(Variable = rowname, everything()) 
+} 
+```
 
-library(pacman)
-p_load(RODBC, openxlsx, tidyverse,forcats, plotly, pander)
+When we run this function on a variable it will give us data in [long / narrow format](https://en.wikipedia.org/wiki/Wide_and_narrow_data). The argument 'dataframe' for the function is always the overall dataset, like alumni.data or response.data. The argument 'variable' is the field we actually want to do the work on, like 'CurrentSector'. In the code, ln 6-9 gives us the pretty data: the 'work' is done by ln 1-5.
 
-opar = par()
+Next we need a helper function for our subgroups (subgroup_summary). The structure of this function will be almost exactly the same, but we will add an extra argument to our helper function to allow us to define the group (subgroup) by which we also to divide the data up.
 
+```{r alum_setup_3}
+subgroup_summary <- function(dataframe, group, variable){
+  dataframe %>% 
+    group_by_(group, variable) %>% 
+    summarise_(freq = ~n()) %>% 
+    mutate(prop = round((freq / sum(freq))*100,1)) %>% 
+    rownames_to_column() %>%
+    mutate(rowname=colnames(.)[3]) %>% 
+    rename_(Response = variable) %>% 
+    select(Variable = rowname, everything()) 
+}
+```
 
-# --- Functions ----
+We still supply the 'dataframe', but now we give the grouping variable (e.g. Gender) before we specify what field we want to analyse. Again, the result will be in long format.
 
+Finally, we will need a helper function to conduct some descriptive statistics on the standard score from the selection process that we calculated in [3.1] above. Routinely we will want the number of responses (frequency), some measures of central tendency (mean, median), dispersion (Standard Deviaton / SD), and range (max, min). This time, we do our filtering and grouping before we apply our function, so for the function itself we need only supply the dataframe.
+
+```{r alum_setup_4}
 score_summary <- function(dataframe){
   summarise(
     filter(dataframe,!SchemeNom=="Shared Scholars", !SchemeNom=="Distance Learners"),
@@ -479,44 +552,13 @@ score_summary <- function(dataframe){
   mutate(rowname=colnames(.)[2]) %>% 
   rename_(Response = colnames(.)[2]) %>% 
   select(Variable = rowname, everything())
-} #Statistical summary for committee scores, group data first to yield useful comparisons. In long data format.
+}
+```
 
-pop_summary <- function(dataframe, variable){
-  dataframe %>% 
-    group_by_(variable) %>% 
-    summarise_(freq = ~n()) %>% 
-    mutate(prop = round((freq / sum(freq))*100,1)) %>% 
-    rownames_to_column() %>%
-    mutate(rowname=colnames(.)[2]) %>% 
-    rename_(Response = variable) %>% 
-    select(Variable = rowname, everything()) 
-} #population level summary for a variable, in long data format
+The reason for only supplying the dataframe is that we are going to group by the variable we are interested in (e.g. CurrentSector), rather than a subgroup as we did before, which is harder to do as part of the function. See below for examples of how this has been done: in practice it only adds a single extra function call to each analysis.
 
-subgroup_summary <- function(dataframe, group, variable){
-  dataframe %>% 
-    group_by_(group, variable) %>% 
-    summarise_(freq = ~n()) %>% 
-    mutate(prop = round((freq / sum(freq))*100,1)) %>% 
-    rownames_to_column() %>%
-    mutate(rowname=colnames(.)[3]) %>% 
-    rename_(Response = variable) %>% 
-    select(Variable = rowname, everything()) 
-} #subgroup summary for a variable: takes group as the second argument - in long data format
 
-# --- Dataset structure ----
-
-str(alumni.data, list.len=nrow(alumni.data))
-
-# VARIABLE SUFFIXES:
-# Gender = gender
-# Scheme = sch
-# Scheme type = schtype
-# YearGroup = year
-# Origin region = orireg
-# Residency region = resreg
-# JACS category = jacs. Note: throughout, JACs categories included in dataframes are limited to those with 20+ cases. JACs = NA is usually excluded.
-
-# --- Survey response rates ----
+### [4.1] Survey response rates
 
 resp_overall <- pop_summary(response.data,~Response) %>% select(-Variable,Rate=prop)
 

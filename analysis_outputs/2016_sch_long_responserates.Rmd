@@ -9,13 +9,17 @@ output:
 
 ```{r setup, include = FALSE}
 
-source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Crystal Snap IT/r_codebank/2016_sch_long/2016_sch_long_responserates.r")
-
 library(pacman)
 pacman:: p_load(tidyverse, pander,knitr, RODBC)
 
-# Preferred option with this markdown is to knit to MS Word and apply style template saved for quick formatting.
+##The data for this response rates markdown comes from the sch_long_basicanalysis script
+# Before you run the markdown report, do these two checks:
+# 1] Check this filepath is correct before you run the script:
+source(xx)
+# 2] Go into the basicanalysis script at the filepath above and check the survey variables are declared correctly (see notes in that script)
 
+## There are several output options - a good choice is to knit to MS Word and apply a saved style template for quick formatting.
+## Below this code block is the markdown that is turned into your actual Word / PDF output
 ```
 
 This paper relates to the __`r SurveyName`__.  

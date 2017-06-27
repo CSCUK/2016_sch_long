@@ -557,11 +557,22 @@ score_summary <- function(dataframe){
 
 The reason for only supplying the dataframe is that we are going to group by the variable we are interested in (e.g. CurrentSector), rather than a subgroup as we did before, which is harder to do as part of the function. See below for examples of how this has been done: in practice it only adds a single extra function call to each analysis.
 
+Note that at this stage all of our analysis will be *univariate*. More complex analysis involving several variables should follow from conducting all of this (easy) univariate analysis, especially if, as would be usual, you are interested in potential interactions between subgroup or demographic factors.
+
 
 ### [4.1] Survey response rates
 
-resp_overall <- pop_summary(response.data,~Response) %>% select(-Variable,Rate=prop)
+Before getting into the substantive analysis, we can generate some basic tables of survey response rates. Firstly, we can look at the overall response rates by using our pop_summary function and offering the 'Response', from the response.data, as our argument. Note that we have used the tilde (~) to show the 'Response' variable is from the  dataframe named in the first argument.
 
+```{r alum_resp_1}
+resp_overall <- pop_summary(response.data,~Response) %>% select(-Variable,Rate=prop)
+```
+
+We also drop the 'variable' column and rename the 'prop' column, to make the result prettier.
+
+Because we also want to view our response rates by subgroup, we will use the subgroup_summary function we defined earlier. For each of our key variables we use basically the same code and assign the result to an appropriately named data frame.
+
+```{r alum_resp_2}
 resp_gender <- subgroup_summary(response.data,~Gender,~Response) %>% select(-Variable,Rate=prop)
 resp_sch <- subgroup_summary(response.data,~SchemeNom,~Response) %>% select(-Variable,Rate=prop)
 resp_schtype <- subgroup_summary(response.data,~SchemeType,~Response) %>% select(-Variable,Rate=prop)
@@ -569,10 +580,23 @@ resp_YearGroup <- subgroup_summary(response.data,~YearGroup,~Response) %>% selec
 resp_orireg <- subgroup_summary(response.data,~OriginRegion,~Response) %>% select(-Variable,Rate=prop)
 resp_ctry <- subgroup_summary(response.data,~Origin,~Response) %>% select(-Variable,Rate=prop)
 resp_jacs <- subgroup_summary(response.data,~JacsCat,~Response) %>% select(-Variable,Rate=prop) %>% filter(!JacsCat=="NA", sum(freq)>20)
+```
+
+Note that for the JACS categories we have filtered out any responses which are NA (not applicable: no category in this case) and those categories with 20 or fewer cases. This latter threshold is a matter of judgement: it could be set higher or lower, depending on how interested you are in the less voluminous categories and how will willing you are to deal with potentially misleading impressions from small numbers of cases.
+
+Finally, we will use our score_summary function to examine response rates in relation to performance in the selection process.
+
+```{r alum_resp_3}
 resp_score <- response.data %>% group_by(Response) %>% score_summary()
+```
 
+As will be evident when you run this code, the result looks quite different to our pop_summary and subgroup_summary functions, but the idea is basically the same: generate some basic summary information to highlight any possible trends for further analysis.
 
-## a] Data overview ----
+### [4.2] Alumni survey data overview
+
+Now we are at the point that we want to actually get some results from our alumni survey. First, we can examine what the distribution of survey respondents looks like in each of subgroups / key variables, so that we understand who actually replied to the survey.
+
+```{r alum_over_1}
 overview_gender <- pop_summary(alumni.data,~Gender) %>% arrange(desc(prop))
 overview_sch <- pop_summary(alumni.data,~SchemeNom) %>% arrange(desc(prop))
 overview_schtype <- pop_summary(alumni.data,~SchemeType) %>% arrange(desc(prop))
@@ -581,18 +605,25 @@ overview_orireg <- pop_summary(alumni.data,~OriginRegion) %>% arrange(desc(prop)
 overview_resreg <- pop_summary(alumni.data,~ResidencyRegion) %>% arrange(desc(prop))
 overview_jacs <- pop_summary(alumni.data,~JacsCat) %>% arrange(desc(prop))
 overview_score <- alumni.data %>% group_by(CtteeGroup) %>% score_summary()
+```
 
+Notice that these are almost exactly the same lines of code we used for our response data: we are just changing the input arguments and assigning the results to appropriately named variables. One potentially confusing factor here is the use of subgroups in the pop_summary function: usually we use subgroups in the *subgroup_summary* function! In this case, however, we are actually interested in the Gender, SchemeType etc. as the topic of our analysis, not as an additional way to divide the date from another question or topic. We want to know what the proportion of males and females were in our survey data, not how male and female respondents different in their responses to some other question. To achieve the desired result, we use the pop_Summary function.
 
-## b] Residency ----
+### [4.3] Residency
 
-# prefix = 'res'
+We will prefix all of our output data frames related to residency with the prefix 'res', so we can easily find them.
 
-#overall
+First we look at residency variables overall.
+
+```{r alum_res_1}
 rescountry_overall <- pop_summary(alumni.data,~resStatusCountry)
 resregion_overall <- pop_summary(alumni.data,~resStatusRegion)
 resreason_overall <- alumni.data %>% filter(!ResidencyReason=="NA") %>%  pop_summary(~ResidencyReason) %>% arrange(desc(prop))
+```
 
-# Residency status (home country)
+Then we examine residency status for living in the *home country* for our subgroups.
+
+```{r alum_res_2}
 rescountry_gender <- subgroup_summary(alumni.data,~Gender,~resStatusCountry)
 rescountry_sch <- subgroup_summary(alumni.data,~SchemeNom,~resStatusCountry)
 rescountry_schtype <- subgroup_summary(alumni.data,~SchemeType,~resStatusCountry)
@@ -601,8 +632,11 @@ rescountry_orireg <- subgroup_summary(alumni.data,~OriginRegion,~resStatusCountr
 rescountry_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~resStatusCountry)
 rescountry_jacs <- subgroup_summary(alumni.data,~JacsCat,~resStatusCountry) %>% filter(!JacsCat=="NA", sum(freq)>20)
 rescountry_score <- alumni.data %>% group_by(resStatusCountry) %>% score_summary()
+```
 
-# Residency status (home region)
+And finally, the same examination of residency status for living in the *home region*.
+
+```{r alum_res3}
 resregion_gender <- subgroup_summary(alumni.data,~Gender,~resStatusRegion)
 resregion_sch <- subgroup_summary(alumni.data,~SchemeNom,~resStatusRegion)
 resregion_schtype <- subgroup_summary(alumni.data,~SchemeType,~resStatusRegion)
@@ -611,21 +645,31 @@ resregion_orireg <- subgroup_summary(alumni.data,~OriginRegion,~resStatusRegion)
 resregion_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~resStatusRegion)
 resregion_jacs <- subgroup_summary(alumni.data,~JacsCat,~resStatusRegion) %>% filter(!JacsCat=="NA", sum(freq)>20)
 resregion_score <- alumni.data %>% group_by(resStatusRegion) %>% score_summary()
+```
 
-## c] Employment ----
+This is the same principle we will use for all of the data: examine overall, then examine each individual variable (usually a single survey question) by each of our subgroups. By running the code, R will generate all of these data frames for our use: like creating many dozens of tables in MS Excel.
 
-# prefix = 'emp'
-# TO ADD - CONTEXT VARIABLES
+### [4.4] Employment
 
-# Overall
+We will prefix all of our output data frames related to employment with the prefix 'emp', so we can easily find them. The employment context variables (e.g. variables that begin 'cxt') are not included here as these are meant for more complex analysis that compares the response on, for instance, application of skills questions to the supportiveness of the workplace environment reported by Scholars.
+
+As before, we begin with overall figures.
+
+```{alum_emp_1}
 empcurrent_overall <- pop_summary(alumni.data,~CurrentEmploy)
 empsector_overall <- pop_summary(alumni.data,~CurrentSector)
 empskillmatch_overall <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% pop_summary(~CurrentSkillMatch)
 empchange_overall <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% pop_summary(~CurrentJobChange)
 empreturnorg_overall <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% pop_summary(~ReturnOrganisation)
-empreturntime_overall <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>% pop_summary(~ReturnEmploy)
+empreturntime_overall <- alumni.data %>% filter(grepl("_Two$", SurveyID), !ReturnOrganisation=="Yes", CurrentEmploy=="Employed") %>%
+                          pop_summary(~ReturnEmploy)
+```
 
-# Current employment - limited to 'Employed' and 'Studying' for ease of viewing
+For the final two variables - return to organisation and return to work time - we need to do some additional filtering to include only those filling in the +2 survey and, in the case of the latter variable, those who are currently employed but *did not* return to their pre-scholarship organisation. These 'flows' of questions are detailed elsewhere, notably in the surveys themselves, and so will not be explained in detail in this document.
+
+Current employment status
+
+```{r alum_emp_2}
 empcurrent_gender <- subgroup_summary(alumni.data,~Gender,~CurrentEmploy)
 empcurrent_sch <- subgroup_summary(alumni.data,~SchemeNom,~CurrentEmploy)
 empcurrent_schtype <- subgroup_summary(alumni.data,~SchemeType,~CurrentEmploy)
@@ -634,8 +678,11 @@ empcurrent_orireg <- subgroup_summary(alumni.data,~OriginRegion,~CurrentEmploy)
 empcurrent_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~CurrentEmploy)
 empcurrent_jacs <- subgroup_summary(alumni.data,~JacsCat,~CurrentEmploy) %>% filter(!JacsCat=="NA", sum(freq)>20)
 empcurrent_score <- alumni.data %>% group_by(CurrentEmploy) %>% score_summary
+```
 
-# Current employment sector
+Current employment sector
+
+```{r alum_emp_3}
 empsector_gender <- subgroup_summary(alumni.data,~Gender,~CurrentSector)
 empsector_sch <- subgroup_summary(alumni.data,~SchemeNom,~CurrentSector)
 empsector_schtype <- subgroup_summary(alumni.data,~SchemeType,~CurrentSector)
@@ -644,26 +691,35 @@ empsector_orireg <- subgroup_summary(alumni.data,~OriginRegion,~CurrentSector)
 empsector_resreg <- subgroup_summary(alumni.data,~ResidencyRegion,~CurrentSector)
 empsector_jacs <- subgroup_summary(alumni.data,~JacsCat,~CurrentSector) %>% filter(!JacsCat=="NA", sum(freq)>20)
 empsector_score <- alumni.data %>% group_by(CurrentSector) %>% score_summary
+```
 
-# Current employment skill level match
+Skill match with current employment. Here we need to add an extra filter because we do not want to include cases where there is no answer to the CurrentSkillMatch question (i.e. the respondent is not employed).
+
+```{r alum_emp_4}
 empskillmatch_gender <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~Gender,~CurrentSkillMatch)
 empskillmatch_sch <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~SchemeNom,~CurrentSkillMatch)
 empskillmatch_schtype <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~SchemeType,~CurrentSkillMatch)
 empskillmatch_year <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~YearGroup,~CurrentSkillMatch)
 empskillmatch_orireg <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~OriginRegion,~CurrentSkillMatch)
 empskillmatch_resreg <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% subgroup_summary(~ResidencyRegion,~CurrentSkillMatch)
-empskillmatch_jacs <- alumni.data %>% filter(!JacsCat=="NA",!CurrentSkillMatch=="NA") %>% subgroup_summary(~JacsCat,~CurrentSkillMatch) %>% filter(sum(freq)>20)
+empskillmatch_jacs <- alumni.data %>% filter(!JacsCat=="NA",!CurrentSkillMatch=="NA") %>% subgroup_summary(~JacsCat,~CurrentSkillMatch) %>%
+                        filter(sum(freq)>20)
 empskillmatch_score <- alumni.data %>% filter(!CurrentSkillMatch=="NA") %>% group_by(CurrentSkillMatch) %>% score_summary()
+```
 
-# Job changes in the last 2 years
+Changes of employment in the last two years. Again, we want to exclude respondents who have not got an answer to this question: those who have not been employed in the last years.
+
+```{r alum_emp_5}
 empchange_gender <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~Gender,~CurrentJobChange)
 empchange_sch <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~SchemeNom,~CurrentJobChange)
 empchange_schtype <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~SchemeType,~CurrentJobChange)
 empchange_year <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~YearGroup,~CurrentJobChange)
 empchange_orireg <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~OriginRegion,~CurrentJobChange)
 empchange_resreg <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% subgroup_summary(~ResidencyRegion,~CurrentJobChange)
-empchange_jacs <- alumni.data %>% filter(!JacsCat=="NA",!CurrentJobChange=="NA") %>% subgroup_summary(~JacsCat,~CurrentJobChange) %>% filter(sum(freq)>20)
+empchange_jacs <- alumni.data %>% filter(!JacsCat=="NA",!CurrentJobChange=="NA") %>% subgroup_summary(~JacsCat,~CurrentJobChange) %>%
+                  filter(sum(freq)>20)
 empchange_score <- alumni.data %>% filter(!CurrentJobChange=="NA") %>% group_by(CurrentJobChange) %>% score_summary()
+```
 
 # Return to previous organisation for +2 year respondents only (note 'YearGroup' is missing as a variable because it is meaningless: all are +2 group)
 empreturnorg_gender <- alumni.data %>% filter(grepl("_Two$", SurveyID)) %>% subgroup_summary(~Gender,~ReturnOrganisation)
@@ -680,6 +736,7 @@ subset_returntime <- function(dataframe){
   subset(dataframe, grepl("_Two$", SurveyID) &
          !ReturnOrganisation=="Yes" &
          CurrentEmploy=="Employed")}
+         
 empreturntime_gender <- alumni.data %>% subset_returntime() %>% subgroup_summary(~Gender,~ReturnEmploy)
 empreturntime_sch <- alumni.data %>% subset_returntime() %>% subgroup_summary(~SchemeNom,~ReturnEmploy)
 empreturntime_schtype <- alumni.data %>% subset_returntime() %>% subgroup_summary(~SchemeType,~ReturnEmploy)

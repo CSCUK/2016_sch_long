@@ -1,13 +1,21 @@
 ---
-title: "Documentation: Longitudinal Framework basic analysis"
-output: html_notebook
+title: 'Documentation: Longitudinal Framework basic analysis'
+output:
+  html_document: default
+  html_notebook: default
+  pdf_document: default
+  word_document: default
 ---
+
+```{r include = FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
 
 **Longitudinal Scholar tracking survey: data analysis**  
 Matt Mawer, The Association of Commonwealth Universities  
 Feb-Jun, 2017  
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. In the document, the code for accessing survey data and performing basic tabulation for a specific iteration of alumni surveys is set out. There are several associated R Markdown documents that take the data tables produced and turn them into, for instance, basic analyses for key variables (gender, nominating route etc.) and response rates. 
+This output is based on an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. If you are reading the HTML or Word versions, the code is printed but (obviously) does not work interactively. In the document, the code for accessing survey data and performing basic tabulation for a specific iteration of alumni surveys is set out. There are several associated R Markdown documents that take the data tables produced and turn them into, for instance, basic analyses for key variables (gender, nominating route etc.) and response rates. 
 
 Three notes before you read on:  
 
@@ -32,11 +40,11 @@ SurveyName <- "2016 Alumni Survey"
 opar = par() # no need to change this variable: opar stores graphical parameters, as a backup
 ```
 
-The SurveyName variable is used only in some titles on alumni survey outputs, it is not vital for data access: put whatever you to appear as the description for the survey. There is not an equivalent for the baseline survey at the moment because there are no key variable analysis documents, but you could easily add 'SurveyName_base' and declare a variable for it (in the styke above).
+The SurveyName variable is used only in some titles on alumni survey outputs, it is not vital for data access: put whatever you to appear as the description for the survey. There is not an equivalent for the baseline survey at the moment because there are no key variable analysis documents, but you could easily add 'SurveyName_base' and declare a variable for it (in the style above).
 
 # [2] Library calls
 
-The next step is to call the various packages that will help us access and analyse the data. The easiest way to do this is through pacman, a useful package-managing package (!). The first line of code checks if you have pacman installed and, if not, installs it from [CRAN](https://cran.r-project.org/). The second line calls the package itself and loads it. The third line uses pacman's p_lod function to check and load the other packages used in this script.   
+The next step is to call the various packages that will help us access and analyse the data. The easiest way to do this is through pacman, a useful package-managing package (!). The first line of code checks if you have pacman installed and, if not, installs it from [CRAN](https://cran.r-project.org/). The second line calls the package itself and loads it. The third line uses pacman's p_load function to check and load the other packages used in this script.   
 
 ```{r library_calls}
 if (!require("pacman")) install.packages("pacman")

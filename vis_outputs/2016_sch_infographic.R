@@ -25,7 +25,8 @@ source("S:/SCHOLARSHIPS/CSC/SCHEMES/CSFP-IN/CSC-Evaluation/Data Management Cryst
 
 # Response rate
 response_rate <- resp_overall %>% filter(Response=="Complete")
-response_countries <- bind_rows(resp_ctry %>% arrange(desc(Rate)) %>% filter(sum(freq)>30, Response=="Complete") %>% head(3) %>% mutate(Place="Top 3"),
+response_countries <- resp_ctry %>% arrange(desc(Rate)) %>% filter(sum(freq)>30, Response=="Complete")
+response_countries_toptail <- bind_rows(resp_ctry %>% arrange(desc(Rate)) %>% filter(sum(freq)>30, Response=="Complete") %>% head(3) %>% mutate(Place="Top 3"),
                                 resp_ctry %>% arrange(desc(Rate)) %>% filter(sum(freq)>30, Response=="Complete") %>% tail(3) %>% mutate(Place="Bottom 3"))
 
 # Employment sectors of respondents
@@ -122,6 +123,9 @@ writeData(wb,"response_rate",response_rate)
 
 addWorksheet(wb,"response_countries")
 writeData(wb,"response_countries",response_countries)
+
+addWorksheet(wb,"response_countries_toptail")
+writeData(wb,"response_countries_toptail",response_countries_toptail)
 
 addWorksheet(wb,"employment_sectors")
 writeData(wb,"employment_sectors",employment_sectors)
